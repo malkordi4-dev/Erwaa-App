@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC">
+
+    <RelativeLayout
+        android:id="@+id/layoutHeader"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/cairo_black"
+            android:text="إرواء"
+            android:textColor="#0069B4"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/back"
+            app:tint="#555555" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingBottom="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="تسجيل مزود خدمة"
+                android:textColor="#0069B4"
+                android:textSize="20sp"
+                android:fontFamily="@font/cairo_black"
+                android:layout_gravity="right"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="انضم إلى شبكة الموزعين المعتمدين لتأمين المياه للأحياء."
+                android:textColor="#666666"
+                android:textSize="13sp"
+                android:fontFamily="@font/cairo_regular"
+                android:layout_gravity="right"
+                android:layout_marginTop="2dp" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#FFFFFF"
+                android:layout_marginTop="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="الاسم الرباعي"
+                        android:textColor="#444444"
+                        android:textSize="13sp"
+                        android:fontFamily="@font/cairo_black"
+                        android:layout_gravity="right" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:background="@drawable/bg_input_field"
+                        android:layout_marginTop="4dp"
+                        android:hint="أدخل اسمك الكامل كما في الهوية"
+                        android:gravity="right|center_vertical"
+                        android:fontFamily="@font/cairo_regular"
+                        android:textSize="13sp"
+                        android:paddingHorizontal="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="رقم الهوية"
+                        android:textColor="#444444"
+                        android:textSize="13sp"
+                        android:fontFamily="@font/cairo_black"
+                        android:layout_marginTop="12dp"
+                        android:layout_gravity="right" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:background="@drawable/bg_input_field"
+                        android:layout_marginTop="4dp"
+                        android:hint="9XXXXXXXX"
+                        android:gravity="right|center_vertical"
+                        android:fontFamily="@font/cairo_regular"
+                        android:textSize="13sp"
+                        android:paddingHorizontal="12dp"
+                        android:inputType="number" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="رقم الجوال"
+                        android:textColor="#444444"
+                        android:textSize="13sp"
+                        android:fontFamily="@font/cairo_black"
+                        android:layout_marginTop="12dp"
+                        android:layout_gravity="right" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:background="@drawable/bg_input_field"
+                        android:layout_marginTop="4dp"
+                        android:hint="05XXXXXXXX"
+                        android:gravity="right|center_vertical"
+                        android:fontFamily="@font/cairo_regular"
+                        android:textSize="13sp"
+                        android:paddingHorizontal="12dp"
+                        android:inputType="phone" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="المنطقة الجغرافية للتوزيع"
+                        android:textColor="#444444"
+                        android:textSize="13sp"
+                        android:fontFamily="@font/cairo_black"
+                        android:layout_marginTop="12dp"
+                        android:layout_gravity="right" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:background="@drawable/bg_input_field"
+                        android:layout_marginTop="4dp"
+                        android:text="اختر المنطقة"
+                        android:textColor="#A0AEC0"
+                        android:gravity="right|center_vertical"
+                        android:fontFamily="@font/cairo_regular"
+                        android:textSize="13sp"
+                        android:paddingHorizontal="12dp"
+                        android:drawableLeft="@android:drawable/arrow_down_float" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_alert_blue"
+                        android:orientation="horizontal"
+                        android:padding="10dp"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center_vertical|right">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="بيانات الاعتماد المهني\nيرجى التأكد من مطابقة الكود للسجلات الرسمية بالبلدية."
+                            android:textColor="#0369A1"
+                            android:textSize="11sp"
+                            android:fontFamily="@font/cairo_regular"
+                            android:gravity="right"
+                            android:layout_marginRight="8dp"/>
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@android:drawable/ic_dialog_info"
+                            app:tint="#0369A1" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="كود الاعتماد من البلدية"
+                        android:textColor="#444444"
+                        android:textSize="13sp"
+                        android:fontFamily="@font/cairo_black"
+                        android:layout_marginTop="12dp"
+                        android:layout_gravity="right" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:background="@drawable/bg_input_field"
+                        android:layout_marginTop="4dp"
+                        android:hint="MUN - 2024 - XXXX"
+                        android:gravity="right|center_vertical"
+                        android:fontFamily="@font/cairo_regular"
+                        android:textSize="13sp"
+                        android:paddingHorizontal="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="نوع المعدات / المصدر"
+                        android:textColor="#444444"
+                        android:textSize="13sp"
+                        android:fontFamily="@font/cairo_black"
+                        android:layout_marginTop="16dp"
+                        android:layout_gravity="right" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="6dp">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_marginRight="4dp"
+                            app:cardCornerRadius="8dp"
+                            app:cardElevation="1dp"
+                            app:cardBackgroundColor="#FFFFFF">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="center">
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/hydration"
+                                    app:tint="#0069B4"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="محطة محلية"
+                                    android:textSize="11sp"
+                                    android:fontFamily="@font/cairo_regular"
+                                    android:textColor="#0069B4"
+                                    android:layout_marginTop="2dp"/>
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_horizontalMargin="4dp"
+                            app:cardCornerRadius="8dp"
+                            app:cardElevation="1dp"
+                            app:cardBackgroundColor="#FFFFFF">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="center">
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/water"
+                                    app:tint="#0069B4"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="بئر"
+                                    android:textSize="11sp"
+                                    android:fontFamily="@font/cairo_regular"
+                                    android:textColor="#0069B4"
+                                    android:layout_marginTop="2dp"/>
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="4dp"
+                            app:cardCornerRadius="8dp"
+                            app:cardElevation="1dp">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="center">
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/truck"
+                                    app:tint="#0069B4"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="صهريج"
+                                    android:textSize="11sp"
+                                    android:fontFamily="@font/cairo_black"
+                                    android:textColor="#0069B4"
+                                    android:layout_marginTop="2dp"/>
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#F1F5F9"
+                        android:orientation="horizontal"
+                        android:padding="10dp"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center_vertical|right">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="سيتم مراجعة طلبك وتدقيق كود الاعتماد من قبل فريق الإدارة والبلدية، قد يستغرق الرد 24-48 ساعة."
+                            android:textColor="#555555"
+                            android:textSize="11sp"
+                            android:fontFamily="@font/cairo_regular"
+                            android:gravity="right"
+                            android:layout_marginRight="8dp"/>
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@android:drawable/ic_dialog_info"
+                            app:tint="#555555" />
+                    </LinearLayout>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/btnSubmit"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        app:cardCornerRadius="24dp"
+                        app:cardBackgroundColor="#0069B4"
+                        app:cardElevation="0dp"
+                        android:layout_marginTop="16dp">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:layout_gravity="center">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="تقديم الطلب"
+                                android:textColor="#FFFFFF"
+                                android:textSize="15sp"
+                                android:fontFamily="@font/cairo_black" />
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@android:drawable/ic_menu_send"
+                                android:layout_marginLeft="8dp"
+                                app:tint="#FFFFFF" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="wrap_content"
+                android:layout_height="137dp"
+                android:layout_marginTop="20dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img3"
+                app:shapeAppearanceOverlay="@style/RoundedImageViewStyle" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="تأمين الحياة.. مسؤولية ومشاركة"
+                android:textColor="#777777"
+                android:textSize="12sp"
+                android:fontFamily="@font/cairo_regular"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
