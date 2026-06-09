@@ -31,7 +31,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@drawable/back"
-            app:tint="#0069B4" />
+            app:tint="#555555" />
     </RelativeLayout>
 
     <ScrollView
@@ -40,7 +40,7 @@
         android:fillViewport="true"
         android:scrollbars="none"
         app:layout_constraintTop_toBottomOf="@id/layoutHeader"
-        app:layout_constraintBottom_toTopOf="@id/layoutActionAndNav">
+        app:layout_constraintBottom_toTopOf="@id/btnSubmitGroupOrder">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,24 +72,28 @@
                         android:orientation="vertical"
                         android:layout_gravity="bottom|start"
                         android:padding="16dp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="تنظيم توريد الحي"
                             android:textColor="#FFFFFF"
-                            android:textSize="20sp" />
+                            android:textSize="20sp"
+                            android:layout_marginTop="35sp"
+                            android:fontFamily="@font/cairo_black" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="اجمع جيرانك ووفر في تكاليف النقل"
                             android:textColor="#E2E8F0"
                             android:textSize="12sp"
+                            android:fontFamily="@font/cairo_regular"
                             android:layout_marginTop="2dp" />
                     </LinearLayout>
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Coordinator Section -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -102,6 +106,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -109,27 +114,66 @@
                         android:textColor="#0D63B3"
                         android:textSize="16sp"
                         android:layout_marginBottom="12dp"/>
-                    <EditText
-                        android:id="@+id/etCoordinatorName"
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="اسم المنسق"
+                        android:textColor="#64748B"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="6dp"/>
+
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="46dp"
-                        android:background="@drawable/bg_edit_text_rounded"
-                        android:hint="اسم المنسق"
-                        android:paddingHorizontal="12dp"
-                        android:inputType="textPersonName"
-                        android:layout_marginBottom="12dp"/>
-                    <EditText
-                        android:id="@+id/etCoordinatorPhone"
+                        android:layout_marginBottom="12dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardBackgroundColor="#F1F5F9"
+                        app:cardElevation="0dp">
+                        <EditText
+                            android:id="@+id/etCoordinatorName"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@null"
+                            android:hint="مثال: أحمد محمد"
+                            android:textColorHint="#94A3B8"
+                            android:textColor="#1E293B"
+                            android:textSize="15sp"
+                            android:paddingHorizontal="12dp"
+                            android:inputType="textPersonName"/>
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="رقم الجوال"
+                        android:textColor="#64748B"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="6dp"/>
+
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="46dp"
-                        android:background="@drawable/bg_edit_text_rounded"
-                        android:hint="رقم الجوال"
-                        android:paddingHorizontal="12dp"
-                        android:inputType="phone"/>
+                        app:cardCornerRadius="10dp"
+                        app:cardBackgroundColor="#F1F5F9"
+                        app:cardElevation="0dp">
+                        <EditText
+                            android:id="@+id/etCoordinatorPhone"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@null"
+                            android:hint="+970 59-000-0000"
+                            android:textColorHint="#94A3B8"
+                            android:textColor="#1E293B"
+                            android:textSize="15sp"
+                            android:gravity="right|center_vertical"
+                            android:textDirection="rtl"
+                            android:paddingHorizontal="12dp"
+                            android:inputType="phone"/>
+                    </androidx.cardview.widget.CardView>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Neighbors Section -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -142,6 +186,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -150,25 +195,40 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
                             android:text="📋 قائمة المشتركين"
                             android:textColor="#0D63B3"
                             android:textSize="16sp"/>
-                        <TextView
-                            android:id="@+id/tvTotalLitersBadge"
+
+                        <androidx.cardview.widget.CardView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
-
-                            android:text="0 لتر إجمالي"
-                            android:textColor="#0369A1"
-                            android:paddingHorizontal="10dp"
-                            android:paddingVertical="4dp"/>
+                            android:layout_centerVertical="true"
+                            app:cardCornerRadius="12dp"
+                            app:cardBackgroundColor="#E0F2FE"
+                            app:cardElevation="0dp">
+                            <TextView
+                                android:id="@+id/tvTotalLitersBadge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0 لتر إجمالي"
+                                android:textColor="#0369A1"
+                                android:textSize="13sp"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="4dp"/>
+                        </androidx.cardview.widget.CardView>
                     </RelativeLayout>
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvNeighborsList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false" />
+                        android:nestedScrollingEnabled="false"
+                        android:layout_marginBottom="12dp"
+                        xmlns:tools="http://schemas.android.com/tools"
+                        tools:listitem="@layout/item_neighbor" />
+
                     <LinearLayout
                         android:id="@+id/btnAddNeighborClick"
                         android:layout_width="match_parent"
@@ -176,8 +236,7 @@
                         android:background="@drawable/bg_dashed_button"
                         android:gravity="center"
                         android:clickable="true"
-                        android:focusable="true"
-                        android:layout_marginTop="8dp">
+                        android:focusable="true">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -188,7 +247,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Map Section -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -201,6 +259,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -208,87 +267,106 @@
                         android:textColor="#0D63B3"
                         android:textSize="14sp"
                         android:layout_marginBottom="12dp"/>
-                    <com.google.android.gms.maps.MapView
-                        android:id="@+id/mapViewLocation"
+
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="160dp"
-                        android:layout_marginBottom="12dp" />
-                    <EditText
-                        android:id="@+id/etLocationDescription"
+                        android:layout_marginBottom="12dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp">
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <com.google.android.gms.maps.MapView
+                                android:id="@+id/mapViewLocation"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+
+                            <ImageView
+                                android:id="@+id/ivLiveTankTracking"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+
+                                android:contentDescription="تتبع حي"
+                                android:layout_centerInParent="true"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="#15000000"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="⚙️ جاري تتبع صهريج الحي برمجياً..."
+                                android:textColor="#1E293B"
+                                android:textSize="12sp"
+                                android:background="#CCFFFFFF"
+                                android:paddingHorizontal="12dp"
+                                android:paddingVertical="6dp"/>
+                        </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
-                        android:background="@drawable/bg_edit_text_rounded"
-                        android:hint="وصف إضافي للموقع"
-                        android:padding="10dp"
-                        android:gravity="top|right"
-                        android:inputType="textMultiLine"/>
+                        app:cardCornerRadius="10dp"
+                        app:cardBackgroundColor="#F1F5F9"
+                        app:cardElevation="0dp">
+                        <EditText
+                            android:id="@+id/etLocationDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@null"
+                            android:hint="وصف إضافي للموقع (مثال: بجوار مدرسة فلسطين)"
+                            android:textColorHint="#94A3B8"
+                            android:textColor="#1E293B"
+                            android:textSize="12sp"
+                            android:padding="10dp"
+                            android:gravity="top|right"
+                            android:inputType="textMultiLine"/>
+                    </androidx.cardview.widget.CardView>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/layoutActionAndNav"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btnSubmitOrder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="52dp"
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="#0D63B3"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="3dp"
         app:layout_constraintBottom_toBottomOf="parent">
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/btnSubmitOrder"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_margin="16dp"
-            app:cardBackgroundColor="#0D63B3"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="3dp">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ارسل الطلب الجماعي "
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp" />
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginLeft="8dp"
-                    android:scaleX="-1"
-                    android:src="@android:drawable/ic_menu_send"
-                    app:tint="#FFFFFF" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Global Navigation Bar -->
         <LinearLayout
-            android:id="@+id/bottomNavGroup"
-            android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:background="#FFFFFF"
-            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:elevation="8dp">
-            <LinearLayout android:id="@+id/navProfile" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
-                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/user" app:tint="#94A3B8" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="حسابي" android:textColor="#94A3B8" android:textSize="11sp" />
-            </LinearLayout>
-            <LinearLayout android:id="@+id/navWallet" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
-                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/wallet" app:tint="#94A3B8" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="المحفظة" android:textColor="#94A3B8" android:textSize="11sp" />
-            </LinearLayout>
-            <LinearLayout android:id="@+id/navOrders" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
-                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/personal" app:tint="#94A3B8" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="طلباتي" android:textColor="#94A3B8" android:textSize="11sp" />
-            </LinearLayout>
-            <LinearLayout android:id="@+id/navHome" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
-                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/home" app:tint="#94A3B8" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="الرئيسية" android:textColor="#94A3B8" android:textSize="11sp" />
-            </LinearLayout>
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/cairo_black"
+                android:text="ارسل الطلب الجماعي "
+                android:textColor="#FFFFFF"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="8dp"
+                android:scaleX="-1"
+                android:src="@android:drawable/ic_menu_send"
+                app:tint="#FFFFFF" />
         </LinearLayout>
-    </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
