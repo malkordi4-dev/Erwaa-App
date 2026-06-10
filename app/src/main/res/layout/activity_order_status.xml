@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F8FAFC"
@@ -12,8 +11,7 @@
         android:id="@+id/layoutHeader"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:paddingHorizontal="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -22,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:fontFamily="@font/cairo_black"
             android:text="قيد المراجعة"
             android:textColor="#0069B4"
             android:textSize="18sp" />
@@ -41,13 +40,14 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
-        app:layout_constraintBottom_toTopOf="@id/layoutActionAndNav">
+
+        app:layout_constraintBottom_toTopOf="@id/btnCancelOrder">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+
             android:gravity="center_horizontal"
             android:padding="24dp">
 
@@ -105,8 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_horizontalMargin="16dp"
                 android:text="يقوم المزود (محطة غزة المركزية) بمراجعة طلبك، ستتلقى إشعاراً فور القبول."
                 android:textColor="#64748B"
                 android:textSize="13sp"
@@ -117,8 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#E2E8F0"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp" />
+                android:layout_verticalMargin="24dp" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -174,14 +172,22 @@
                                 android:text="الكمية"
                                 android:textColor="#94A3B8"
                                 android:textSize="11sp" />
-                            <TextView
-                                android:id="@+id/tvOrderQuantity"
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="10,000 لتر"
-                                android:textColor="#1E293B"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:orientation="horizontal"
+                                android:layout_marginTop="4dp"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:id="@+id/tvOrderQuantity"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="10,000 لتر"
+                                    android:textColor="#1E293B"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
                         </LinearLayout>
 
                         <LinearLayout
@@ -196,14 +202,22 @@
                                 android:text="السعر التقديري"
                                 android:textColor="#94A3B8"
                                 android:textSize="11sp" />
-                            <TextView
-                                android:id="@+id/tvOrderPriceStatus"
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="120 شيكل"
-                                android:textColor="#1E293B"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:orientation="horizontal"
+                                android:layout_marginTop="4dp"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:id="@+id/tvOrderPriceStatus"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="120 شيكل"
+                                    android:textColor="#1E293B"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
 
@@ -218,13 +232,21 @@
                             android:text="موقع التوصيل"
                             android:textColor="#94A3B8"
                             android:textSize="11sp" />
-                        <TextView
-                            android:id="@+id/tvOrderLocationText"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="غزة، حي الرمال - شارع الشهداء"
-                            android:textColor="#1E293B"
-                            android:textSize="13sp" />
+                            android:orientation="horizontal"
+                            android:layout_marginTop="4dp"
+                            android:gravity="right|center_vertical">
+
+                            <TextView
+                                android:id="@+id/tvOrderLocationText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="غزة، حي الرمال - شارع الشهداء"
+                                android:textColor="#1E293B"
+                                android:textSize="13sp" />
+                        </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -234,57 +256,34 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/layoutActionAndNav"
+        android:id="@+id/layoutFooterCancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:gravity="center_horizontal"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:id="@+id/layoutFooterCancel"
+        <Button
+            android:id="@+id/btnCancelOrder"
             android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="❌  إلغاء الطلب"
+            android:textColor="#EF4444"
+            android:textSize="14sp"
+            android:backgroundTint="#E2E8F0"
+            app:cornerRadius="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:padding="16dp"
-            android:background="#FFFFFF">
-            <Button
-                android:id="@+id/btnCancelOrder"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="❌  إلغاء الطلب"
-                android:textColor="#EF4444"
-                android:textSize="14sp"
-                android:backgroundTint="#E2E8F0"
-                app:cornerRadius="12dp" />
-        </LinearLayout>
-
-        <!-- Global Navigation Bar -->
-        <LinearLayout
-            android:id="@+id/bottomNavStatus"
-            android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:background="#FFFFFF"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:elevation="8dp">
-            <LinearLayout android:id="@+id/navProfile" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
-                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/user" app:tint="#94A3B8" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="حسابي" android:textColor="#94A3B8" android:textSize="11sp" />
-            </LinearLayout>
-            <LinearLayout android:id="@+id/navWallet" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
-                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/wallet" app:tint="#94A3B8" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="المحفظة" android:textColor="#94A3B8" android:textSize="11sp" />
-            </LinearLayout>
-            <LinearLayout android:id="@+id/navOrders" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
-                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/personal" app:tint="#0069B4" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="طلباتي" android:textColor="#0069B4" android:textSize="11sp" android:textStyle="bold" />
-            </LinearLayout>
-            <LinearLayout android:id="@+id/navHome" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
-                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/home" app:tint="#94A3B8" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="الرئيسية" android:textColor="#94A3B8" android:textSize="11sp" />
-            </LinearLayout>
-        </LinearLayout>
+            android:layout_marginTop="8dp"
+            android:text="يمكنك إلغاء الطلب مجاناً طالما لم يتم قبوله من قبل المزود."
+            android:textColor="#94A3B8"
+            android:textSize="11sp"
+            android:gravity="center" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
