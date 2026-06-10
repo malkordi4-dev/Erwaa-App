@@ -32,7 +32,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@drawable/back"
-            app:tint="#555555" />
+            app:tint="#0069B4" />
     </RelativeLayout>
 
     <ScrollView

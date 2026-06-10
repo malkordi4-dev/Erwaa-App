@@ -79,7 +79,7 @@
                             android:text="تنظيم توريد الحي"
                             android:textColor="#FFFFFF"
                             android:textSize="20sp"
-                            android:layout_marginTop="35sp"
+                            android:layout_marginTop="35dp"
                             android:fontFamily="@font/cairo_black" />
 
                         <TextView
