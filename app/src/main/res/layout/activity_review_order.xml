@@ -41,7 +41,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@drawable/back"
-            app:tint="#555555" />
+            app:tint="#0069B4" />
     </RelativeLayout>
 
     <ScrollView
@@ -83,15 +83,14 @@
                         android:layout_alignParentRight="true"
                         android:layout_bottomOf="parent"
                         android:layout_margin="16dp"
-                        android:layout_marginTop="50sp"
                         android:gravity="right">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="الخدمة المختارة"
                             android:textColor="#E2E8F0"
-
-                            android:textSize="11sp" />
+                            android:layout_marginTop="40dp"
+                            android:textSize="13sp" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -120,7 +119,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_store"
+                        android:src="@drawable/file"
                         app:tint="#0D63B3" />
 
                     <TextView
@@ -174,7 +173,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_time"
+                        android:src="@drawable/clock"
                         app:tint="#0369A1" />
 
                     <TextView
@@ -231,7 +230,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_alignParentRight="true"
-                            android:src="@drawable/ic_location"
+                            android:src="@drawable/location"
                             app:tint="#0D63B3" />
                         <TextView
                             android:layout_width="wrap_content"
@@ -444,11 +443,16 @@
             android:layout_height="48dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="تأكيد وإرسال الطلب  ➤"
+            android:text="تأكيد وإرسال الطلب"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:backgroundTint="#005B8A"
-            app:cornerRadius="12dp"/>
+            app:cornerRadius="12dp"
+
+            app:icon="@android:drawable/ic_menu_send"
+            app:iconGravity="textEnd"
+            app:iconPadding="8dp"
+            app:iconTint="#FFFFFF"/>
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

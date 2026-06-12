@@ -31,7 +31,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@drawable/back"
-            app:tint="#555555" />
+            app:tint="#0069B4" />
     </RelativeLayout>
 
     <ScrollView
@@ -80,7 +80,7 @@
                             android:textColor="#FFFFFF"
                             android:textSize="20sp"
                             android:layout_marginTop="35dp"
-                            android:fontFamily="@font/cairo_black" />
+                          />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -88,7 +88,7 @@
                             android:text="اجمع جيرانك ووفر في تكاليف النقل"
                             android:textColor="#E2E8F0"
                             android:textSize="12sp"
-                            android:fontFamily="@font/cairo_regular"
+
                             android:layout_marginTop="2dp" />
                     </LinearLayout>
                 </RelativeLayout>
@@ -352,7 +352,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:fontFamily="@font/cairo_black"
                 android:text="ارسل الطلب الجماعي "
                 android:textColor="#FFFFFF"
                 android:textSize="15sp" />

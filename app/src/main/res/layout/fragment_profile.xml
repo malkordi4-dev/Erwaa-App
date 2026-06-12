@@ -119,7 +119,7 @@
                 <ImageView
                     android:layout_width="14dp"
                     android:layout_height="14dp"
-                    android:src="@drawable/back"
+                    android:src="@drawable/water_drop"
                     app:tint="#0069B4" />
             </LinearLayout>
 

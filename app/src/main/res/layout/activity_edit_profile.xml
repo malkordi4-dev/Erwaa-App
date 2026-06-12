@@ -61,7 +61,7 @@
                     android:id="@+id/ivUserAvatar"
                     android:layout_width="110dp"
                     android:layout_height="110dp"
-
+                    android:src="@drawable/person"
                     android:scaleType="centerCrop"
                     android:padding="2dp"
                     app:strokeColor="#0069B4"

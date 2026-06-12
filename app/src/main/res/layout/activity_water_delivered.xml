@@ -22,7 +22,7 @@
             android:layout_height="24dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_menu"
+            android:src="@drawable/menu"
             app:tint="#0069B4" />
 
         <TextView
@@ -40,7 +40,7 @@
             android:layout_height="24dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_notification"
+            android:src="@drawable/notification"
             app:tint="#0069B4" />
     </RelativeLayout>
 

@@ -25,17 +25,20 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/user"
-                android:scaleType="centerCrop" />
+                android:src="@drawable/back"
+                android:scaleType="centerCrop"
+                app:tint="#0069B4" />
         </com.google.android.material.card.MaterialCardView>
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/notification"
-            app:tint="#0069B4" />
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="19dp"
+            android:src="@drawable/user"
+         />
     </RelativeLayout>
 
     <ScrollView
@@ -122,10 +125,32 @@
                     app:cardElevation="1dp"
                     app:strokeColor="#E2E8F0"
                     app:strokeWidth="1dp">
-                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp">
-                        <ImageView android:id="@+id/i1" android:layout_width="24dp" android:layout_height="24dp" android:layout_alignParentRight="true" android:src="@drawable/wallet" app:tint="#0069B4"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toLeftOf="@id/i1" android:layout_marginRight="12dp" android:text="المحفظة الإلكترونية" android:textColor="#1E293B" android:textSize="15sp" android:layout_centerVertical="true"/>
-                        <ImageView android:layout_width="18dp" android:layout_height="18dp" android:layout_alignParentLeft="true" android:src="@drawable/ic_chevron_left" app:tint="#CBD5E1"/>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+                        <ImageView
+                            android:id="@+id/i1"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentRight="true"
+                            android:src="@drawable/wallet"
+                            app:tint="#0069B4"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@id/i1"
+                            android:layout_marginRight="12dp"
+                            android:text="المحفظة الإلكترونية"
+                            android:textColor="#1E293B"
+                            android:textSize="15sp"
+                            android:layout_centerVertical="true"/>
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_alignParentLeft="true"
+                            android:src="@drawable/left"
+                            app:tint="#CBD5E1"/>
                     </RelativeLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -137,17 +162,33 @@
                     app:cardElevation="1dp"
                     app:strokeColor="#E2E8F0"
                     app:strokeWidth="1dp">
-                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
 
                         <ImageView
                             android:id="@+id/i2"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_alignParentRight="true"
-                            android:src="@drawable/question"
+                            android:src="@drawable/protection"
                             app:tint="#0069B4" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toLeftOf="@id/i2" android:layout_marginRight="12dp" android:text=" المساعدة والدعم" android:textColor="#1E293B" android:textSize="15sp" android:layout_centerVertical="true"/>
-                        <ImageView android:layout_width="18dp" android:layout_height="18dp" android:layout_alignParentLeft="true" android:src="@drawable/ic_chevron_left" app:tint="#CBD5E1"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@id/i2"
+                            android:layout_marginRight="12dp"
+                            android:text="  سجل الطلبات"
+                            android:textColor="#1E293B"
+                            android:textSize="15sp"
+                            android:layout_centerVertical="true"/>
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_alignParentLeft="true"
+                            android:src="@drawable/left"
+                            app:tint="#CBD5E1"/>
                     </RelativeLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -159,10 +200,36 @@
                     app:cardElevation="1dp"
                     app:strokeColor="#E2E8F0"
                     app:strokeWidth="1dp">
-                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp">
-                        <ImageView android:id="@+id/i3" android:layout_width="24dp" android:layout_height="24dp" android:layout_alignParentRight="true" android:src="@drawable/data" app:tint="#0069B4"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toLeftOf="@id/i3" android:layout_marginRight="12dp" android:text="كلمة المرور والأمان" android:textColor="#1E293B" android:textSize="15sp" android:layout_centerVertical="true"/>
-                        <ImageView android:layout_width="18dp" android:layout_height="18dp" android:layout_alignParentLeft="true" android:src="@drawable/ic_chevron_left" app:tint="#CBD5E1"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:id="@+id/i3"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentRight="true"
+                            android:src="@drawable/settings"
+                            app:tint="#0069B4" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="12dp"
+                            android:layout_toLeftOf="@id/i3"
+                            android:text=" الاعدادات"
+                            android:textColor="#1E293B"
+                            android:textSize="15sp" />
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_alignParentLeft="true"
+                            android:src="@drawable/left"
+                            app:tint="#CBD5E1" />
                     </RelativeLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -173,13 +240,7 @@
                     app:cardCornerRadius="16dp"
                     app:cardElevation="1dp"
                     app:strokeColor="#E2E8F0"
-                    app:strokeWidth="1dp">
-                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp">
-                        <ImageView android:id="@+id/i4" android:layout_width="24dp" android:layout_height="24dp" android:layout_alignParentRight="true" android:src="@drawable/language" app:tint="#0069B4"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toLeftOf="@id/i4" android:layout_marginRight="12dp" android:text="لغة التطبيق (العربية)" android:textColor="#1E293B" android:textSize="15sp" android:layout_centerVertical="true"/>
-                        <ImageView android:layout_width="18dp" android:layout_height="18dp" android:layout_alignParentLeft="true" android:src="@drawable/ic_chevron_left" app:tint="#CBD5E1"/>
-                    </RelativeLayout>
-                </com.google.android.material.card.MaterialCardView>
+                    app:strokeWidth="1dp"/>
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
@@ -190,9 +251,26 @@
                     app:strokeColor="#FCA5A5"
                     app:strokeWidth="1.5dp"
                     app:cardBackgroundColor="#FEF2F2">
-                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp">
-                        <ImageView android:id="@+id/iLogout" android:layout_width="24dp" android:layout_height="24dp" android:layout_alignParentRight="true" android:src="@drawable/logout" app:tint="#DC2626"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toLeftOf="@id/iLogout" android:layout_marginRight="12dp" android:text="تسجيل الخروج" android:textColor="#DC2626" android:textSize="15sp" android:textStyle="bold" android:layout_centerVertical="true"/>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+                        <ImageView android:id="@+id/iLogout"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentRight="true"
+                            android:src="@drawable/logout"
+                            app:tint="#DC2626"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@id/iLogout"
+                            android:layout_marginRight="12dp"
+                            android:text="تسجيل الخروج"
+                            android:textColor="#DC2626"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:layout_centerVertical="true"/>
                     </RelativeLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -222,7 +300,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/user"
-                app:tint="#0069B4"
+
                 />
             <TextView android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

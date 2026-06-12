@@ -138,7 +138,7 @@
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="نوع الخدمة" android:textColor="#64748B" android:textSize="12sp" android:layout_marginBottom="6dp"/>
                     <RelativeLayout android:layout_width="match_parent" android:layout_height="48dp" android:background="@drawable/bg_input_field" android:paddingHorizontal="12dp">
                         <Spinner android:layout_width="match_parent" android:layout_height="match_parent" android:background="@android:color/transparent"/>
-                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentLeft="true" android:layout_centerVertical="true" android:src="@drawable/back" app:tint="#64748B"/>
+                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:layout_alignParentLeft="true" android:layout_centerVertical="true" android:src="@drawable/arrow_down" app:tint="#64748B"/>
                     </RelativeLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -194,12 +194,12 @@
                             android:hint="حدد المنطقة أو اختر من الخريطة"
                             android:textSize="11sp"
                             android:paddingHorizontal="32dp"
-                            android:drawableRight="@drawable/back"
+                            android:drawableRight="@drawable/mylocation"
                             android:drawablePadding="8dp"/>
                     </RelativeLayout>
 
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="السعر" android:textColor="#64748B" android:textSize="12sp" android:layout_marginBottom="6dp"/>
-                    <EditText android:layout_width="match_parent" android:layout_height="48dp" android:background="@drawable/bg_input_field" android:hint="0.00" android:paddingHorizontal="12dp" android:textSize="13sp" android:drawableLeft="@drawable/back" android:inputType="numberDecimal"/>
+                    <EditText android:layout_width="match_parent" android:layout_height="48dp" android:background="@drawable/bg_input_field" android:hint="0.00" android:paddingHorizontal="12dp" android:textSize="13sp" android:drawableLeft="@drawable/currency_nis" android:inputType="numberDecimal"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

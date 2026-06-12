@@ -20,7 +20,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:fontFamily="@font/cairo_black"
             android:text="طلب مياه فردي"
             android:textColor="#0069B4"
             android:textSize="18sp" />
@@ -102,8 +101,7 @@
                         android:text="2"
                         android:textColor="#475569"
                         android:gravity="center"
-                        android:textSize="14sp"
-                        android:fontFamily="@font/cairo_regular" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -111,7 +109,6 @@
                         android:text="المراجعة"
                         android:textColor="#475569"
                         android:textSize="14sp"
-                        android:fontFamily="@font/cairo_regular"
                         android:layout_marginHorizontal="8dp" />
                 </LinearLayout>
 
@@ -123,7 +120,6 @@
                 android:text="💧 تحديد الكمية"
                 android:textColor="#1E293B"
                 android:textSize="18sp"
-                android:fontFamily="@font/cairo_black"
                 android:layout_marginBottom="12dp" />
 
             <LinearLayout
@@ -151,8 +147,7 @@
                             android:layout_height="wrap_content"
                             android:text="باللتر"
                             android:textColor="#0C4A6E"
-                            android:textSize="19sp"
-                            android:fontFamily="@font/cairo_black" />
+                            android:textSize="19sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -175,8 +170,7 @@
                             android:layout_height="wrap_content"
                             android:text="بعدد الخزانات"
                             android:textColor="#64748B"
-                            android:textSize="19sp"
-                            android:fontFamily="@font/cairo_regular" />
+                            android:textSize="19sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
@@ -223,8 +217,7 @@
                             android:layout_height="wrap_content"
                             android:text="500"
                             android:textColor="#0D63B3"
-                            android:textSize="22sp"
-                            android:fontFamily="@font/cairo_black" />
+                            android:textSize="22sp" />
                         <TextView
                             android:id="@+id/tvUnit"
                             android:layout_width="wrap_content"
@@ -232,7 +225,6 @@
                             android:text="لتر"
                             android:textColor="#0C4A6E"
                             android:textSize="19sp"
-                            android:fontFamily="@font/cairo_regular"
                             android:layout_marginEnd="6dp"
                             android:layout_gravity="center_vertical"/>
                     </LinearLayout>
@@ -263,7 +255,6 @@
                 android:text="🕒 موعد التوصيل"
                 android:textColor="#1E293B"
                 android:textSize="18sp"
-                android:fontFamily="@font/cairo_black"
                 android:layout_marginBottom="12dp" />
 
             <LinearLayout
@@ -287,7 +278,6 @@
                         android:text="الآن"
                         android:textColor="#0C4A6E"
                         android:textSize="15sp"
-                        android:fontFamily="@font/cairo_black"
                         android:layout_gravity="center" />
                 </androidx.cardview.widget.CardView>
 
@@ -306,7 +296,6 @@
                         android:text="اليوم (خلال 4 ساعات)"
                         android:textColor="#64748B"
                         android:textSize="15sp"
-                        android:fontFamily="@font/cairo_regular"
                         android:layout_gravity="center" />
                 </androidx.cardview.widget.CardView>
 
@@ -325,7 +314,6 @@
                         android:text="غداً صباحاً"
                         android:textColor="#64748B"
                         android:textSize="15sp"
-                        android:fontFamily="@font/cairo_regular"
                         android:layout_gravity="center" />
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
@@ -336,7 +324,6 @@
                 android:text="📍 موقع التوصيل"
                 android:textColor="#1E293B"
                 android:textSize="18sp"
-                android:fontFamily="@font/cairo_black"
                 android:layout_marginBottom="12dp" />
 
             <androidx.cardview.widget.CardView
@@ -369,7 +356,6 @@
                             android:text="🎯 تحديد موقعي"
                             android:textColor="#1E293B"
                             android:textSize="15sp"
-                            android:fontFamily="@font/cairo_regular"
                             android:paddingHorizontal="12dp"
                             android:layout_gravity="center" />
                     </androidx.cardview.widget.CardView>
@@ -386,7 +372,6 @@
                 android:textColorHint="#94A3B8"
                 android:textColor="#1E293B"
                 android:textSize="15sp"
-                android:fontFamily="@font/cairo_regular"
                 android:paddingHorizontal="12dp"
                 android:layout_marginBottom="20dp"
                 android:inputType="textPostalAddress"/>
@@ -397,7 +382,6 @@
                 android:text="💬 ملاحظات إضافية"
                 android:textColor="#1E293B"
                 android:textSize="18sp"
-                android:fontFamily="@font/cairo_black"
                 android:layout_marginBottom="12dp" />
 
             <EditText
@@ -411,7 +395,6 @@
                 android:textColor="#1E293B"
                 android:textSize="15sp"
                 android:gravity="top|start"
-                android:fontFamily="@font/cairo_regular"
                 android:padding="12dp"
                 android:inputType="textMultiLine"
                 android:layout_marginBottom="16dp"/>
@@ -438,7 +421,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:fontFamily="@font/cairo_black"
                 android:text="متابعة للمراجعة "
                 android:textColor="#FFFFFF"
                 android:textSize="15sp" />

@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:fontFamily="@font/cairo_black"
+
             android:text="إرواء"
             android:textColor="#0069B4"
             android:textSize="18sp" />
@@ -54,7 +54,6 @@
                 android:text="تسجيل مزود خدمة"
                 android:textColor="#0069B4"
                 android:textSize="20sp"
-                android:fontFamily="@font/cairo_black"
                 android:layout_gravity="right"
                 android:layout_marginTop="8dp" />
 
@@ -64,7 +63,6 @@
                 android:text="انضم إلى شبكة الموزعين المعتمدين لتأمين المياه للأحياء."
                 android:textColor="#666666"
                 android:textSize="13sp"
-                android:fontFamily="@font/cairo_regular"
                 android:layout_gravity="right"
                 android:layout_marginTop="2dp" />
 
@@ -88,7 +86,6 @@
                         android:text="الاسم الرباعي"
                         android:textColor="#444444"
                         android:textSize="13sp"
-                        android:fontFamily="@font/cairo_black"
                         android:layout_gravity="right" />
 
                     <EditText
@@ -98,7 +95,6 @@
                         android:layout_marginTop="4dp"
                         android:hint="أدخل اسمك الكامل كما في الهوية"
                         android:gravity="right|center_vertical"
-                        android:fontFamily="@font/cairo_regular"
                         android:textSize="13sp"
                         android:paddingHorizontal="12dp" />
 
@@ -108,7 +104,6 @@
                         android:text="رقم الهوية"
                         android:textColor="#444444"
                         android:textSize="13sp"
-                        android:fontFamily="@font/cairo_black"
                         android:layout_marginTop="12dp"
                         android:layout_gravity="right" />
 
@@ -119,7 +114,6 @@
                         android:layout_marginTop="4dp"
                         android:hint="9XXXXXXXX"
                         android:gravity="right|center_vertical"
-                        android:fontFamily="@font/cairo_regular"
                         android:textSize="13sp"
                         android:paddingHorizontal="12dp"
                         android:inputType="number" />
@@ -130,7 +124,6 @@
                         android:text="رقم الجوال"
                         android:textColor="#444444"
                         android:textSize="13sp"
-                        android:fontFamily="@font/cairo_black"
                         android:layout_marginTop="12dp"
                         android:layout_gravity="right" />
 
@@ -141,7 +134,6 @@
                         android:layout_marginTop="4dp"
                         android:hint="05XXXXXXXX"
                         android:gravity="right|center_vertical"
-                        android:fontFamily="@font/cairo_regular"
                         android:textSize="13sp"
                         android:paddingHorizontal="12dp"
                         android:inputType="phone" />
@@ -152,7 +144,6 @@
                         android:text="المنطقة الجغرافية للتوزيع"
                         android:textColor="#444444"
                         android:textSize="13sp"
-                        android:fontFamily="@font/cairo_black"
                         android:layout_marginTop="12dp"
                         android:layout_gravity="right" />
 
@@ -164,7 +155,6 @@
                         android:text="اختر المنطقة"
                         android:textColor="#A0AEC0"
                         android:gravity="right|center_vertical"
-                        android:fontFamily="@font/cairo_regular"
                         android:textSize="13sp"
                         android:paddingHorizontal="12dp"
                         android:drawableLeft="@android:drawable/arrow_down_float" />
@@ -185,7 +175,6 @@
                             android:text="بيانات الاعتماد المهني\nيرجى التأكد من مطابقة الكود للسجلات الرسمية بالبلدية."
                             android:textColor="#0369A1"
                             android:textSize="11sp"
-                            android:fontFamily="@font/cairo_regular"
                             android:gravity="right"
                             android:layout_marginRight="8dp"/>
 
@@ -202,7 +191,6 @@
                         android:text="كود الاعتماد من البلدية"
                         android:textColor="#444444"
                         android:textSize="13sp"
-                        android:fontFamily="@font/cairo_black"
                         android:layout_marginTop="12dp"
                         android:layout_gravity="right" />
 
@@ -213,7 +201,6 @@
                         android:layout_marginTop="4dp"
                         android:hint="MUN - 2024 - XXXX"
                         android:gravity="right|center_vertical"
-                        android:fontFamily="@font/cairo_regular"
                         android:textSize="13sp"
                         android:paddingHorizontal="12dp" />
 
@@ -223,7 +210,6 @@
                         android:text="نوع المعدات / المصدر"
                         android:textColor="#444444"
                         android:textSize="13sp"
-                        android:fontFamily="@font/cairo_black"
                         android:layout_marginTop="16dp"
                         android:layout_gravity="right" />
 
@@ -256,7 +242,6 @@
                                     android:layout_height="wrap_content"
                                     android:text="محطة محلية"
                                     android:textSize="11sp"
-                                    android:fontFamily="@font/cairo_regular"
                                     android:textColor="#0069B4"
                                     android:layout_marginTop="2dp"/>
                             </LinearLayout>
@@ -285,7 +270,6 @@
                                     android:layout_height="wrap_content"
                                     android:text="بئر"
                                     android:textSize="11sp"
-                                    android:fontFamily="@font/cairo_regular"
                                     android:textColor="#0069B4"
                                     android:layout_marginTop="2dp"/>
                             </LinearLayout>
@@ -313,7 +297,6 @@
                                     android:layout_height="wrap_content"
                                     android:text="صهريج"
                                     android:textSize="11sp"
-                                    android:fontFamily="@font/cairo_black"
                                     android:textColor="#0069B4"
                                     android:layout_marginTop="2dp"/>
                             </LinearLayout>
@@ -337,7 +320,6 @@
                             android:text="سيتم مراجعة طلبك وتدقيق كود الاعتماد من قبل فريق الإدارة والبلدية، قد يستغرق الرد 24-48 ساعة."
                             android:textColor="#555555"
                             android:textSize="11sp"
-                            android:fontFamily="@font/cairo_regular"
                             android:gravity="right"
                             android:layout_marginRight="8dp"/>
 
@@ -363,21 +345,22 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/cairo_black"
-                                android:text="تقديم الطلب"
-                                android:textColor="#FFFFFF"
-                                android:textSize="15sp" />
-
                             <ImageView
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
                                 android:layout_marginLeft="8dp"
+                                android:scaleX="-1"
                                 android:src="@android:drawable/ic_menu_send"
                                 app:tint="#FFFFFF" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="تقديم الطلب"
+                                android:textColor="#FFFFFF"
+                                android:textSize="15sp" />
+
+
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -398,7 +381,6 @@
                 android:text="تأمين الحياة.. مسؤولية ومشاركة"
                 android:textColor="#777777"
                 android:textSize="12sp"
-                android:fontFamily="@font/cairo_regular"
                 android:layout_gravity="center"
                 android:layout_marginTop="8dp"/>
 
