@@ -19,7 +19,6 @@
             android:text="إرواء"
             android:textColor="#0D6383"
             android:textSize="20sp"
-            android:fontFamily="@font/cairo_black"
             android:layout_centerInParent="true" />
 
         <ImageView
@@ -29,7 +28,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@drawable/back"
-            app:tint="#555555" />
+            app:tint="#0069B4" />
     </RelativeLayout>
 
     <ScrollView
@@ -72,7 +71,6 @@
                 android:text="كيف ترغب في استخدام إرواء؟"
                 android:textColor="#111111"
                 android:textSize="20sp"
-                android:fontFamily="@font/cairo_black"
                 android:layout_marginTop="20dp"
                 app:layout_constraintTop_toBottomOf="@id/cardLogoIcon"
                 app:layout_constraintStart_toStartOf="parent"
@@ -86,7 +84,6 @@
                 android:textColor="#777777"
                 android:textSize="13sp"
                 android:gravity="center"
-                android:fontFamily="@font/cairo_regular"
                 android:layout_marginTop="8dp"
                 app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
@@ -127,7 +124,6 @@
                         android:text="طالب خدمة (مواطن)"
                         android:textColor="#111111"
                         android:textSize="16sp"
-                        android:fontFamily="@font/cairo_black"
                         android:layout_marginTop="12dp" />
 
                     <TextView
@@ -137,7 +133,7 @@
                         android:textColor="#888888"
                         android:textSize="12sp"
                         android:gravity="center"
-                        android:fontFamily="@font/cairo_regular"
+
                         android:layout_marginTop="6dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -180,7 +176,6 @@
                         android:text="مقدم خدمة (صاحب بئر/صهريج)"
                         android:textColor="#111111"
                         android:textSize="16sp"
-                        android:fontFamily="@font/cairo_black"
                         android:layout_marginTop="12dp" />
 
                     <TextView
@@ -190,7 +185,7 @@
                         android:textColor="#888888"
                         android:textSize="12sp"
                         android:gravity="center"
-                        android:fontFamily="@font/cairo_regular"
+
                         android:layout_marginTop="6dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -211,7 +206,6 @@
                     android:text="المتابعة"
                     android:textColor="#A0AEC0"
                     android:textSize="15sp"
-                    android:fontFamily="@font/cairo_black"
                     android:layout_gravity="center"/>
             </androidx.cardview.widget.CardView>
 
@@ -221,7 +215,6 @@
                 android:text="يمكنك تغيير نوع الحساب لاحقاً من الإعدادات"
                 android:textColor="#777777"
                 android:textSize="12sp"
-                android:fontFamily="@font/cairo_regular"
                 android:layout_marginTop="16dp"
                 app:layout_constraintTop_toBottomOf="@id/btnNext"
                 app:layout_constraintStart_toStartOf="parent"

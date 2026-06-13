@@ -56,7 +56,6 @@
                 android:textColorHint="#999999"
                 android:textColor="#111111"
                 android:textSize="14sp"
-                android:fontFamily="@font/cairo_regular"
                 android:gravity="right|center_vertical" />
 
             <ImageView

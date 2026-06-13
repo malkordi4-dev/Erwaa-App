@@ -16,4 +16,10 @@
     <style name="RoundedImageViewStyle">
         <item name="cornerSize">14dp</item>
     </style>
+    <style name="CustomRatingBarTheme">
+        <item name="colorControlNormal">#CBDCE9</item> <item name="colorControlActivated">#FFB000</item> </style>
+        <style name="CircleImage">
+            <item name="cornerSize">50%</item>
+        </style>
+
 </resources>

@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,15 +16,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GraduationProject">
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".OnboardingActivity" />
+        <activity android:name=".ServicesActivity" />
+        <activity android:name=".ProviderDetailsActivity" />
+        <activity android:name=".Order_Checkout_Activity" />
+        <activity android:name=".Review_Order_Activity" />
+        <activity android:name=".Order_Status_Activity" />
+        <activity android:name=".Order_Accepted_Activity" />
+        <activity android:name=".Payment_Method_Activity" />
+        <activity android:name=".Monthly_Subscription_Activity" />
+        <activity android:name=".Group_Order_Activity" />
+        <activity android:name=".OnboardingActivity2" />
+        <activity android:name=".OnboardingActivity3" />
+        <activity android:name=".UserTypeActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".RegisterProviderActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".ResetPasswordActivity" />
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".MapExplorerActivity" />
     </application>
 
 </manifest>
