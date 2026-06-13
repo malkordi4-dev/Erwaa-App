@@ -39,8 +39,8 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@id/layoutFooterActions"
-        app:layout_constraintTop_toBottomOf="@id/layoutHeader">
+        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
+        app:layout_constraintBottom_toTopOf="@id/layoutFooterActions">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -98,6 +98,7 @@
                 app:cardElevation="2dp"
                 app:strokeColor="#475569"
                 app:strokeWidth="2dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
