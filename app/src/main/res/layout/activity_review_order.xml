@@ -81,7 +81,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_alignParentRight="true"
-                        android:layout_bottomOf="parent"
+                        android:layout_alignParentBottom="true"
                         android:layout_margin="16dp"
                         android:gravity="right">
                         <TextView

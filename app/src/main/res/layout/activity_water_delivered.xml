@@ -67,20 +67,21 @@
                 android:layout_marginTop="40dp"
                 app:cardCornerRadius="60dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#67E8F9"> <com.google.android.material.card.MaterialCardView
-                android:layout_width="54dp"
-                android:layout_height="54dp"
-                android:layout_gravity="center"
-                app:cardCornerRadius="27dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="#0069B4">
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                app:cardBackgroundColor="#67E8F9">
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/sure"
-                    app:tint="#FFFFFF" />
-            </com.google.android.material.card.MaterialCardView>
+                    app:cardCornerRadius="27dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="#0069B4">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/sure"
+                        app:tint="#FFFFFF" />
+                </com.google.android.material.card.MaterialCardView>
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
@@ -125,9 +126,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:gravity="right"
-                            android:orientation="horizontal"
-                            android:verticalGravity="center_vertical">
+                            android:gravity="right|center_vertical"
+                            android:orientation="horizontal">
 
                             <com.google.android.material.card.MaterialCardView
                                 android:id="@+id/cardDriverAvatar"
@@ -194,7 +194,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="#E2E8F0"
-                        android:layout_verticalMargin="16dp" />
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"

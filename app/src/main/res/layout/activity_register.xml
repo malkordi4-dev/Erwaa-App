@@ -122,6 +122,7 @@
                         android:paddingHorizontal="12dp"
                         android:gravity="center_vertical">
                         <EditText
+                            android:id="@+id/etFullName"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -134,6 +135,74 @@
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:src="@android:drawable/ic_menu_myplaces"
+                            app:tint="#888888" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="البريد الإلكتروني"
+                        android:textColor="#444444"
+                        android:textSize="13sp"
+                        android:layout_marginTop="16dp"
+                        android:layout_gravity="right" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_input_field"
+                        android:layout_marginTop="6dp"
+                        android:paddingHorizontal="12dp"
+                        android:gravity="center_vertical">
+                        <EditText
+                            android:id="@+id/etEmail"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:hint="example@mail.com"
+                            android:gravity="right|center_vertical"
+                            android:textSize="14sp"
+                            android:paddingHorizontal="8dp"
+                            android:inputType="textEmailAddress" />
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@android:drawable/ic_dialog_email"
+                            app:tint="#888888" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="كلمة المرور"
+                        android:textColor="#444444"
+                        android:textSize="13sp"
+                        android:layout_marginTop="16dp"
+                        android:layout_gravity="right" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_input_field"
+                        android:layout_marginTop="6dp"
+                        android:paddingHorizontal="12dp"
+                        android:gravity="center_vertical">
+                        <EditText
+                            android:id="@+id/etPassword"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:hint="********"
+                            android:gravity="right|center_vertical"
+                            android:textSize="14sp"
+                            android:paddingHorizontal="8dp"
+                            android:inputType="textPassword" />
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@android:drawable/ic_lock_idle_lock"
                             app:tint="#888888" />
                     </LinearLayout>
 
@@ -154,6 +223,7 @@
                         android:paddingHorizontal="12dp"
                         android:gravity="center_vertical">
                         <EditText
+                            android:id="@+id/etIdNumber"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -224,6 +294,7 @@
                         android:paddingHorizontal="12dp"
                         android:gravity="center_vertical">
                         <EditText
+                            android:id="@+id/etPhone"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"

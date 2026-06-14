@@ -12,7 +12,8 @@
         android:id="@+id/layoutHeader"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:paddingHorizontal="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -40,6 +41,8 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
+        app:layout_constraintBottom_toTopOf="@id/layoutFooterCancel"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
@@ -103,7 +106,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_horizontalMargin="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:text="يقوم المزود (محطة غزة المركزية) بمراجعة طلبك، ستتلقى إشعاراً فور القبول."
                 android:textColor="#64748B"
                 android:textSize="13sp"
@@ -114,7 +118,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#E2E8F0"
-                android:layout_verticalMargin="24dp" />
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"

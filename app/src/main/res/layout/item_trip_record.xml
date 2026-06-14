@@ -102,7 +102,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:background="@drawable/bg_badge_cash"
+                        android:background="@drawable/back"
                         android:paddingHorizontal="6dp"
                         android:paddingVertical="1dp"
                         android:text="نقداً"
@@ -116,7 +116,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_vertical="12dp"
                 android:background="#E2E8F0"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"/>
@@ -145,7 +144,7 @@
                     <ImageView
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:src="@drawable/check_circle"
+                        android:src="@drawable/back"
                         app:tint="#15803D"
                         android:layout_marginRight="12dp"/>
 
@@ -161,7 +160,7 @@
                     <ImageView
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:src="@drawable/water_drop"
+                        android:src="@drawable/back"
                         app:tint="#0069B4" />
                 </LinearLayout>
 
@@ -178,7 +177,7 @@
                     <ImageView
                         android:layout_width="14dp"
                         android:layout_height="14dp"
-                        android:src="@drawable/arrow_back"
+                        android:src="@drawable/back"
                         app:tint="#0069B4"
                         android:layout_marginRight="4dp"/>
 

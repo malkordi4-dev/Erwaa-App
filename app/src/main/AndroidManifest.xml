@@ -17,6 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GraduationProject">
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="YOUR_API_KEY_HERE" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -44,6 +48,9 @@
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".MapExplorerActivity" />
+        <activity android:name=".Track_Driver_Activity" />
+        <activity android:name=".Water_Delivered_Activity" />
+        <activity android:name=".Rate_Service_Activity" />
     </application>
 
 </manifest>

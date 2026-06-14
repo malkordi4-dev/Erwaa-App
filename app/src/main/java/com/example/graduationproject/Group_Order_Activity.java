@@ -50,7 +50,7 @@ public class Group_Order_Activity extends AppCompatActivity implements OnMapRead
         LinearLayout btnAddNeighbor = findViewById(R.id.btnAddNeighborClick);
         mapViewLocation = findViewById(R.id.mapViewLocation);
         etLocationDescription = findViewById(R.id.etLocationDescription);
-        android.view.View btnSubmit = findViewById(R.id.btnSubmitGroupOrder);
+        android.view.View btnSubmit = findViewById(R.id.btnSubmitOrder);
 
         // Back button
         btnBack.setOnClickListener(v -> finish());

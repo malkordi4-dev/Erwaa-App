@@ -3,38 +3,43 @@ package com.example.graduationproject;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 
-public class Order_Checkout_Activity extends AppCompatActivity implements OnMapReadyCallback {
+public class Order_Checkout_Activity extends AppCompatActivity {
 
     private MapView mapView;
-    private GoogleMap googleMap;
     private int quantity = 500;
     private String unit = "لتر";
     private String selectedTime = "الآن";
 
     private TextView tvQuantityCount, tvUnit;
     private CardView btnByLiter, btnByTank;
-    private CardView btnNow, btnTodayLater, btnTomorrow;
+    // Commented out since they are missing from the XML layout
+    // private CardView btnNow, btnTodayLater, btnTomorrow;
     private EditText etAddressDetails, etNotes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // OSMDroid configuration
+        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
+        
         setContentView(R.layout.activity_order_checkout);
 
         // Initialize Views
@@ -45,9 +50,7 @@ public class Order_Checkout_Activity extends AppCompatActivity implements OnMapR
         CardView btnPlus = findViewById(R.id.btnPlus);
         tvQuantityCount = findViewById(R.id.tvQuantityCount);
         tvUnit = findViewById(R.id.tvUnit);
-        btnNow = findViewById(R.id.btnNow);
-        btnTodayLater = findViewById(R.id.btnTodayLater);
-        btnTomorrow = findViewById(R.id.btnTomorrow);
+
         mapView = findViewById(R.id.mapView);
         CardView btnLocateMe = findViewById(R.id.btnLocateMe);
         etAddressDetails = findViewById(R.id.etAddressDetails);
@@ -64,33 +67,47 @@ public class Order_Checkout_Activity extends AppCompatActivity implements OnMapR
         // Quantity Adjustment
         btnMinus.setOnClickListener(v -> {
             if (quantity > 0) {
-                quantity -= (unit.equals("لتر") ? 50 : 1);
+                int step = (unit.equals("لتر") ? 50 : 1);
+                quantity -= step;
                 if (quantity < 0) quantity = 0;
                 updateQuantityText();
             }
         });
 
         btnPlus.setOnClickListener(v -> {
-            quantity += (unit.equals("لتر") ? 50 : 1);
+            int step = (unit.equals("لتر") ? 50 : 1);
+            quantity += step;
             updateQuantityText();
         });
 
-        // Delivery Time Selection
-        btnNow.setOnClickListener(v -> selectDeliveryTime("الآن", btnNow));
-        btnTodayLater.setOnClickListener(v -> selectDeliveryTime("اليوم", btnTodayLater));
-        btnTomorrow.setOnClickListener(v -> selectDeliveryTime("غداً", btnTomorrow));
+        // Delivery Time Selection (Commented out because buttons are missing in activity_order_checkout.xml)
+        /*
+        btnNow = findViewById(R.id.btnNow);
+        btnTodayLater = findViewById(R.id.btnTodayLater);
+        btnTomorrow = findViewById(R.id.btnTomorrow);
+        
+        if (btnNow != null) btnNow.setOnClickListener(v -> selectDeliveryTime("الآن", btnNow));
+        if (btnTodayLater != null) btnTodayLater.setOnClickListener(v -> selectDeliveryTime("اليوم", btnTodayLater));
+        if (btnTomorrow != null) btnTomorrow.setOnClickListener(v -> selectDeliveryTime("غداً", btnTomorrow));
+        */
 
-        // Map initialization
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+        // Osmdroid Map initialization
+        mapView.setTileSource(TileSourceFactory.MAPNIK);
+        mapView.setMultiTouchControls(true);
+        GeoPoint startPoint = new GeoPoint(31.5, 34.4); // Example: Gaza
+        mapView.getController().setZoom(15.0);
+        mapView.getController().setCenter(startPoint);
+
+        Marker startMarker = new Marker(mapView);
+        startMarker.setPosition(startPoint);
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        startMarker.setTitle("موقع التوصيل");
+        mapView.getOverlays().add(startMarker);
 
         btnLocateMe.setOnClickListener(v -> {
-            // In a real app, use FusedLocationProviderClient to get current location
             Toast.makeText(this, "جاري تحديد الموقع...", Toast.LENGTH_SHORT).show();
-            if (googleMap != null) {
-                LatLng dummyLocation = new LatLng(31.5, 34.4); // Example: Gaza
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(dummyLocation, 15));
-            }
+            // In a real app, use FusedLocationProviderClient to get current location
+            mapView.getController().animateTo(startPoint);
         });
 
         // Submit Order
@@ -116,71 +133,69 @@ public class Order_Checkout_Activity extends AppCompatActivity implements OnMapR
             quantity = 500;
             btnByLiter.setCardBackgroundColor(Color.parseColor("#BAE6FD"));
             btnByTank.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
-            ((TextView)((android.widget.LinearLayout)btnByLiter.getChildAt(0)).getChildAt(0)).setTextColor(Color.parseColor("#0C4A6E"));
-            ((TextView)((android.widget.LinearLayout)btnByTank.getChildAt(0)).getChildAt(0)).setTextColor(Color.parseColor("#64748B"));
+            
+            View layoutLiter = btnByLiter.getChildAt(0);
+            if (layoutLiter instanceof LinearLayout) {
+                View textLiter = ((LinearLayout) layoutLiter).getChildAt(0);
+                if (textLiter instanceof TextView) ((TextView) textLiter).setTextColor(Color.parseColor("#0C4A6E"));
+            }
+
+            View layoutTank = btnByTank.getChildAt(0);
+            if (layoutTank instanceof LinearLayout) {
+                View textTank = ((LinearLayout) layoutTank).getChildAt(0);
+                if (textTank instanceof TextView) ((TextView) textTank).setTextColor(Color.parseColor("#64748B"));
+            }
         } else {
             unit = "خزان";
             quantity = 1;
             btnByLiter.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
             btnByTank.setCardBackgroundColor(Color.parseColor("#BAE6FD"));
-            ((TextView)((android.widget.LinearLayout)btnByLiter.getChildAt(0)).getChildAt(0)).setTextColor(Color.parseColor("#64748B"));
-            ((TextView)((android.widget.LinearLayout)btnByTank.getChildAt(0)).getChildAt(0)).setTextColor(Color.parseColor("#0C4A6E"));
+
+            View layoutLiter = btnByLiter.getChildAt(0);
+            if (layoutLiter instanceof LinearLayout) {
+                View textLiter = ((LinearLayout) layoutLiter).getChildAt(0);
+                if (textLiter instanceof TextView) ((TextView) textLiter).setTextColor(Color.parseColor("#64748B"));
+            }
+
+            View layoutTank = btnByTank.getChildAt(0);
+            if (layoutTank instanceof LinearLayout) {
+                View textTank = ((LinearLayout) layoutTank).getChildAt(0);
+                if (textTank instanceof TextView) ((TextView) textTank).setTextColor(Color.parseColor("#0C4A6E"));
+            }
         }
         tvUnit.setText(unit);
         updateQuantityText();
     }
 
+    /*
     private void selectDeliveryTime(String time, CardView selectedBtn) {
         selectedTime = time;
+        if (btnNow == null || btnTodayLater == null || btnTomorrow == null) return;
+        
         // Reset all
         btnNow.setCardBackgroundColor(Color.parseColor("#F1F5F9"));
         btnTodayLater.setCardBackgroundColor(Color.parseColor("#F1F5F9"));
         btnTomorrow.setCardBackgroundColor(Color.parseColor("#F1F5F9"));
         
-        ((TextView)btnNow.getChildAt(0)).setTextColor(Color.parseColor("#64748B"));
-        ((TextView)btnTodayLater.getChildAt(0)).setTextColor(Color.parseColor("#64748B"));
-        ((TextView)btnTomorrow.getChildAt(0)).setTextColor(Color.parseColor("#64748B"));
+        if (btnNow.getChildAt(0) instanceof TextView) ((TextView)btnNow.getChildAt(0)).setTextColor(Color.parseColor("#64748B"));
+        if (btnTodayLater.getChildAt(0) instanceof TextView) ((TextView)btnTodayLater.getChildAt(0)).setTextColor(Color.parseColor("#64748B"));
+        if (btnTomorrow.getChildAt(0) instanceof TextView) ((TextView)btnTomorrow.getChildAt(0)).setTextColor(Color.parseColor("#64748B"));
 
         // Highlight selected
         selectedBtn.setCardBackgroundColor(Color.parseColor("#BAE6FD"));
-        ((TextView)selectedBtn.getChildAt(0)).setTextColor(Color.parseColor("#0C4A6E"));
+        if (selectedBtn.getChildAt(0) instanceof TextView) ((TextView)selectedBtn.getChildAt(0)).setTextColor(Color.parseColor("#0C4A6E"));
     }
-
-    @Override
-    public void onMapReady(GoogleMap map) {
-        googleMap = map;
-        LatLng defaultLoc = new LatLng(31.5, 34.4); // Example coordinates
-        googleMap.addMarker(new MarkerOptions().position(defaultLoc).title("موقع التوصيل"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLoc, 13));
-    }
+    */
 
     @Override
     protected void onResume() {
         super.onResume();
-        mapView.onResume();
+        if (mapView != null) mapView.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mapView.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
+        if (mapView != null) mapView.onPause();
     }
 }

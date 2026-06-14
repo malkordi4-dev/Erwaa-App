@@ -25,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String PREFS_NAME = "AppPrefs";
     private static final String KEY_EMAIL = "saved_email";
+    private static final String KEY_USER_ID = "user_id";
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
 
     @Override
@@ -88,11 +89,6 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(this, "يرجى إدخال بريد إلكتروني صحيح", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         AuthRequest request = new AuthRequest(email, password);
         SupabaseApi api = SupbaseClient.getClient().create(SupabaseApi.class);
 
@@ -100,8 +96,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    AuthResponse authResponse = response.body();
+                    
                     SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
                     editor.putString(KEY_EMAIL, email);
+                    editor.putString(KEY_USER_ID, authResponse.getUser().getId());
                     editor.putBoolean(KEY_IS_LOGGED_IN, true);
                     editor.apply();
 
@@ -111,21 +110,12 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    try {
-                        String errorBody = response.errorBody().string();
-                        Log.e("Supabase_Login", "Error: " + errorBody);
-                        SupabaseError error = new Gson().fromJson(errorBody, SupabaseError.class);
-                        String msg = (error != null) ? error.getDisplayMessage() : "البريد الإلكتروني أو كلمة المرور غير صحيحة";
-                        Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_LONG).show();
-                    } catch (Exception e) {
-                        Toast.makeText(LoginActivity.this, "فشل تسجيل الدخول", Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(LoginActivity.this, "البريد الإلكتروني أو كلمة المرور غير صحيحة", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<AuthResponse> call, Throwable t) {
-                Log.e("Supabase_Login", "Network Failure", t);
                 Toast.makeText(LoginActivity.this, "خطأ في الاتصال بالسيرفر", Toast.LENGTH_SHORT).show();
             }
         });

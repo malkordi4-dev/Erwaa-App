@@ -74,6 +74,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent">
                         <TextView
+                            android:id="@+id/tvOrderNumber"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="#ORD-8821"
@@ -133,6 +134,7 @@
                             android:textColor="#94A3B8"
                             android:textSize="11sp" />
                         <TextView
+                            android:id="@+id/tvQuantity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="20 لتر"
@@ -168,6 +170,7 @@
                             android:textColor="#94A3B8"
                             android:textSize="11sp" />
                         <TextView
+                            android:id="@+id/tvPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="15.00 ₪"
@@ -208,8 +211,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="28dp"
                 android:layout_gravity="center_horizontal"
-                style="@android:style/Widget.Material.RatingBar"
-                android:theme="@style/CustomRatingBarTheme"/>
+                style="@android:style/Widget.Material.RatingBar" />
 
             <TextView
                 android:layout_width="wrap_content"

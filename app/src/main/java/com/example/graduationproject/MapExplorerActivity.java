@@ -1,4 +1,5 @@
 
+
 package com.example.graduationproject;
 
 import android.content.Context;
@@ -36,11 +37,11 @@ public class MapExplorerActivity extends AppCompatActivity {
     private IMapController mapController;
     private EditText etSearch;
     private CardView bottomSheetCard;
-  // Changed from Button to View (CardView in XML)
+    // Changed from Button to View (CardView in XML)
 
     private BottomSheetBehavior<CardView> bottomSheetBehavior;
     private TextView tvLocationTitle, tvLocationAddress, tvNearestSource,move ,Confirm1 ;;
-     // Changed from TextView to View (ImageView in XML)
+    // Changed from TextView to View (ImageView in XML)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
