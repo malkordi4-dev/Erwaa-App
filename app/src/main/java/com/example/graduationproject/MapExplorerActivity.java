@@ -1,5 +1,3 @@
-
-
 package com.example.graduationproject;
 
 import android.content.Context;
@@ -37,24 +35,20 @@ public class MapExplorerActivity extends AppCompatActivity {
     private IMapController mapController;
     private EditText etSearch;
     private CardView bottomSheetCard;
-    // Changed from Button to View (CardView in XML)
-
     private BottomSheetBehavior<CardView> bottomSheetBehavior;
-    private TextView tvLocationTitle, tvLocationAddress, tvNearestSource,move ,Confirm1 ;;
-    // Changed from TextView to View (ImageView in XML)
+    private TextView tvLocationTitle, tvLocationAddress, tvNearestSource, move, Confirm1;
+    private View btnMyOrders; // زر جديد للذهاب لطلباتي
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // إعدادات مكتبة osmdroid للخرائط
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         Configuration.getInstance().setUserAgentValue(getPackageName());
 
         setContentView(R.layout.activity_map_explorer);
 
-        // ربط عناصر الواجهة المحدثة بالتصميم
         map = findViewById(R.id.map);
         move = findViewById(R.id.move1);
         Confirm1 = findViewById(R.id.btnConfirm1);
@@ -63,18 +57,26 @@ public class MapExplorerActivity extends AppCompatActivity {
         tvLocationAddress = findViewById(R.id.tvLocationAddress);
         tvNearestSource = findViewById(R.id.tvNearestSource);
         etSearch = findViewById(R.id.etSearch);
+        
+        // ربط الزر الموجود في التصميم (الذي كان move22 سابقاً أو أيقونة القائمة)
+        btnMyOrders = findViewById(R.id.move22);
 
-        // إعداد الـ BottomSheetBehavior وإخفاء البطاقة المنزلقة في البداية تماماً
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetCard);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        // Navigation to ProviderDetailsActivity
+        // الذهاب لصفحة طلباتي
+        if (btnMyOrders != null) {
+            btnMyOrders.setOnClickListener(v -> {
+                Intent intent = new Intent(MapExplorerActivity.this, My_Orders_Activity.class);
+                startActivity(intent);
+            });
+        }
+
         Confirm1.setOnClickListener(v -> {
             Intent intent = new Intent(MapExplorerActivity.this, ProviderDetailsActivity.class);
             startActivity(intent);
         });
 
-        // Navigation to UserTypeActivity
         move.setOnClickListener(v -> {
             Intent intent = new Intent(MapExplorerActivity.this, UserTypeActivity.class);
             startActivity(intent);
@@ -86,20 +88,18 @@ public class MapExplorerActivity extends AppCompatActivity {
             mapController = map.getController();
             mapController.setZoom(12.0);
             mapController.setCenter(new GeoPoint(31.5017, 34.4578));
-
-            // تفعيل أحداث الضغط على الخريطة
             setupMapEvents();
         }
 
         setupClickListeners();
-        showWaterPoints(); // تحميل نقاط المياه افتراضياً عند البدء
+        showWaterPoints();
     }
 
     private void setupMapEvents() {
         MapEventsReceiver mReceive = new MapEventsReceiver() {
             @Override
             public boolean singleTapConfirmedHelper(GeoPoint p) {
-                hideBottomCard(); // إخفاء البطاقة عند النقر على الخريطة
+                hideBottomCard();
                 return true;
             }
             @Override
@@ -109,11 +109,8 @@ public class MapExplorerActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-        // أزرار التحكم بالزوم
         findViewById(R.id.btnZoomIn).setOnClickListener(v -> mapController.zoomIn());
         findViewById(R.id.btnZoomOut).setOnClickListener(v -> mapController.zoomOut());
-
-        // زر موقعي الحالي
         findViewById(R.id.btnMyLocation).setOnClickListener(v -> {
             GeoPoint gazaCenter = new GeoPoint(31.5017, 34.4578);
             mapController.animateTo(gazaCenter);
@@ -121,12 +118,10 @@ public class MapExplorerActivity extends AppCompatActivity {
             hideBottomCard();
         });
 
-        // أزرار الفلترة والطبقات الجانبية
         findViewById(R.id.btnLayerWater).setOnClickListener(v -> showWaterPoints());
         findViewById(R.id.btnLayerTruck).setOnClickListener(v -> showTrucks());
         findViewById(R.id.btnLayerStorage).setOnClickListener(v -> showStorage());
 
-        // الاستماع لزر البحث في لوحة المفاتيح
         etSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 performSearch(etSearch.getText().toString());
@@ -138,21 +133,18 @@ public class MapExplorerActivity extends AppCompatActivity {
 
     private void addMarker(GeoPoint point, String title, String snippet, String sourceType, int iconRes) {
         if (map == null) return;
-
         Marker marker = new Marker(map);
         marker.setPosition(point);
         marker.setTitle(title);
         marker.setSnippet(snippet);
-
         marker.setRelatedObject(sourceType);
-
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        marker.setInfoWindow(null); // إلغاء الفقاعة الافتراضية
+        marker.setInfoWindow(null);
 
         if (iconRes != 0) {
             Drawable drawable = ContextCompat.getDrawable(this, iconRes);
             if (drawable != null) {
-                int sizeInPx = 45;
+                int sizeInPx = 60;
                 Bitmap bitmap = Bitmap.createBitmap(sizeInPx, sizeInPx, Bitmap.Config.ARGB_8888);
                 Canvas canvas = new Canvas(bitmap);
                 drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -162,12 +154,10 @@ public class MapExplorerActivity extends AppCompatActivity {
         }
 
         marker.setOnMarkerClickListener((m, mapView) -> {
-            String source = (m.getRelatedObject() != null) ? m.getRelatedObject().toString() : "غير محدد";
-            showBottomCard(m.getTitle(), m.getSnippet(), source);
+            showBottomCard(m.getTitle(), m.getSnippet(), m.getRelatedObject().toString());
             mapController.animateTo(m.getPosition());
             return true;
         });
-
         map.getOverlays().add(marker);
     }
 
@@ -210,27 +200,15 @@ public class MapExplorerActivity extends AppCompatActivity {
         tvLocationTitle.setText(title);
         tvLocationAddress.setText(address);
         tvNearestSource.setText(sourceType);
-
-        if (bottomSheetBehavior != null) {
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        }
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     private void hideBottomCard() {
-        if (bottomSheetBehavior != null) {
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        }
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if(map != null) map.onResume();
-    }
-
+    public void onResume() { super.onResume(); if(map != null) map.onResume(); }
     @Override
-    public void onPause() {
-        super.onPause();
-        if(map != null) map.onPause();
-    }
+    public void onPause() { super.onPause(); if(map != null) map.onPause(); }
 }

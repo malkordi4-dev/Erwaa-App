@@ -256,29 +256,20 @@
                         android:id="@+id/tvLocationMain"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="حي الرمال، شارع الجلاء، بالقرب من المسجد الكبير"
+                        android:text="جاري التحميل..."
                         android:textColor="#1E293B"
                         android:textSize="14sp"
                         android:layout_marginTop="8dp"
                         android:gravity="right" />
 
-                    <TextView
-                        android:id="@+id/tvLocationSub"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="غزة، فلسطين"
-                        android:textColor="#94A3B8"
-                        android:textSize="12sp"
-                        android:layout_marginTop="2dp"
-                        android:gravity="right" />
-
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="80dp"
+                        android:layout_height="120dp"
                         android:layout_marginTop="12dp"
                         app:cardCornerRadius="8dp"
                         app:cardElevation="0dp">
-                        <com.google.android.gms.maps.MapView
+                        <!-- تم التغيير إلى Osmdroid -->
+                        <org.osmdroid.views.MapView
                             android:id="@+id/mapViewReview"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" />
@@ -286,6 +277,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+            <!-- تفاصيل السعر (بقيت كما هي) -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -316,7 +308,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:text="مياه عذبة (500 لتر)"
+                            android:text="مياه عذبة"
                             android:textColor="#1E293B"
                             android:textSize="14sp"/>
                         <TextView
@@ -324,7 +316,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
-                            android:text="50.00 ILS"
+                            android:text="0.00 ILS"
                             android:textColor="#1E293B"
                             android:textSize="14sp"/>
                     </RelativeLayout>
@@ -359,33 +351,12 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_alignParentRight="true">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="الإجمالي التقديري"
-                                android:textColor="#1E293B"
-                                android:textSize="16sp"
-                                android:textStyle="bold"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="شامل كافة الرسوم والضرائب"
-                                android:textColor="#94A3B8"
-                                android:textSize="11sp"
-                                android:layout_marginTop="2dp"/>
-                        </LinearLayout>
                         <TextView
                             android:id="@+id/tvTotalPriceMain"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
-                            android:layout_centerVertical="true"
-                            android:text="60.00 ILS"
+                            android:text="0.00 ILS"
                             android:textColor="#0069B4"
                             android:textSize="18sp"
                             android:textStyle="bold"/>
@@ -393,14 +364,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="🛡️ دفع آمن وخدمة مضمونة من Hydro-Vitality"
-                android:textColor="#94A3B8"
-                android:textSize="11sp"
-                android:gravity="center"
-                android:layout_marginBottom="8dp"/>
         </LinearLayout>
     </ScrollView>
 
@@ -410,32 +373,18 @@
         android:layout_height="76dp"
         android:background="#FFFFFF"
         android:paddingHorizontal="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvFooterPriceText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="المبلغ الإجمالي"
-                android:textColor="#94A3B8"
-                android:textSize="11sp" />
-            <TextView
-                android:id="@+id/tvFooterPriceText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="60.00 ILS"
-                android:textColor="#0069B4"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginTop="2dp"/>
-        </LinearLayout>
+            android:layout_centerVertical="true"
+            android:text="0.00 ILS"
+            android:textColor="#0069B4"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
         <Button
             android:id="@+id/btnConfirmAndSend"
@@ -444,15 +393,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:text="تأكيد وإرسال الطلب"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:backgroundTint="#005B8A"
-            app:cornerRadius="12dp"
-
-            app:icon="@android:drawable/ic_menu_send"
-            app:iconGravity="textEnd"
-            app:iconPadding="8dp"
-            app:iconTint="#FFFFFF"/>
+            android:backgroundTint="#005B8A"/>
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

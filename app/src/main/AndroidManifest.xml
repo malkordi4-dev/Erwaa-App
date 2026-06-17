@@ -51,6 +51,8 @@
         <activity android:name=".Track_Driver_Activity" />
         <activity android:name=".Water_Delivered_Activity" />
         <activity android:name=".Rate_Service_Activity" />
+        <activity android:name=".My_Orders_Activity" />
+        <activity android:name=".WalletActivity" />
     </application>
 
 </manifest>

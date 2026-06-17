@@ -1,4 +1,3 @@
-
 package com.example.graduationproject;
 
 import android.content.Intent;
@@ -59,22 +58,21 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // 1. تجميع بيانات المستخدم داخل الخريطة لتمريرها مع الطلب
         Map<String, Object> userData = new HashMap<>();
         userData.put("full_name", fullName);
         userData.put("phone", phone);
         userData.put("id_number", idNumber);
-        userData.put("is_provider", false); // حساب طالب الخدمة الحالي
+        userData.put("is_provider", false);
 
-        // 2. إنشاء كائن الطلب وتمرير الخريطة كمعامل ثالث
         AuthRequest authRequest = new AuthRequest(email, password, userData);
-        SupabaseApi api = SupbaseClient.getClient().create(SupabaseApi.class);
+        
+        // تم التعديل هنا لتمرير (this)
+        SupabaseApi api = SupbaseClient.getClient(this).create(SupabaseApi.class);
 
         api.signUp(authRequest).enqueue(new Callback<AuthResponse>() {
             @Override
             public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    // السيرفر قام بإنشاء الحساب والملف معاً، نعرض رسالة النجاح مباشرة
                     showSuccessDialog();
                 } else {
                     handleError(response);
@@ -84,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<AuthResponse> call, Throwable t) {
                 Log.e("Register", "Failure: " + t.getMessage());
-                Toast.makeText(RegisterActivity.this, "خطأ في الاتصال بالسيرفر، تأكد من الإنترنت", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegisterActivity.this, "خطأ في الاتصال بالسيرفر", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -104,12 +102,10 @@ public class RegisterActivity extends AppCompatActivity {
     private void handleError(Response<AuthResponse> response) {
         try {
             String errorBody = response.errorBody().string();
-            Log.e("RegisterError", "Raw Error from Supabase: " + errorBody);
-
             SupabaseError error = new Gson().fromJson(errorBody, SupabaseError.class);
             Toast.makeText(RegisterActivity.this, error.getDisplayMessage(), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-            Toast.makeText(RegisterActivity.this, "فشل إنشاء الحساب، تأكد من البيانات", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "فشل إنشاء الحساب", Toast.LENGTH_SHORT).show();
         }
     }
 }

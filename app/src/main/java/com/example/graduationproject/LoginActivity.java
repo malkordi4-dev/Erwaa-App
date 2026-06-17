@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         AuthRequest request = new AuthRequest(email, password);
-        SupabaseApi api = SupbaseClient.getClient().create(SupabaseApi.class);
+        SupabaseApi api = SupbaseClient.getClient(this).create(SupabaseApi.class);
 
         api.signIn(request).enqueue(new Callback<AuthResponse>() {
             @Override
@@ -101,6 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
                     editor.putString(KEY_EMAIL, email);
                     editor.putString(KEY_USER_ID, authResponse.getUser().getId());
+                    editor.putString("access_token", authResponse.getAccessToken()); // Save access token for RLS
                     editor.putBoolean(KEY_IS_LOGGED_IN, true);
                     editor.apply();
 
