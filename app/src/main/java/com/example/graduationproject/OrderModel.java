@@ -18,6 +18,9 @@ public class OrderModel {
     @SerializedName("status")
     private String status; // 'pending', 'accepted', 'on_way', 'delivered', 'cancelled'
 
+    @SerializedName("order_type")
+    private String orderType; // 'single', 'monthly', 'group'
+
     @SerializedName("quantity")
     private int quantity;
 
@@ -56,6 +59,8 @@ public class OrderModel {
     public void setServiceId(Integer serviceId) { this.serviceId = serviceId; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    public String getOrderType() { return orderType; }
+    public void setOrderType(String orderType) { this.orderType = orderType; }
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
     public String getUnit() { return unit; }

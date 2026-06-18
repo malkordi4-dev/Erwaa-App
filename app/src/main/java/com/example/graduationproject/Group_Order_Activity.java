@@ -1,5 +1,6 @@
 package com.example.graduationproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.widget.EditText;
@@ -35,13 +36,13 @@ public class Group_Order_Activity extends AppCompatActivity implements OnMapRead
     private NeighborAdapter adapter;
     private List<Neighbor> neighborList = new ArrayList<>();
     private int totalLiters = 0;
+    private LatLng selectedLocation = new LatLng(31.5, 34.4); 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_order);
 
-        // Initialize Views
         ImageView btnBack = findViewById(R.id.btnBack);
         etCoordinatorName = findViewById(R.id.etCoordinatorName);
         etCoordinatorPhone = findViewById(R.id.etCoordinatorPhone);
@@ -52,10 +53,8 @@ public class Group_Order_Activity extends AppCompatActivity implements OnMapRead
         etLocationDescription = findViewById(R.id.etLocationDescription);
         android.view.View btnSubmit = findViewById(R.id.btnSubmitOrder);
 
-        // Back button
         btnBack.setOnClickListener(v -> finish());
 
-        // Setup RecyclerView
         adapter = new NeighborAdapter(neighborList, position -> {
             totalLiters -= neighborList.get(position).getQuantity();
             neighborList.remove(position);
@@ -65,26 +64,41 @@ public class Group_Order_Activity extends AppCompatActivity implements OnMapRead
         rvNeighborsList.setLayoutManager(new LinearLayoutManager(this));
         rvNeighborsList.setAdapter(adapter);
 
-        // Add Neighbor Button
         btnAddNeighbor.setOnClickListener(v -> showAddNeighborDialog());
 
-        // Map setup
         mapViewLocation.onCreate(savedInstanceState);
         mapViewLocation.getMapAsync(this);
 
-        // Submit Button
         btnSubmit.setOnClickListener(v -> {
             if (validateInputs()) {
-                Toast.makeText(this, "تم إرسال الطلب الجماعي للحي بنجاح", Toast.LENGTH_LONG).show();
-                finish();
+                Intent intent = new Intent(this, Review_Order_Activity.class);
+                intent.putExtra("service_id", 3); // معرف الخدمة الجماعية في SQL
+                intent.putExtra("quantity", totalLiters);
+                intent.putExtra("unit", "لتر (مبادرة جماعية)");
+                intent.putExtra("address", etLocationDescription.getText().toString());
+                
+                // بناء ملاحظات تحتوي على تفاصيل الجيران لتخزينها في حقل notes
+                StringBuilder notesBuilder = new StringBuilder();
+                notesBuilder.append("المنسق: ").append(etCoordinatorName.getText().toString())
+                            .append("\nالهاتف: ").append(etCoordinatorPhone.getText().toString())
+                            .append("\nالجيران: ");
+                for(Neighbor n : neighborList) {
+                    notesBuilder.append(n.getName()).append(" (").append(n.getQuantity()).append("لتر)، ");
+                }
+                
+                intent.putExtra("notes", notesBuilder.toString());
+                intent.putExtra("lat", selectedLocation.latitude);
+                intent.putExtra("lng", selectedLocation.longitude);
+                intent.putExtra("scheduledTime", "طلب فوري");
+                
+                startActivity(intent);
             }
         });
     }
 
     private void showAddNeighborDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("إضافة جار جديد");
-
+        builder.setTitle("إضافة جار للمبادرة");
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(50, 40, 50, 10);
@@ -94,28 +108,23 @@ public class Group_Order_Activity extends AppCompatActivity implements OnMapRead
         layout.addView(inputName);
 
         final EditText inputQty = new EditText(this);
-        inputQty.setHint("الكمية (لتر)");
+        inputQty.setHint("الكمية المطلوبة (لتر)");
         inputQty.setInputType(InputType.TYPE_CLASS_NUMBER);
         layout.addView(inputQty);
 
         builder.setView(layout);
-
         builder.setPositiveButton("إضافة", (dialog, which) -> {
             String name = inputName.getText().toString().trim();
             String qtyStr = inputQty.getText().toString().trim();
-
             if (!name.isEmpty() && !qtyStr.isEmpty()) {
                 int qty = Integer.parseInt(qtyStr);
                 neighborList.add(new Neighbor(name, qty));
                 totalLiters += qty;
                 adapter.notifyItemInserted(neighborList.size() - 1);
                 updateTotalBadge();
-            } else {
-                Toast.makeText(this, "يرجى ملء جميع الحقول", Toast.LENGTH_SHORT).show();
             }
         });
-        builder.setNegativeButton("إلغاء", (dialog, which) -> dialog.cancel());
-
+        builder.setNegativeButton("إلغاء", null);
         builder.show();
     }
 
@@ -124,16 +133,8 @@ public class Group_Order_Activity extends AppCompatActivity implements OnMapRead
     }
 
     private boolean validateInputs() {
-        if (etCoordinatorName.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "يرجى إدخال اسم المنسق", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (etCoordinatorPhone.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "يرجى إدخال رقم الجوال", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (neighborList.isEmpty()) {
-            Toast.makeText(this, "يرجى إضافة جار واحد على الأقل", Toast.LENGTH_SHORT).show();
+        if (etCoordinatorName.getText().toString().trim().isEmpty() || neighborList.isEmpty()) {
+            Toast.makeText(this, "يرجى إكمال بيانات المبادرة", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -142,39 +143,14 @@ public class Group_Order_Activity extends AppCompatActivity implements OnMapRead
     @Override
     public void onMapReady(GoogleMap map) {
         googleMap = map;
-        LatLng defaultLoc = new LatLng(31.5, 34.4); // Gaza example
-        googleMap.addMarker(new MarkerOptions().position(defaultLoc).title("نقطة تجمع الصهريج"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLoc, 15));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, 15));
+        googleMap.setOnMapClickListener(latLng -> {
+            selectedLocation = latLng;
+            googleMap.clear();
+            googleMap.addMarker(new MarkerOptions().position(latLng).title("نقطة التجمع"));
+        });
     }
 
-    // MapView Lifecycle methods
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mapViewLocation.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mapViewLocation.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapViewLocation.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapViewLocation.onLowMemory();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapViewLocation.onSaveInstanceState(outState);
-    }
+    @Override protected void onResume() { super.onResume(); mapViewLocation.onResume(); }
+    @Override protected void onPause() { super.onPause(); mapViewLocation.onPause(); }
 }

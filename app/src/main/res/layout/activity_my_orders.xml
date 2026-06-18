@@ -90,6 +90,7 @@
                     app:tint="#94A3B8" />
 
                 <EditText
+                    android:id="@+id/etSearchInput"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginRight="8dp"
@@ -167,8 +168,7 @@
         android:orientation="horizontal"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:strokeColor="#E2E8F0"
-        app:strokeWidth="1dp">
+        android:elevation="8dp">
 
         <LinearLayout
             android:id="@+id/navProfile"
@@ -182,7 +182,8 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/user" />
+                android:src="@drawable/user"
+                app:tint="#94A3B8" />
             <TextView android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="حسابي"
@@ -208,10 +209,13 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/navOrders"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center">
             <ImageView
                 android:layout_width="24dp"

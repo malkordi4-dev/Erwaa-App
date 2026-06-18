@@ -1,6 +1,8 @@
 package com.example.graduationproject;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -9,55 +11,76 @@ import com.google.android.material.button.MaterialButton;
 
 public class Order_Details_Activity extends AppCompatActivity {
 
-    private TextView tvOrderId, tvStatusText, tvCustomerName, tvAddress, tvWaterAmount, tvTotalPrice;
-    private MaterialButton btnConfirmArrival, btnCompleteTask;
+    private TextView tvOrderId, tvStatusBadge, tvCustomerName, tvAddress, tvUnit, tvQuantity, tvTotalPrice;
+    private MaterialButton btnCancelOrder, btnTrackOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_details);
 
-        // Initialize Views
+        // ربط العناصر
         tvOrderId = findViewById(R.id.tvOrderId);
+        tvStatusBadge = findViewById(R.id.tvStatusBadge);
         tvCustomerName = findViewById(R.id.tvCustomerName);
+        tvAddress = findViewById(R.id.tvAddress);
+        tvUnit = findViewById(R.id.tvUnit);
+        tvQuantity = findViewById(R.id.tvQuantity);
         tvTotalPrice = findViewById(R.id.tvTotalPrice);
-        
-        // Note: Some IDs are inferred from your XML layout
+        btnCancelOrder = findViewById(R.id.btnConfirmArrival); // ID من XML لزر الإلغاء
+        btnTrackOrder = findViewById(R.id.btnCompleteTask);    // ID من XML لزر التتبع
         ImageView btnBack = findViewById(R.id.btnBack);
-        btnConfirmArrival = findViewById(R.id.btnConfirmArrival);
-        btnCompleteTask = findViewById(R.id.btnCompleteTask);
 
+        // العودة للخلف
         btnBack.setOnClickListener(v -> finish());
 
-        // Get data from Intent
-        String orderId = getIntent().getStringExtra("order_id");
-        String status = getIntent().getStringExtra("status");
-        double price = getIntent().getDoubleExtra("price", 0.0);
-        int quantity = getIntent().getIntExtra("quantity", 0);
-        String unit = getIntent().getStringExtra("unit");
-        String address = getIntent().getStringExtra("address");
+        // استقبال البيانات من Intent
+        Intent intent = getIntent();
+        String orderId = intent.getStringExtra("order_id");
+        String status = intent.getStringExtra("status");
+        double price = intent.getDoubleExtra("price", 0.0);
+        int quantity = intent.getIntExtra("quantity", 0);
+        String unit = intent.getStringExtra("unit");
+        String address = intent.getStringExtra("address");
 
-        // Set Data to UI
+        // عرض البيانات
         if (orderId != null) tvOrderId.setText("#" + (orderId.length() > 8 ? orderId.substring(0, 8) : orderId));
         tvTotalPrice.setText(String.format("%.2f ₪", price));
+        tvQuantity.setText(String.valueOf(quantity));
+        tvUnit.setText(unit != null ? unit : "لتر");
+        tvAddress.setText(address != null ? "📍 " + address : "📍 العنوان غير محدد");
         
-        // Find quantity text view (it was nested in a card in your XML)
-        // We'll update the most relevant ones
-        if (address != null) {
-            // If you have a specific ID for address text, use it here. 
-            // Based on your XML, it's a TextView with text "📍 الرمال، شارع الوحدة"
-            // I'll assume you might want to find it by its hardcoded text or add an ID
+        // تحديث حالة الطلب
+        updateStatusUI(status);
+
+        // برمجة الأزرار
+        btnCancelOrder.setOnClickListener(v -> {
+            Toast.makeText(this, "سيتم مراجعة طلب الإلغاء من قبل الإدارة", Toast.LENGTH_LONG).show();
+        });
+
+        btnTrackOrder.setOnClickListener(v -> {
+            Intent trackIntent = new Intent(this, Track_Driver_Activity.class);
+            startActivity(trackIntent);
+        });
+    }
+
+    private void updateStatusUI(String status) {
+        if (status == null) return;
+        switch (status) {
+            case "pending":
+                tvStatusBadge.setText("● قيد الانتظار");
+                btnTrackOrder.setVisibility(View.GONE); // لا يمكن التتبع حتى يقبل السائق
+                break;
+            case "accepted":
+            case "on_way":
+                tvStatusBadge.setText("● في الطريق");
+                btnTrackOrder.setVisibility(View.VISIBLE);
+                break;
+            case "delivered":
+                tvStatusBadge.setText("● تم التوصيل");
+                btnTrackOrder.setVisibility(View.GONE);
+                btnCancelOrder.setVisibility(View.GONE);
+                break;
         }
-
-        btnConfirmArrival.setOnClickListener(v -> {
-            Toast.makeText(this, "تم إرسال إشعار بالوصول للموقع", Toast.LENGTH_SHORT).show();
-            btnConfirmArrival.setEnabled(false);
-            btnConfirmArrival.setText("تم تأكيد الوصول");
-        });
-
-        btnCompleteTask.setOnClickListener(v -> {
-            Toast.makeText(this, "تم إتمام الطلب بنجاح. شكراً لك!", Toast.LENGTH_LONG).show();
-            finish();
-        });
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,6 +20,7 @@ public class ProviderDetailsActivity extends AppCompatActivity {
     private MapView mapView;
     private Button btnSelectService;
     private ImageView btnBack;
+    private TextView tvProviderName, tvLocation, tvPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,28 @@ public class ProviderDetailsActivity extends AppCompatActivity {
         btnSelectService = findViewById(R.id.btnSelectService);
         btnBack = findViewById(R.id.btnBack);
         mapView = findViewById(R.id.mapView);
+        tvProviderName = findViewById(R.id.tvProviderName);
+        tvLocation = findViewById(R.id.tvLocation);
+        tvPrice = findViewById(R.id.tvPrice);
+
+        // Get Data from Intent
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("provider_name");
+        String address = intent.getStringExtra("address");
+        String sourceType = intent.getStringExtra("source_type");
+        double lat = intent.getDoubleExtra("lat", 31.51);
+        double lng = intent.getDoubleExtra("lng", 34.45);
+
+        // Update UI with received data
+        if (name != null) tvProviderName.setText(name);
+        if (address != null) tvLocation.setText(address);
+        
+        // Update price based on source type (example logic)
+        if (sourceType != null && sourceType.contains("صهريج")) {
+            tvPrice.setText("30 شيكل / كوب");
+        } else if (sourceType != null && sourceType.contains("بئر")) {
+            tvPrice.setText("15 شيكل / كوب");
+        }
 
         // Back button
         if (btnBack != null) {
@@ -42,18 +66,18 @@ public class ProviderDetailsActivity extends AppCompatActivity {
         // Select Service button
         if (btnSelectService != null) {
             btnSelectService.setOnClickListener(v -> {
-                Intent intent = new Intent(ProviderDetailsActivity.this, ServicesActivity.class);
-                startActivity(intent);
+                Intent sIntent = new Intent(ProviderDetailsActivity.this, ServicesActivity.class);
+                sIntent.putExtra("provider_name", name);
+                startActivity(sIntent);
             });
         }
 
-        // Initialize Map
+        // Initialize Map with provider location
         if (mapView != null) {
             mapView.setTileSource(TileSourceFactory.MAPNIK);
             mapView.setMultiTouchControls(true);
             
-            // Example location for the provider (Gaza)
-            GeoPoint providerLocation = new GeoPoint(31.51, 34.45); 
+            GeoPoint providerLocation = new GeoPoint(lat, lng); 
             mapView.getController().setZoom(16.0);
             mapView.getController().setCenter(providerLocation);
 
@@ -61,7 +85,7 @@ public class ProviderDetailsActivity extends AppCompatActivity {
             Marker marker = new Marker(mapView);
             marker.setPosition(providerLocation);
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            marker.setTitle("موقع المزود");
+            marker.setTitle(name);
             mapView.getOverlays().add(marker);
         }
     }

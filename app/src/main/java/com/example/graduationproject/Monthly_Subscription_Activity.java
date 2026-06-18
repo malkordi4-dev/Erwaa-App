@@ -1,5 +1,6 @@
 package com.example.graduationproject;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +22,7 @@ public class Monthly_Subscription_Activity extends AppCompatActivity {
     
     private int selectedPlanPrice = 45;
     private String selectedPlanName = "الباقة الأساسية";
+    private int selectedQuantity = 1000; // Default for basic
     private String selectedFrequency = "كل أسبوع";
     private String selectedDay = "السبت";
 
@@ -59,9 +61,9 @@ public class Monthly_Subscription_Activity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         // Plan Selection
-        planBasic.setOnClickListener(v -> selectPlan(45, "الباقة الأساسية", planBasic));
-        planStandard.setOnClickListener(v -> selectPlan(90, "الباقة القياسية", planStandard));
-        planFamily.setOnClickListener(v -> selectPlan(160, "الباقة العائلية", planFamily));
+        planBasic.setOnClickListener(v -> selectPlan(45, "الباقة الأساسية", 1000, planBasic));
+        planStandard.setOnClickListener(v -> selectPlan(90, "الباقة القياسية", 2500, planStandard));
+        planFamily.setOnClickListener(v -> selectPlan(160, "الباقة العائلية", 5000, planFamily));
 
         // Frequency Selection
         freqWeekly.setOnClickListener(v -> selectFrequency("كل أسبوع", freqWeekly, freqBiWeekly));
@@ -73,7 +75,7 @@ public class Monthly_Subscription_Activity extends AppCompatActivity {
             dayCards[i].setOnClickListener(v -> selectDay(index));
         }
 
-        // Time Selection (Simple Toggle for Demo)
+        // Time Selection
         btnSelectTime.setOnClickListener(v -> {
             if (tvSelectedTime.getText().toString().contains("الصباحية")) {
                 tvSelectedTime.setText("🕒  الفترة المسائية (1:00 م - 5:00 م)");
@@ -82,51 +84,51 @@ public class Monthly_Subscription_Activity extends AppCompatActivity {
             }
         });
 
-        // Confirm Button
+        // Confirm Button - Navigate to Review_Order_Activity
         btnConfirmSubscription.setOnClickListener(v -> {
-            String message = "تم تأكيد " + selectedPlanName + " (" + selectedFrequency + ") يوم " + selectedDay;
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-            finish();
+            Intent intent = new Intent(this, Review_Order_Activity.class);
+            intent.putExtra("service_id", 2); // معرف الاشتراك الشهري
+            intent.putExtra("quantity", selectedQuantity);
+            intent.putExtra("unit", "لتر (اشتراك)");
+            intent.putExtra("address", "موقع المشترك المسجل");
+            intent.putExtra("totalPrice", (double)selectedPlanPrice);
+            intent.putExtra("notes", "اشتراك شهري: " + selectedPlanName + " - " + selectedFrequency);
+            intent.putExtra("scheduledTime", selectedDay + " | " + tvSelectedTime.getText().toString().replace("🕒  ", ""));
+            intent.putExtra("lat", 31.51); 
+            intent.putExtra("lng", 34.44); 
+            startActivity(intent);
         });
     }
 
-    private void selectPlan(int price, String name, CardView selectedCard) {
+    private void selectPlan(int price, String name, int qty, CardView selectedCard) {
         selectedPlanPrice = price;
         selectedPlanName = name;
+        selectedQuantity = qty;
 
-        // Reset all plans background
         planBasic.setCardBackgroundColor(Color.WHITE);
         planStandard.setCardBackgroundColor(Color.WHITE);
         planFamily.setCardBackgroundColor(Color.WHITE);
 
-        // Highlight selected
         selectedCard.setCardBackgroundColor(Color.parseColor("#E0F2FE"));
 
-        // Update Prices
         tvSummaryPrice.setText(price + ".00 ₪");
         tvBottomPrice.setText(price + ".00 ₪");
     }
 
     private void selectFrequency(String freq, CardView selected, CardView unselected) {
         selectedFrequency = freq;
-        
         selected.setCardBackgroundColor(Color.WHITE);
         ((TextView)selected.getChildAt(0)).setTextColor(Color.parseColor("#0D63B3"));
-        
         unselected.setCardBackgroundColor(Color.TRANSPARENT);
         ((TextView)unselected.getChildAt(0)).setTextColor(Color.parseColor("#64748B"));
     }
 
     private void selectDay(int index) {
         selectedDay = dayTexts[index].getText().toString();
-        
-        // Reset all days
         for (int i = 0; i < dayCards.length; i++) {
             dayCards[i].setCardBackgroundColor(Color.WHITE);
             dayTexts[i].setTextColor(Color.parseColor("#64748B"));
         }
-
-        // Highlight selected day
         dayCards[index].setCardBackgroundColor(Color.parseColor("#0D63B3"));
         dayTexts[index].setTextColor(Color.WHITE);
     }

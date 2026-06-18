@@ -11,25 +11,26 @@ public class WalletActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
 
-       // setupBottomNavigation();
+        setupBottomNavigation();
     }
-    /*
 
     private void setupBottomNavigation() {
-        findViewById(R.id.bottomNavOrders).getChildAt(0).setOnClickListener(v -> {
-            startActivity(new Intent(this, HomeActivity.class));
-        });
-
-        findViewById(R.id.bottomNavOrders).getChildAt(2).setOnClickListener(v -> {
-            startActivity(new Intent(this, My_Orders_Activity.class));
-        });
-
-        findViewById(R.id.bottomNavOrders).getChildAt(3).setOnClickListener(v -> {
+        findViewById(R.id.navHome).setOnClickListener(v -> {
             Intent intent = new Intent(this, MapExplorerActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         });
-    }
 
-     */
+        findViewById(R.id.navWallet).setOnClickListener(v -> {
+            // Already on Wallet activity
+        });
+
+        findViewById(R.id.navOrders).setOnClickListener(v -> {
+            startActivity(new Intent(this, My_Orders_Activity.class));
+        });
+
+        findViewById(R.id.navProfile).setOnClickListener(v -> {
+            startActivity(new Intent(this, HomeActivity.class));
+        });
+    }
 }

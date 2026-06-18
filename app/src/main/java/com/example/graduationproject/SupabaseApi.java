@@ -1,13 +1,10 @@
 package com.example.graduationproject;
 
 import java.util.List;
-import java.util.Map;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface SupabaseApi {
@@ -25,9 +22,19 @@ public interface SupabaseApi {
     Call<List<OrderModel>> getOrders(
             @Query("customer_id") String customerIdFilter, 
             @Query("select") String select,
-            @Query("order") String order // for sorting like "created_at.desc"
+            @Query("order") String order
     );
 
     @GET("rest/v1/services")
     Call<List<ServiceModel>> getServices(@Query("select") String select);
+
+    // تم تعديل status إلى provider_type ليتناسب مع بحث الخريطة
+    @GET("rest/v1/providers")
+    Call<List<ProviderModel>> getProviders(
+            @Query("select") String select,
+            @Query("provider_type") String typeFilter
+    );
+
+    @POST("rest/v1/services")
+    Call<Void> insertServices(@Body List<ServiceModel> services);
 }

@@ -11,7 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
 
@@ -39,18 +42,27 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         OrderModel order = orders.get(position);
 
-        holder.tvCustomerName.setText(order.getProviderId() != null ? "مزود الخدمة #" + order.getProviderId() : "جاري البحث عن مزود");
+        // اسم المزود أو نوع الخدمة
+        holder.tvCustomerName.setText(order.getOrderType().equals("monthly") ? "اشتراك شهري" : "طلب مياه عذب");
         
-        String shortId = order.getId() != null ? order.getId().substring(0, 8) : "---";
-        holder.tvOrderMeta.setText("طلب #" + shortId + " • " + (order.getScheduledTime() != null ? order.getScheduledTime() : "الآن"));
+        // رقم الطلب والوقت
+        String shortId = order.getId() != null && order.getId().length() > 8 ? order.getId().substring(0, 8) : "---";
+        holder.tvOrderMeta.setText("طلب #" + shortId + " • " + order.getScheduledTime());
+        
+        // السعر والكمية
         holder.tvOrderPrice.setText(String.format("%.2f ₪", order.getTotalPrice()));
-        holder.tvWaterAmount.setText(order.getQuantity() + " " + (order.getUnit() != null ? order.getUnit() : "لتر"));
+        holder.tvWaterAmount.setText(order.getQuantity() + " " + order.getUnit());
         
+        // حالة الطلب
         String status = order.getStatus();
         holder.tvStatusText.setText(getStatusArabic(status));
         holder.tvStatusText.setTextColor(getStatusColor(status));
 
-        // Use the detail button inside item_trip_record
+        // معالجة التاريخ العلوي (Section Date)
+        if (order.getCreatedAt() != null) {
+            holder.tvSectionDate.setText(order.getCreatedAt().split("T")[0]); 
+        }
+
         holder.btnGoToDetails.setOnClickListener(v -> {
             Intent intent = new Intent(context, Order_Details_Activity.class);
             intent.putExtra("order_id", order.getId());
@@ -61,30 +73,28 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             intent.putExtra("address", order.getAddressDetails());
             context.startActivity(intent);
         });
-        
-        holder.itemView.setOnClickListener(v -> holder.btnGoToDetails.performClick());
     }
 
     private String getStatusArabic(String status) {
-        if (status == null) return "غير معروف";
+        if (status == null) return "قيد المعالجة";
         switch (status) {
             case "pending": return "قيد الانتظار";
-            case "accepted": return "مقبول";
+            case "accepted": return "تم القبول";
             case "on_way": return "في الطريق";
             case "delivered": return "تم التوصيل";
             case "cancelled": return "ملغي";
-            default: return status;
+            default: return "نشط";
         }
     }
 
     private int getStatusColor(String status) {
-        if (status == null) return Color.GRAY;
+        if (status == null) return Color.parseColor("#F59E0B");
         switch (status) {
-            case "pending": return Color.parseColor("#F59E0B"); // Orange
-            case "accepted": return Color.parseColor("#3B82F6"); // Blue
-            case "on_way": return Color.parseColor("#10B981"); // Green
-            case "delivered": return Color.parseColor("#15803D"); // Dark Green
-            case "cancelled": return Color.parseColor("#EF4444"); // Red
+            case "pending": return Color.parseColor("#F59E0B");
+            case "accepted": return Color.parseColor("#3B82F6");
+            case "on_way": return Color.parseColor("#10B981");
+            case "delivered": return Color.parseColor("#15803D");
+            case "cancelled": return Color.parseColor("#EF4444");
             default: return Color.GRAY;
         }
     }
@@ -95,7 +105,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     }
 
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCustomerName, tvOrderMeta, tvOrderPrice, tvStatusText, tvWaterAmount;
+        TextView tvCustomerName, tvOrderMeta, tvOrderPrice, tvStatusText, tvWaterAmount, tvSectionDate;
         View btnGoToDetails;
 
         public OrderViewHolder(@NonNull View itemView) {
@@ -105,6 +115,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             tvOrderPrice = itemView.findViewById(R.id.tvOrderPrice);
             tvStatusText = itemView.findViewById(R.id.tvStatusText);
             tvWaterAmount = itemView.findViewById(R.id.tvWaterAmount);
+            tvSectionDate = itemView.findViewById(R.id.tvSectionDate);
             btnGoToDetails = itemView.findViewById(R.id.btnGoToDetails);
         }
     }
