@@ -39,15 +39,13 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/layoutHeader"
-        app:layout_constraintBottom_toTopOf="@id/btnSubmitOrder">
+        app:layout_constraintBottom_toTopOf="@id/layoutActionAndNav">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
-
-            <!-- Progress Steps (Skip for brevity) -->
 
             <TextView
                 android:layout_width="wrap_content"
@@ -164,13 +162,10 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
-                    <!-- استبدال MapView بـ Osmdroid -->
                     <org.osmdroid.views.MapView
                         android:id="@+id/mapView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
-
                     <androidx.cardview.widget.CardView
                         android:id="@+id/btnLocateMe"
                         android:layout_width="wrap_content"
@@ -198,7 +193,7 @@
                 android:layout_height="wrap_content"
                 android:hint="تفاصيل العنوان (شارع، معلم بارز...)"
                 android:padding="12dp"
-                android:background="@drawable/bg_input_field"
+                android:background="@drawable/bg_edit_text_rounded"
                 android:layout_marginBottom="16dp"/>
 
             <EditText
@@ -208,28 +203,61 @@
                 android:hint="ملاحظات إضافية..."
                 android:padding="12dp"
                 android:gravity="top"
-                android:background="@drawable/bg_input_field"
+                android:background="@drawable/bg_edit_text_rounded"
                 android:layout_marginBottom="16dp"/>
 
         </LinearLayout>
     </ScrollView>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/btnSubmitOrder"
+    <LinearLayout
+        android:id="@+id/layoutActionAndNav"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_margin="16dp"
-        app:cardBackgroundColor="#005B8A"
-        app:cardCornerRadius="12dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="استمرار للمراجعة"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-    </androidx.cardview.widget.CardView>
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/btnSubmitOrder"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_margin="16dp"
+            app:cardBackgroundColor="#005B8A"
+            app:cardCornerRadius="12dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="استمرار للمراجعة"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- Global Navigation Bar -->
+        <LinearLayout
+            android:id="@+id/bottomNavCheckout"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:background="#FFFFFF"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:elevation="8dp">
+            <LinearLayout android:id="@+id/navProfile" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
+                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/user" app:tint="#94A3B8" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="حسابي" android:textColor="#94A3B8" android:textSize="11sp" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/navWallet" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
+                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/wallet" app:tint="#94A3B8" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="المحفظة" android:textColor="#94A3B8" android:textSize="11sp" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/navOrders" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
+                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/personal" app:tint="#94A3B8" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="طلباتي" android:textColor="#94A3B8" android:textSize="11sp" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/navHome" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
+                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/home" app:tint="#94A3B8" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="الرئيسية" android:textColor="#94A3B8" android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

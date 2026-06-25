@@ -10,29 +10,35 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import com.google.gson.Gson;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText etFullName, etEmail, etPassword, etPhone, etIdNumber;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private CardView btnRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
         etFullName = findViewById(R.id.etFullName);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         etPhone = findViewById(R.id.etPhone);
         etIdNumber = findViewById(R.id.etIdNumber);
+        btnRegister = findViewById(R.id.btnRegister);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
@@ -42,7 +48,6 @@ public class RegisterActivity extends AppCompatActivity {
             finish();
         });
 
-        CardView btnRegister = findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(v -> performSignUp());
     }
 
@@ -58,54 +63,81 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("full_name", fullName);
-        userData.put("phone", phone);
-        userData.put("id_number", idNumber);
-        userData.put("is_provider", false);
+        btnRegister.setEnabled(false);
+        btnRegister.setAlpha(0.5f);
 
-        AuthRequest authRequest = new AuthRequest(email, password, userData);
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            saveUserProfile(user.getUid(), fullName, email, phone, idNumber);
+                        }
+                    } else {
+                        btnRegister.setEnabled(true);
+                        btnRegister.setAlpha(1.0f);
+                        Log.w("RegisterActivity", "createUserWithEmail:failure", task.getException());
+                        Toast.makeText(RegisterActivity.this, "فشل إنشاء الحساب: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void saveUserProfile(String userId, String fullName, String email, String phone, String idNumber) {
+        WriteBatch batch = db.batch();
+
+        Map<String, Object> userProfile = new HashMap<>();
+        userProfile.put("id", userId);
+        userProfile.put("full_name", fullName);
+        userProfile.put("email", email);
+        userProfile.put("phone", phone);
+        userProfile.put("id_number", idNumber);
+        userProfile.put("role", "customer");
+        userProfile.put("is_provider", false);
+        userProfile.put("created_at", com.google.firebase.Timestamp.now());
+
+        batch.set(db.collection("users").document(userId), userProfile);
+
+        Map<String, Object> customerData = new HashMap<>();
+        customerData.put("user_id", userId);
+        customerData.put("full_name", fullName);
+        customerData.put("status", "active");
         
-        // تم التعديل هنا لتمرير (this)
-        SupabaseApi api = SupbaseClient.getClient(this).create(SupabaseApi.class);
+        batch.set(db.collection("customers").document(userId), customerData);
 
-        api.signUp(authRequest).enqueue(new Callback<AuthResponse>() {
-            @Override
-            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
+        Map<String, Object> walletData = new HashMap<>();
+        walletData.put("user_id", userId);
+        walletData.put("balance", 0.0);
+        walletData.put("total_recharge", 0.0);
+        walletData.put("total_payments", 0.0);
+        
+        batch.set(db.collection("wallets").document(userId), walletData);
+
+        batch.commit()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("RegisterActivity", "Batch write successful");
                     showSuccessDialog();
-                } else {
-                    handleError(response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AuthResponse> call, Throwable t) {
-                Log.e("Register", "Failure: " + t.getMessage());
-                Toast.makeText(RegisterActivity.this, "خطأ في الاتصال بالسيرفر", Toast.LENGTH_LONG).show();
-            }
-        });
+                })
+                .addOnFailureListener(e -> {
+                    btnRegister.setEnabled(true);
+                    btnRegister.setAlpha(1.0f);
+                    Log.e("RegisterActivity", "Error saving profiles", e);
+                    Toast.makeText(RegisterActivity.this, "فشل حفظ بيانات الحساب", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void showSuccessDialog() {
-        new AlertDialog.Builder(RegisterActivity.this)
-                .setTitle("تم التسجيل بنجاح")
-                .setMessage("تم إنشاء حسابك بنجاح! يمكنك الآن تسجيل الدخول.")
-                .setPositiveButton("تسجيل الدخول", (dialog, which) -> {
-                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                    finish();
-                })
-                .setCancelable(false)
-                .show();
-    }
-
-    private void handleError(Response<AuthResponse> response) {
-        try {
-            String errorBody = response.errorBody().string();
-            SupabaseError error = new Gson().fromJson(errorBody, SupabaseError.class);
-            Toast.makeText(RegisterActivity.this, error.getDisplayMessage(), Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            Toast.makeText(RegisterActivity.this, "فشل إنشاء الحساب", Toast.LENGTH_SHORT).show();
-        }
+        if (isFinishing()) return;
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+        builder.setTitle("تم التسجيل بنجاح");
+        builder.setMessage("تم إنشاء حسابك بنجاح! يمكنك الآن تسجيل الدخول.");
+        builder.setPositiveButton("تسجيل الدخول", (dialog, which) -> {
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            finish();
+        });
+        builder.setCancelable(false);
+        
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

@@ -73,10 +73,11 @@
                         android:textColor="#64748B"
                         android:textSize="12sp" />
                     <TextView
+                        android:id="@+id/tvEstimatedTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="15 دقيقة"
+                        android:text="--"
                         android:textColor="#0069B4"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -93,6 +94,7 @@
                         android:layout_height="48dp"
                         app:cardCornerRadius="24dp">
                         <ImageView
+                            android:id="@+id/imgDriver"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:src="@drawable/user"
@@ -105,16 +107,18 @@
                         android:orientation="vertical"
                         android:layout_marginLeft="12dp">
                         <TextView
+                            android:id="@+id/tvDriverName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="أحمد منصور"
+                            android:text="جاري التحميل..."
                             android:textColor="#1E293B"
                             android:textSize="16sp"
                             android:textStyle="bold" />
                         <TextView
+                            android:id="@+id/tvPlateNumber"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="رقم اللوحة: 7-1234-56"
+                            android:text="--"
                             android:textColor="#64748B"
                             android:textSize="12sp" />
                     </LinearLayout>

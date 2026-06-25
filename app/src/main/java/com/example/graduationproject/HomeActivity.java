@@ -1,26 +1,33 @@
 package com.example.graduationproject;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class HomeActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private TextView tvWelcome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        TextView tvWelcome = findViewById(R.id.tvWelcome);
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        tvWelcome = findViewById(R.id.tvWelcome);
         
-        // جلب اسم المستخدم من التفضيلات (تم تخزينه أثناء Login/Register)
-        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
-        String userName = prefs.getString("full_name", "المستخدم");
-        tvWelcome.setText("مرحباً بك، " + userName);
+        fetchUserProfile();
 
         CardView btnOpenMap = findViewById(R.id.btnOpenMap);
         btnOpenMap.setOnClickListener(v -> {
@@ -30,11 +37,7 @@ public class HomeActivity extends AppCompatActivity {
 
         Button btnLogout = findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(v -> {
-            // مسح بيانات الجلسة عند تسجيل الخروج
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.clear();
-            editor.apply();
-            
+            mAuth.signOut();
             Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -42,6 +45,22 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         setupBottomNavigation();
+    }
+
+    private void fetchUserProfile() {
+        if (mAuth.getCurrentUser() == null) return;
+        
+        String userId = mAuth.getCurrentUser().getUid();
+        db.collection("users").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String fullName = documentSnapshot.getString("full_name");
+                        tvWelcome.setText("مرحباً بك، " + (fullName != null ? fullName : "المستخدم"));
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    tvWelcome.setText("مرحباً بك، المستخدم");
+                });
     }
 
     private void setupBottomNavigation() {

@@ -10,20 +10,25 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class ServicesActivity extends AppCompatActivity {
-    CardView cardSingleOrder, cardMonthlySubscription, cardGroupInitiative;
-    TextView tvSingleTitle, tvSingleDesc, tvMonthlyTitle, tvGroupTitle;
+    private CardView cardSingleOrder, cardMonthlySubscription, cardGroupInitiative;
+    private TextView tvSingleTitle, tvSingleDesc, tvMonthlyTitle, tvGroupTitle;
+    private FirebaseFirestore db;
+    private String providerId, providerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_services);
+
+        db = FirebaseFirestore.getInstance();
+
+        // استقبال بيانات المزود
+        providerId = getIntent().getStringExtra("provider_id");
+        providerName = getIntent().getStringExtra("provider_name");
 
         cardSingleOrder = findViewById(R.id.cardSingleOrder);
         cardMonthlySubscription = findViewById(R.id.cardMonthlySubscription);
@@ -36,14 +41,16 @@ public class ServicesActivity extends AppCompatActivity {
 
         selectCard(cardSingleOrder);
         
-        // جلب البيانات الديناميكية من سوبابيز لتحديث النصوص إذا تغيرت في القاعدة
-        loadServicesData();
+        loadServicesFromFirestore();
+        setupBottomNavigation();
 
         cardSingleOrder.setOnClickListener(v -> {
             selectCard(cardSingleOrder);
             v.postDelayed(() -> {
                 Intent intent = new Intent(ServicesActivity.this, Order_Checkout_Activity.class);
-                intent.putExtra("service_id", 1); 
+                intent.putExtra("service_id", "1"); 
+                intent.putExtra("provider_id", providerId);
+                intent.putExtra("provider_name", providerName);
                 startActivity(intent);
             }, 200);
         });
@@ -52,7 +59,9 @@ public class ServicesActivity extends AppCompatActivity {
             selectCard(cardMonthlySubscription);
             v.postDelayed(() -> {
                 Intent intent = new Intent(ServicesActivity.this, Monthly_Subscription_Activity.class);
-                intent.putExtra("service_id", 2);
+                intent.putExtra("service_id", "2");
+                intent.putExtra("provider_id", providerId);
+                intent.putExtra("provider_name", providerName);
                 startActivity(intent);
             }, 200);
         });
@@ -61,7 +70,9 @@ public class ServicesActivity extends AppCompatActivity {
             selectCard(cardGroupInitiative);
             v.postDelayed(() -> {
                 Intent intent = new Intent(ServicesActivity.this, Group_Order_Activity.class);
-                intent.putExtra("service_id", 3);
+                intent.putExtra("service_id", "3");
+                intent.putExtra("provider_id", providerId);
+                intent.putExtra("provider_name", providerName);
                 startActivity(intent);
             }, 200);
         });
@@ -69,35 +80,27 @@ public class ServicesActivity extends AppCompatActivity {
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
     }
 
-    private void loadServicesData() {
-        SupabaseApi api = SupbaseClient.getClient(this).create(SupabaseApi.class);
-        api.getServices("*").enqueue(new Callback<List<ServiceModel>>() {
-            @Override
-            public void onResponse(Call<List<ServiceModel>> call, Response<List<ServiceModel>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    for (ServiceModel service : response.body()) {
-                        updateServiceUI(service);
+    private void loadServicesFromFirestore() {
+        db.collection("services").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    String nameAr = document.getString("name_ar");
+                    String descAr = document.getString("description_ar");
+                    String docId = document.getId();
+                    
+                    if ("1".equals(docId)) {
+                        tvSingleTitle.setText(nameAr);
+                        tvSingleDesc.setText(descAr);
+                    } else if ("2".equals(docId)) {
+                        tvMonthlyTitle.setText(nameAr);
+                    } else if ("3".equals(docId)) {
+                        tvGroupTitle.setText(nameAr);
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<List<ServiceModel>> call, Throwable t) {
-                Log.e("Supabase", "Error fetching services", t);
+            } else {
+                Log.e("Firebase", "Error getting services", task.getException());
             }
         });
-    }
-
-    private void updateServiceUI(ServiceModel service) {
-        // تحديث النصوص بناءً على المعرفات الموجودة في جدول SQL الذي أنشأناه
-        if (service.getId() == 1) {
-            tvSingleTitle.setText(service.getNameAr());
-            tvSingleDesc.setText(service.getDescriptionAr());
-        } else if (service.getId() == 2) {
-            tvMonthlyTitle.setText(service.getNameAr());
-        } else if (service.getId() == 3) {
-            tvGroupTitle.setText(service.getNameAr());
-        }
     }
 
     private void selectCard(CardView selectedCard) {
@@ -125,5 +128,16 @@ public class ServicesActivity extends AppCompatActivity {
         tvSingleDesc.setTextColor(Color.parseColor("#64748B"));
         tvMonthlyTitle.setTextColor(Color.parseColor("#1E293B"));
         tvGroupTitle.setTextColor(Color.parseColor("#1E293B"));
+    }
+
+    private void setupBottomNavigation() {
+        findViewById(R.id.navHome).setOnClickListener(v -> {
+            Intent intent = new Intent(this, MapExplorerActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        });
+        findViewById(R.id.navWallet).setOnClickListener(v -> startActivity(new Intent(this, WalletActivity.class)));
+        findViewById(R.id.navOrders).setOnClickListener(v -> startActivity(new Intent(this, My_Orders_Activity.class)));
+        findViewById(R.id.navProfile).setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
     }
 }

@@ -69,14 +69,16 @@
                         android:textColor="#E2E8F0"
                         android:textSize="14sp" />
                     <TextView
+                        android:id="@+id/tvWalletBalance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="150.00 شيكل"
+                        android:text="0.00 ₪"
                         android:textColor="#FFFFFF"
                         android:textSize="28sp"
                         android:textStyle="bold" />
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRecharge"
                         android:layout_width="wrap_content"
                         android:layout_height="44dp"
                         android:layout_marginTop="16dp"
@@ -113,9 +115,10 @@
                             android:textColor="#64748B"
                             android:textSize="12sp"/>
                         <TextView
+                            android:id="@+id/tvTotalRecharge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="450 ₪"
+                            android:text="0 ₪"
                             android:textColor="#166534"
                             android:textSize="18sp"
                             android:textStyle="bold"/>
@@ -141,9 +144,10 @@
                             android:textColor="#64748B"
                             android:textSize="12sp"/>
                         <TextView
+                            android:id="@+id/tvTotalPayments"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="300 ₪"
+                            android:text="0 ₪"
                             android:textColor="#991B1B"
                             android:textSize="18sp"
                             android:textStyle="bold"/>
@@ -160,7 +164,11 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp"/>
 
-            <!-- Operation Records ... (Same as before) -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvWalletTransactions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
     </ScrollView>

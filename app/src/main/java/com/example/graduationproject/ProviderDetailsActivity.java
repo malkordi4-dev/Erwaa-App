@@ -21,17 +21,16 @@ public class ProviderDetailsActivity extends AppCompatActivity {
     private Button btnSelectService;
     private ImageView btnBack;
     private TextView tvProviderName, tvLocation, tvPrice;
+    private String providerId, providerName, address, sourceType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // OSMDroid configuration
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
 
         setContentView(R.layout.activity_provider_details);
 
-        // Initialize Views
         btnSelectService = findViewById(R.id.btnSelectService);
         btnBack = findViewById(R.id.btnBack);
         mapView = findViewById(R.id.mapView);
@@ -39,55 +38,70 @@ public class ProviderDetailsActivity extends AppCompatActivity {
         tvLocation = findViewById(R.id.tvLocation);
         tvPrice = findViewById(R.id.tvPrice);
 
-        // Get Data from Intent
         Intent intent = getIntent();
-        String name = intent.getStringExtra("provider_name");
-        String address = intent.getStringExtra("address");
-        String sourceType = intent.getStringExtra("source_type");
+        providerId = intent.getStringExtra("provider_id");
+        providerName = intent.getStringExtra("provider_name");
+        address = intent.getStringExtra("address");
+        sourceType = intent.getStringExtra("source_type");
         double lat = intent.getDoubleExtra("lat", 31.51);
         double lng = intent.getDoubleExtra("lng", 34.45);
 
-        // Update UI with received data
-        if (name != null) tvProviderName.setText(name);
+        if (providerName != null) tvProviderName.setText(providerName);
         if (address != null) tvLocation.setText(address);
         
-        // Update price based on source type (example logic)
         if (sourceType != null && sourceType.contains("صهريج")) {
             tvPrice.setText("30 شيكل / كوب");
         } else if (sourceType != null && sourceType.contains("بئر")) {
             tvPrice.setText("15 شيكل / كوب");
         }
 
-        // Back button
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> finish());
         }
 
-        // Select Service button
         if (btnSelectService != null) {
             btnSelectService.setOnClickListener(v -> {
                 Intent sIntent = new Intent(ProviderDetailsActivity.this, ServicesActivity.class);
-                sIntent.putExtra("provider_name", name);
+                sIntent.putExtra("provider_id", providerId);
+                sIntent.putExtra("provider_name", providerName);
                 startActivity(sIntent);
             });
         }
 
-        // Initialize Map with provider location
         if (mapView != null) {
             mapView.setTileSource(TileSourceFactory.MAPNIK);
             mapView.setMultiTouchControls(true);
-            
             GeoPoint providerLocation = new GeoPoint(lat, lng); 
             mapView.getController().setZoom(16.0);
             mapView.getController().setCenter(providerLocation);
-
-            // Add marker for the provider
             Marker marker = new Marker(mapView);
             marker.setPosition(providerLocation);
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            marker.setTitle(name);
+            marker.setTitle(providerName);
             mapView.getOverlays().add(marker);
         }
+
+        setupBottomNavigation();
+    }
+
+    private void setupBottomNavigation() {
+        findViewById(R.id.navHome).setOnClickListener(v -> {
+            Intent intent = new Intent(this, MapExplorerActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        });
+
+        findViewById(R.id.navWallet).setOnClickListener(v -> {
+             startActivity(new Intent(this, WalletActivity.class));
+        });
+
+        findViewById(R.id.navOrders).setOnClickListener(v -> {
+             startActivity(new Intent(this, My_Orders_Activity.class));
+        });
+
+        findViewById(R.id.navProfile).setOnClickListener(v -> {
+             startActivity(new Intent(this, HomeActivity.class));
+        });
     }
 
     @Override

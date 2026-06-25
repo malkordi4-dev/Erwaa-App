@@ -12,26 +12,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.Gson;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
 
     private boolean isPasswordVisible = false;
     private EditText etEmail, etPassword;
+    private FirebaseAuth mAuth;
+
+
+    private FirebaseFirestore db;
 
     private static final String PREFS_NAME = "AppPrefs";
     private static final String KEY_EMAIL = "saved_email";
     private static final String KEY_USER_ID = "user_id";
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
+    private static final String KEY_USER_ROLE = "user_role";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
@@ -89,36 +96,64 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        AuthRequest request = new AuthRequest(email, password);
-        SupabaseApi api = SupbaseClient.getClient(this).create(SupabaseApi.class);
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            String userId = user.getUid();
+                            saveUserDataLocally(email, userId);
+                            fetchUserRole(userId);
+                        }
+                    } else {
+                        Log.w("LoginActivity", "signInWithEmail:failure", task.getException());
+                        Toast.makeText(LoginActivity.this, "البريد الإلكتروني أو كلمة المرور غير صحيحة", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
-        api.signIn(request).enqueue(new Callback<AuthResponse>() {
-            @Override
-            public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    AuthResponse authResponse = response.body();
-                    
-                    SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putString(KEY_EMAIL, email);
-                    editor.putString(KEY_USER_ID, authResponse.getUser().getId());
-                    editor.putString("access_token", authResponse.getAccessToken()); // Save access token for RLS
-                    editor.putBoolean(KEY_IS_LOGGED_IN, true);
-                    editor.apply();
+    private void saveUserDataLocally(String email, String userId) {
+        SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putString(KEY_EMAIL, email);
+        editor.putString(KEY_USER_ID, userId);
+        editor.apply();
+    }
 
-                    Toast.makeText(LoginActivity.this, "تم تسجيل الدخول بنجاح", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, MapExplorerActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(LoginActivity.this, "البريد الإلكتروني أو كلمة المرور غير صحيحة", Toast.LENGTH_LONG).show();
-                }
-            }
+    private void fetchUserRole(String userId) {
+        db.collection("users").document(userId).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null && document.exists()) {
+                            String role = document.getString("role");
+                            navigateToDashboard(role != null ? role : "customer");
+                        } else {
+                            navigateToDashboard("customer");
+                        }
+                    } else {
+                        Log.e("LoginActivity", "Error fetching user role", task.getException());
+                        navigateToDashboard("customer");
+                    }
+                });
+    }
 
-            @Override
-            public void onFailure(Call<AuthResponse> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "خطأ في الاتصال بالسيرفر", Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void navigateToDashboard(String role) {
+        SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putString(KEY_USER_ROLE, role);
+        editor.putBoolean(KEY_IS_LOGGED_IN, true);
+        editor.apply();
+
+        Toast.makeText(LoginActivity.this, "تم تسجيل الدخول بنجاح", Toast.LENGTH_SHORT).show();
+        
+        Intent intent;
+        if ("provider".equalsIgnoreCase(role)) {
+            intent = new Intent(LoginActivity.this, ProviderDashboardActivity.class);
+        } else {
+            intent = new Intent(LoginActivity.this, MapExplorerActivity.class);
+        }
+        
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.Timestamp;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -42,37 +44,65 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         OrderModel order = orders.get(position);
 
-        // اسم المزود أو نوع الخدمة
-        holder.tvCustomerName.setText(order.getOrderType().equals("monthly") ? "اشتراك شهري" : "طلب مياه عذب");
+        String providerName = order.getProviderName();
+        holder.tvCustomerName.setText(providerName != null ? providerName : "طلب تزويد مياه");
         
-        // رقم الطلب والوقت
         String shortId = order.getId() != null && order.getId().length() > 8 ? order.getId().substring(0, 8) : "---";
-        holder.tvOrderMeta.setText("طلب #" + shortId + " • " + order.getScheduledTime());
+        holder.tvOrderMeta.setText("طلب #" + shortId + " • " + (order.getScheduledTime() != null ? order.getScheduledTime() : "الآن"));
         
-        // السعر والكمية
-        holder.tvOrderPrice.setText(String.format("%.2f ₪", order.getTotalPrice()));
-        holder.tvWaterAmount.setText(order.getQuantity() + " " + order.getUnit());
+        double price = order.getTotalPrice() != null ? order.getTotalPrice() : 0.0;
+        holder.tvOrderPrice.setText(String.format(Locale.getDefault(), "%.2f ₪", price));
+        holder.tvWaterAmount.setText(order.getQuantity() + " " + (order.getUnit() != null ? order.getUnit() : "لتر"));
         
-        // حالة الطلب
         String status = order.getStatus();
         holder.tvStatusText.setText(getStatusArabic(status));
         holder.tvStatusText.setTextColor(getStatusColor(status));
 
-        // معالجة التاريخ العلوي (Section Date)
         if (order.getCreatedAt() != null) {
-            holder.tvSectionDate.setText(order.getCreatedAt().split("T")[0]); 
+            try {
+                String dateOnly = formatCreatedAt(order.getCreatedAt());
+                holder.tvSectionDate.setText(dateOnly);
+                if (position > 0 && orders.get(position - 1).getCreatedAt() != null) {
+                    String prevDate = formatCreatedAt(orders.get(position - 1).getCreatedAt());
+                    if (dateOnly.equals(prevDate)) {
+                        holder.tvSectionDate.setVisibility(View.GONE);
+                    } else {
+                        holder.tvSectionDate.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    holder.tvSectionDate.setVisibility(View.VISIBLE);
+                }
+            } catch (Exception e) {
+                holder.tvSectionDate.setVisibility(View.GONE);
+            }
+        } else {
+            holder.tvSectionDate.setVisibility(View.GONE);
         }
 
         holder.btnGoToDetails.setOnClickListener(v -> {
-            Intent intent = new Intent(context, Order_Details_Activity.class);
+            Intent intent;
+            // إذا كان الطلب لا يزال قيد الانتظار، نفتح شاشة حالة الانتظار
+            if ("pending".equals(status)) {
+                intent = new Intent(context, Order_Status_Activity.class);
+            } else if ("accepted".equals(status)) {
+                intent = new Intent(context, Order_Accepted_Activity.class);
+            } else {
+                intent = new Intent(context, Order_Details_Activity.class);
+            }
             intent.putExtra("order_id", order.getId());
-            intent.putExtra("status", order.getStatus());
-            intent.putExtra("price", order.getTotalPrice());
-            intent.putExtra("quantity", order.getQuantity());
-            intent.putExtra("unit", order.getUnit());
-            intent.putExtra("address", order.getAddressDetails());
             context.startActivity(intent);
         });
+        
+        holder.itemView.setOnClickListener(v -> holder.btnGoToDetails.performClick());
+    }
+
+    private String formatCreatedAt(Object createdAt) {
+        if (createdAt == null) return "";
+        if (createdAt instanceof Timestamp) {
+            Date date = ((Timestamp) createdAt).toDate();
+            return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date);
+        }
+        return createdAt.toString();
     }
 
     private String getStatusArabic(String status) {
@@ -100,14 +130,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     }
 
     @Override
-    public int getItemCount() {
-        return orders.size();
-    }
+    public int getItemCount() { return orders.size(); }
 
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
         TextView tvCustomerName, tvOrderMeta, tvOrderPrice, tvStatusText, tvWaterAmount, tvSectionDate;
         View btnGoToDetails;
-
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             tvCustomerName = itemView.findViewById(R.id.tvCustomerName);

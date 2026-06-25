@@ -1,7 +1,6 @@
 package com.example.graduationproject;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
@@ -13,23 +12,29 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.IOException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Rate_Service_Activity extends AppCompatActivity {
     private RatingBar ratingBar;
     private EditText etNotes;
     private TextView tvStationName, tvOrderNumber, tvOrderDate, tvQuantity, tvPrice;
-    private String orderUuid;
-    private Integer providerId;
+    private String orderId;
+    private String providerId;
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate_service);
+
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         // Initialize views
         ImageView btnBack = findViewById(R.id.btnBack);
@@ -46,9 +51,8 @@ public class Rate_Service_Activity extends AppCompatActivity {
 
         // Get data from intent
         if (getIntent() != null) {
-            orderUuid = getIntent().getStringExtra("order_uuid");
-            providerId = getIntent().getIntExtra("provider_id", -1);
-            if (providerId == -1) providerId = null;
+            orderId = getIntent().getStringExtra("order_uuid"); // Match intent key from previous code
+            providerId = getIntent().getStringExtra("provider_id");
 
             String stationName = getIntent().getStringExtra("station_name");
             String orderNum = getIntent().getStringExtra("order_number");
@@ -65,12 +69,8 @@ public class Rate_Service_Activity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
         
-        // Skip button: Navigate back to MapExplorerActivity
         btnSkip.setOnClickListener(v -> {
-            Intent intent = new Intent(Rate_Service_Activity.this, MapExplorerActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
+            navigateToMain();
         });
 
         btnSubmitRating.setOnClickListener(v -> {
@@ -84,50 +84,59 @@ public class Rate_Service_Activity extends AppCompatActivity {
     }
 
     private void performSubmitRating(int ratingValue) {
-        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
-        String customerId = prefs.getString("user_id", null);
-        String accessToken = prefs.getString("access_token", null);
-
-        if (customerId == null || accessToken == null) {
+        if (mAuth.getCurrentUser() == null) {
             Toast.makeText(this, "يرجى تسجيل الدخول أولاً", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (orderUuid == null) {
+        if (orderId == null) {
             Toast.makeText(this, "خطأ: لم يتم العثور على معرّف الطلب الصحيح", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        String customerId = mAuth.getCurrentUser().getUid();
         String comment = etNotes.getText().toString().trim();
-        RatingModel rating = new RatingModel(orderUuid, customerId, providerId, ratingValue, comment);
 
-        SupabaseApi api = SupbaseClient.getClient(this).create(SupabaseApi.class);
-/*
-        // Note: authHeader is handled by the Interceptor in SupbaseClient
-        api.submitRating(rating).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
+        Map<String, Object> rating = new HashMap<>();
+        rating.put("order_id", orderId);
+        rating.put("customer_id", customerId);
+        rating.put("provider_id", providerId);
+        rating.put("rating", ratingValue);
+        rating.put("comment", comment);
+        rating.put("created_at", FieldValue.serverTimestamp());
+
+        db.collection("ratings").add(rating)
+                .addOnSuccessListener(documentReference -> {
                     Toast.makeText(Rate_Service_Activity.this, "تم إرسال تقييمك بنجاح!", Toast.LENGTH_LONG).show();
-                    // Also return to map after successful rating
-                    Intent intent = new Intent(Rate_Service_Activity.this, MapExplorerActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    String errorBody = "";
-                    try { if (response.errorBody() != null) errorBody = response.errorBody().string(); } catch (IOException e) { e.printStackTrace(); }
-                    Log.e("Supabase_Rating", "Error: " + response.code() + " Body: " + errorBody);
-                    Toast.makeText(Rate_Service_Activity.this, "فشل إرسال التقييم: " + response.code(), Toast.LENGTH_SHORT).show();
-                }
-            }
+                    updateProviderRating(providerId, ratingValue);
+                    navigateToMain();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firebase_Rating", "Error", e);
+                    Toast.makeText(Rate_Service_Activity.this, "فشل إرسال التقييم", Toast.LENGTH_SHORT).show();
+                });
+    }
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.e("Supabase_Rating", "Failure", t);
-                Toast.makeText(Rate_Service_Activity.this, "خطأ في الاتصال بالشبكة", Toast.LENGTH_SHORT).show();
+    private void updateProviderRating(String providerId, int newRating) {
+        if (providerId == null) return;
+        
+        // This is a simplified rating update logic. 
+        // In a real app, you might want to recalculate based on all ratings.
+        db.collection("providers").document(providerId).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Double currentRating = documentSnapshot.getDouble("rating");
+                if (currentRating == null) currentRating = 4.5;
+                
+                double updatedRating = (currentRating + newRating) / 2.0; // Simple average for demo
+                db.collection("providers").document(providerId).update("rating", updatedRating);
             }
         });
-*/
+    }
+
+    private void navigateToMain() {
+        Intent intent = new Intent(Rate_Service_Activity.this, MapExplorerActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 }

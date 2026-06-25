@@ -1,7 +1,6 @@
 package com.example.graduationproject;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,13 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class My_Orders_Activity extends AppCompatActivity {
 
@@ -28,11 +27,16 @@ public class My_Orders_Activity extends AppCompatActivity {
     private List<OrderModel> allOrders = new ArrayList<>();
     private MaterialButton btnActiveOrders, btnHistoryOrders;
     private boolean showingActive = true;
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_orders);
+
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         rvOrders = findViewById(R.id.rvOrders);
         btnActiveOrders = findViewById(R.id.btnActiveOrders);
@@ -66,7 +70,6 @@ public class My_Orders_Activity extends AppCompatActivity {
         findViewById(R.id.navProfile).setOnClickListener(v -> {
             startActivity(new Intent(this, HomeActivity.class));
         });
-        // زر الطلبات مفعل حالياً
     }
 
     private void updateTabUI() {
@@ -84,28 +87,28 @@ public class My_Orders_Activity extends AppCompatActivity {
     }
 
     private void fetchOrders() {
-        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
-        // ملاحظة: تأكد من تخزين user_id عند تسجيل الدخول، أو استخدم anon key للتجربة
-        String userId = prefs.getString("user_id", "default_user"); 
+        if (mAuth.getCurrentUser() == null) return;
+        
+        String userId = mAuth.getCurrentUser().getUid();
 
-        SupabaseApi api = SupbaseClient.getClient(this).create(SupabaseApi.class);
-        // جلب كافة الطلبات لهذا المستخدم
-        api.getOrders("eq." + userId, "*", "created_at.desc").enqueue(new Callback<List<OrderModel>>() {
-            @Override
-            public void onResponse(Call<List<OrderModel>> call, Response<List<OrderModel>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    allOrders = response.body();
-                    filterOrders();
-                } else {
-                    Toast.makeText(My_Orders_Activity.this, "لا يوجد طلبات حالياً", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<OrderModel>> call, Throwable t) {
-                Toast.makeText(My_Orders_Activity.this, "خطأ في الاتصال بالسيرفر", Toast.LENGTH_SHORT).show();
-            }
-        });
+        db.collection("orders")
+                .whereEqualTo("customer_id", userId)
+                .orderBy("created_at", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        allOrders.clear();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            OrderModel order = document.toObject(OrderModel.class);
+                            order.setId(document.getId());
+                            allOrders.add(order);
+                        }
+                        filterOrders();
+                    } else {
+                        Log.e("Firebase", "Error getting orders", task.getException());
+                        Toast.makeText(My_Orders_Activity.this, "لا يوجد طلبات حالياً", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void filterOrders() {

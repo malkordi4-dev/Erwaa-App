@@ -98,6 +98,28 @@ public class Monthly_Subscription_Activity extends AppCompatActivity {
             intent.putExtra("lng", 34.44); 
             startActivity(intent);
         });
+
+        setupBottomNavigation();
+    }
+
+    private void setupBottomNavigation() {
+        findViewById(R.id.navHome).setOnClickListener(v -> {
+            Intent intent = new Intent(this, MapExplorerActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        });
+
+        findViewById(R.id.navWallet).setOnClickListener(v -> {
+             startActivity(new Intent(this, WalletActivity.class));
+        });
+
+        findViewById(R.id.navOrders).setOnClickListener(v -> {
+             startActivity(new Intent(this, My_Orders_Activity.class));
+        });
+
+        findViewById(R.id.navProfile).setOnClickListener(v -> {
+             startActivity(new Intent(this, HomeActivity.class));
+        });
     }
 
     private void selectPlan(int price, String name, int qty, CardView selectedCard) {
@@ -118,9 +140,13 @@ public class Monthly_Subscription_Activity extends AppCompatActivity {
     private void selectFrequency(String freq, CardView selected, CardView unselected) {
         selectedFrequency = freq;
         selected.setCardBackgroundColor(Color.WHITE);
-        ((TextView)selected.getChildAt(0)).setTextColor(Color.parseColor("#0D63B3"));
+        if (selected.getChildCount() > 0 && selected.getChildAt(0) instanceof TextView) {
+            ((TextView)selected.getChildAt(0)).setTextColor(Color.parseColor("#0D63B3"));
+        }
         unselected.setCardBackgroundColor(Color.TRANSPARENT);
-        ((TextView)unselected.getChildAt(0)).setTextColor(Color.parseColor("#64748B"));
+        if (unselected.getChildCount() > 0 && unselected.getChildAt(0) instanceof TextView) {
+            ((TextView)unselected.getChildAt(0)).setTextColor(Color.parseColor("#64748B"));
+        }
     }
 
     private void selectDay(int index) {

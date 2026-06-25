@@ -72,12 +72,11 @@ public class Group_Order_Activity extends AppCompatActivity implements OnMapRead
         btnSubmit.setOnClickListener(v -> {
             if (validateInputs()) {
                 Intent intent = new Intent(this, Review_Order_Activity.class);
-                intent.putExtra("service_id", 3); // معرف الخدمة الجماعية في SQL
+                intent.putExtra("service_id", 3);
                 intent.putExtra("quantity", totalLiters);
                 intent.putExtra("unit", "لتر (مبادرة جماعية)");
                 intent.putExtra("address", etLocationDescription.getText().toString());
                 
-                // بناء ملاحظات تحتوي على تفاصيل الجيران لتخزينها في حقل notes
                 StringBuilder notesBuilder = new StringBuilder();
                 notesBuilder.append("المنسق: ").append(etCoordinatorName.getText().toString())
                             .append("\nالهاتف: ").append(etCoordinatorPhone.getText().toString())
@@ -90,10 +89,22 @@ public class Group_Order_Activity extends AppCompatActivity implements OnMapRead
                 intent.putExtra("lat", selectedLocation.latitude);
                 intent.putExtra("lng", selectedLocation.longitude);
                 intent.putExtra("scheduledTime", "طلب فوري");
-                
                 startActivity(intent);
             }
         });
+
+        setupBottomNavigation();
+    }
+
+    private void setupBottomNavigation() {
+        findViewById(R.id.navHome).setOnClickListener(v -> {
+            Intent intent = new Intent(this, MapExplorerActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        });
+        findViewById(R.id.navWallet).setOnClickListener(v -> startActivity(new Intent(this, WalletActivity.class)));
+        findViewById(R.id.navOrders).setOnClickListener(v -> startActivity(new Intent(this, My_Orders_Activity.class)));
+        findViewById(R.id.navProfile).setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
     }
 
     private void showAddNeighborDialog() {
@@ -102,16 +113,13 @@ public class Group_Order_Activity extends AppCompatActivity implements OnMapRead
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(50, 40, 50, 10);
-
         final EditText inputName = new EditText(this);
         inputName.setHint("اسم الجار");
         layout.addView(inputName);
-
         final EditText inputQty = new EditText(this);
         inputQty.setHint("الكمية المطلوبة (لتر)");
         inputQty.setInputType(InputType.TYPE_CLASS_NUMBER);
         layout.addView(inputQty);
-
         builder.setView(layout);
         builder.setPositiveButton("إضافة", (dialog, which) -> {
             String name = inputName.getText().toString().trim();

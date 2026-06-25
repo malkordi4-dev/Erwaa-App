@@ -1,31 +1,35 @@
 package com.example.graduationproject;
 
+import com.google.firebase.firestore.Exclude;
 import com.google.gson.annotations.SerializedName;
 
 public class OrderModel {
-    @SerializedName("id")
+    @Exclude
     private String id;
 
     @SerializedName("customer_id")
     private String customerId;
 
     @SerializedName("provider_id")
-    private Integer providerId;
+    private String providerId;
+
+    @SerializedName("provider_name")
+    private String providerName; // تم إضافة هذا الحقل
 
     @SerializedName("service_id")
-    private Integer serviceId;
+    private String serviceId;
 
     @SerializedName("status")
     private String status; // 'pending', 'accepted', 'on_way', 'delivered', 'cancelled'
 
     @SerializedName("order_type")
-    private String orderType; // 'single', 'monthly', 'group'
+    private String orderType;
 
     @SerializedName("quantity")
     private int quantity;
 
     @SerializedName("unit")
-    private String unit; // 'لتر' or 'خزان'
+    private String unit;
 
     @SerializedName("total_price")
     private Double totalPrice;
@@ -43,20 +47,23 @@ public class OrderModel {
     private String notes;
 
     @SerializedName("scheduled_time")
-    private String scheduledTime; // 'الآن', 'اليوم', 'غداً'
+    private String scheduledTime;
 
     @SerializedName("created_at")
-    private String createdAt;
+    private Object createdAt;
 
-    // Getters and Setters
+    public OrderModel() {}
+
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
     public String getCustomerId() { return customerId; }
     public void setCustomerId(String customerId) { this.customerId = customerId; }
-    public Integer getProviderId() { return providerId; }
-    public void setProviderId(Integer providerId) { this.providerId = providerId; }
-    public Integer getServiceId() { return serviceId; }
-    public void setServiceId(Integer serviceId) { this.serviceId = serviceId; }
+    public String getProviderId() { return providerId; }
+    public void setProviderId(String providerId) { this.providerId = providerId; }
+    public String getProviderName() { return providerName; }
+    public void setProviderName(String providerName) { this.providerName = providerName; }
+    public String getServiceId() { return serviceId; }
+    public void setServiceId(String serviceId) { this.serviceId = serviceId; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
     public String getOrderType() { return orderType; }
@@ -77,6 +84,6 @@ public class OrderModel {
     public void setNotes(String notes) { this.notes = notes; }
     public String getScheduledTime() { return scheduledTime; }
     public void setScheduledTime(String scheduledTime) { this.scheduledTime = scheduledTime; }
-    public String getCreatedAt() { return createdAt; }
-    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public Object getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Object createdAt) { this.createdAt = createdAt; }
 }

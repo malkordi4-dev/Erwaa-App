@@ -75,6 +75,7 @@
                             android:textSize="12sp"
                             android:textStyle="bold" />
                         <TextView
+                            android:id="@+id/tvWorkStatus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="متاح للعمل"
@@ -122,6 +123,7 @@
                             android:textSize="11sp"
                             android:textStyle="bold" />
                         <TextView
+                            android:id="@+id/tvActiveOrdersCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="3"
@@ -176,6 +178,7 @@
                             android:textSize="11sp"
                             android:textStyle="bold" />
                         <TextView
+                            android:id="@+id/tvTodayEarnings"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="450 NIS"
@@ -230,6 +233,7 @@
                             android:textSize="11sp"
                             android:textStyle="bold" />
                         <TextView
+                            android:id="@+id/tvAverageRating"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="4.8"
@@ -296,6 +300,7 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp"/>
 
+            <!-- Placeholder for dynamic list or hardcoded items -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -364,149 +369,9 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#EF4444"
-                app:strokeWidth="1.5dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="14dp">
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_alignParentRight="true">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="تعبئة خزان علوي - شارع الجلاء"
-                                android:textColor="#1E293B"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="العميل: شركة القدس"
-                                android:textColor="#64748B"
-                                android:textSize="12sp"
-                                android:layout_marginTop="2dp" />
-                        </LinearLayout>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:background="#FEE2E2"
-                            android:text="منذ 12 دقيقة"
-                            android:textColor="#EF4444"
-                            android:textSize="10sp"
-                            android:textStyle="bold"
-                            android:paddingHorizontal="8dp"
-                            android:paddingVertical="4dp"/>
-                    </RelativeLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="10dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="💧 3000 لتر" android:textColor="#475569" android:textSize="12sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📍 4.1 كم" android:textColor="#475569" android:textSize="12sp" android:layout_marginRight="16dp" android:textStyle="bold"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="38dp"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="12dp">
-                        <com.google.android.material.button.MaterialButton android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="قبول الطلب" android:textColor="#FFFFFF" android:backgroundTint="#0069B4" android:textSize="12sp" android:textStyle="bold" app:cornerRadius="8dp" android:insetTop="0dp" android:insetBottom="0dp"/>
-                        <com.google.android.material.button.MaterialButton android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_marginRight="8dp" android:text="تجاهل" android:textColor="#64748B" android:backgroundTint="#F1F5F9" android:textSize="12sp" android:textStyle="bold" app:cornerRadius="8dp" android:insetTop="0dp" android:insetBottom="0dp" app:strokeColor="#E2E8F0" app:strokeWidth="1dp"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#0069B4"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="16dp">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="نسبة الإنجاز اليومي"
-                            android:textColor="#FFFFFF"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="أداء ممتاز اليوم! لقد أكملت 85% من مهامك."
-                            android:textColor="#E0F2FE"
-                            android:textSize="12sp"
-                            android:layout_marginTop="4dp"/>
-                    </LinearLayout>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:text="11/14"
-                        android:textColor="#FFFFFF"
-                        android:textSize="26sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="#F1F5F9"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#E2E8F0"
-                app:strokeWidth="1dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ساعات الذروة" android:textColor="#1E293B" android:textSize="15sp" android:textStyle="bold" android:layout_marginBottom="20dp"/>
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="120dp" android:orientation="horizontal" android:gravity="bottom" android:weightSum="5">
-                        <View android:layout_width="0dp" android:layout_height="50dp" android:layout_weight="1" android:layout_marginHorizontal="6dp" android:background="#0A63B3"/>
-                        <View android:layout_width="0dp" android:layout_height="85dp" android:layout_weight="1" android:layout_marginHorizontal="6dp" android:background="#0069B4"/>
-                        <View android:layout_width="0dp" android:layout_height="115dp" android:layout_weight="1" android:layout_marginHorizontal="6dp" android:background="#094A74"/>
-                        <View android:layout_width="0dp" android:layout_height="95dp" android:layout_weight="1" android:layout_marginHorizontal="6dp" android:background="#0069B4"/>
-                        <View android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:layout_marginHorizontal="6dp" android:background="#0A63B3"/>
-                    </LinearLayout>
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp" android:weightSum="3">
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="4 م" android:textColor="#64748B" android:textSize="11sp" android:gravity="center" android:textStyle="bold"/>
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="12 م" android:textColor="#64748B" android:textSize="11sp" android:gravity="center" android:textStyle="bold"/>
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="8 ص" android:textColor="#64748B" android:textSize="11sp" android:gravity="center" android:textStyle="bold"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
         </LinearLayout>
     </ScrollView>
+
     <LinearLayout
         android:id="@+id/bottomNavProvider"
         android:layout_width="match_parent"
@@ -518,11 +383,13 @@
         android:elevation="16dp">
 
         <LinearLayout
+            android:id="@+id/navProviderDashboard"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.2"
-            android:gravity="center">
-
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <LinearLayout
                 android:layout_width="85dp"
                 android:layout_height="56dp"
@@ -530,13 +397,11 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:paddingVertical="6dp">
-
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/home"
                     app:tint="#0069B4" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -549,11 +414,14 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/navProviderOrders"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
@@ -569,11 +437,14 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/navProviderServices"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
@@ -589,11 +460,14 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/navProviderHistory"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"

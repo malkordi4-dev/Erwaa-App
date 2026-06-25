@@ -26,19 +26,25 @@ public class Order_Checkout_Activity extends AppCompatActivity {
     private int quantity = 500;
     private String unit = "لتر";
     private String selectedTime = "الآن";
-    private GeoPoint selectedLocation = new GeoPoint(31.5, 34.4);
+    private GeoPoint selectedLocation = new GeoPoint(31.516, 34.448);
 
     private TextView tvQuantityCount, tvUnit;
     private CardView btnByLiter, btnByTank;
     private EditText etAddressDetails, etNotes;
+    
+    private String providerId, providerName, serviceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-        
         setContentView(R.layout.activity_order_checkout);
+
+        // استقبال بيانات المزود والخدمة
+        providerId = getIntent().getStringExtra("provider_id");
+        providerName = getIntent().getStringExtra("provider_name");
+        serviceId = getIntent().getStringExtra("service_id");
 
         // Initialize Views
         ImageView btnBack = findViewById(R.id.btnBack);
@@ -56,7 +62,6 @@ public class Order_Checkout_Activity extends AppCompatActivity {
         CardView btnSubmitOrder = findViewById(R.id.btnSubmitOrder);
 
         btnBack.setOnClickListener(v -> finish());
-
         btnByLiter.setOnClickListener(v -> selectQuantityType(true));
         btnByTank.setOnClickListener(v -> selectQuantityType(false));
 
@@ -75,11 +80,10 @@ public class Order_Checkout_Activity extends AppCompatActivity {
             updateQuantityText();
         });
 
-        // Osmdroid Map initialization
         mapView.setTileSource(TileSourceFactory.MAPNIK);
         mapView.setMultiTouchControls(true);
         mapView.getController().setZoom(15.0);
-        mapView.getController().setCenter(selectedLocation);
+        mapControllerSetCenter();
 
         Marker startMarker = new Marker(mapView);
         startMarker.setPosition(selectedLocation);
@@ -87,23 +91,18 @@ public class Order_Checkout_Activity extends AppCompatActivity {
         startMarker.setTitle("موقع التوصيل");
         startMarker.setDraggable(true);
         startMarker.setOnMarkerDragListener(new Marker.OnMarkerDragListener() {
-            @Override
-            public void onMarkerDrag(Marker marker) {}
-            @Override
-            public void onMarkerDragEnd(Marker marker) {
+            @Override public void onMarkerDrag(Marker marker) {}
+            @Override public void onMarkerDragEnd(Marker marker) {
                 selectedLocation = (GeoPoint) marker.getPosition();
             }
-            @Override
-            public void onMarkerDragStart(Marker marker) {}
+            @Override public void onMarkerDragStart(Marker marker) {}
         });
         mapView.getOverlays().add(startMarker);
 
         btnLocateMe.setOnClickListener(v -> {
-            Toast.makeText(this, "جاري تحديد الموقع...", Toast.LENGTH_SHORT).show();
             mapView.getController().animateTo(selectedLocation);
         });
 
-        // Submit Order
         btnSubmitOrder.setOnClickListener(v -> {
             String address = etAddressDetails.getText().toString().trim();
             if (address.isEmpty()) {
@@ -112,6 +111,9 @@ public class Order_Checkout_Activity extends AppCompatActivity {
             }
             
             Intent intent = new Intent(Order_Checkout_Activity.this, Review_Order_Activity.class);
+            intent.putExtra("provider_id", providerId);
+            intent.putExtra("provider_name", providerName);
+            intent.putExtra("service_id", serviceId);
             intent.putExtra("quantity", quantity);
             intent.putExtra("unit", unit);
             intent.putExtra("address", address);
@@ -121,6 +123,23 @@ public class Order_Checkout_Activity extends AppCompatActivity {
             intent.putExtra("lng", selectedLocation.getLongitude());
             startActivity(intent);
         });
+
+        setupBottomNavigation();
+    }
+
+    private void mapControllerSetCenter() {
+        if (mapView != null) mapView.getController().setCenter(selectedLocation);
+    }
+
+    private void setupBottomNavigation() {
+        findViewById(R.id.navHome).setOnClickListener(v -> {
+            Intent intent = new Intent(this, MapExplorerActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        });
+        findViewById(R.id.navWallet).setOnClickListener(v -> startActivity(new Intent(this, WalletActivity.class)));
+        findViewById(R.id.navOrders).setOnClickListener(v -> startActivity(new Intent(this, My_Orders_Activity.class)));
+        findViewById(R.id.navProfile).setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
     }
 
     private void updateQuantityText() {
@@ -129,45 +148,18 @@ public class Order_Checkout_Activity extends AppCompatActivity {
 
     private void selectQuantityType(boolean isLiter) {
         if (isLiter) {
-            unit = "لتر";
-            quantity = 500;
+            unit = "لتر"; quantity = 500;
             btnByLiter.setCardBackgroundColor(Color.parseColor("#BAE6FD"));
-            btnByTank.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
-            
-            updateTextColor(btnByLiter, "#0C4A6E");
-            updateTextColor(btnByTank, "#64748B");
+            btnByTank.setCardBackgroundColor(Color.WHITE);
         } else {
-            unit = "خزان";
-            quantity = 1;
-            btnByLiter.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
+            unit = "خزان"; quantity = 1;
+            btnByLiter.setCardBackgroundColor(Color.WHITE);
             btnByTank.setCardBackgroundColor(Color.parseColor("#BAE6FD"));
-
-            updateTextColor(btnByLiter, "#64748B");
-            updateTextColor(btnByTank, "#0C4A6E");
         }
         tvUnit.setText(unit);
         updateQuantityText();
     }
 
-    private void updateTextColor(CardView card, String colorHex) {
-        View layout = card.getChildAt(0);
-        if (layout instanceof LinearLayout) {
-            View text = ((LinearLayout) layout).getChildAt(0);
-            if (text instanceof TextView) ((TextView) text).setTextColor(Color.parseColor(colorHex));
-        } else if (layout instanceof TextView) {
-            ((TextView) layout).setTextColor(Color.parseColor(colorHex));
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mapView != null) mapView.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mapView != null) mapView.onPause();
-    }
+    @Override protected void onResume() { super.onResume(); if (mapView != null) mapView.onResume(); }
+    @Override protected void onPause() { super.onPause(); if (mapView != null) mapView.onPause(); }
 }

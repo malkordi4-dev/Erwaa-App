@@ -23,9 +23,17 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@drawable/user"
-
             app:strokeColor="#0069B4"
             app:strokeWidth="1dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="إدارة الطلبات"
+            android:textColor="#0A3A60"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <RelativeLayout
             android:id="@+id/btnNotificationWrapper"
@@ -65,8 +73,11 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <TextView
+                android:id="@+id/tvTabNew"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -76,6 +87,7 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
             <View
+                android:id="@+id/indicatorNew"
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
                 android:background="#0069B4" />
@@ -87,8 +99,11 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <TextView
+                android:id="@+id/tvTabInProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -98,6 +113,7 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
             <View
+                android:id="@+id/indicatorInProgress"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#E2E8F0" />
@@ -109,8 +125,11 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <TextView
+                android:id="@+id/tvTabCompleted"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -120,395 +139,22 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
             <View
+                android:id="@+id/indicatorCompleted"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#E2E8F0" />
         </LinearLayout>
     </LinearLayout>
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvProviderOrders"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fillViewport="true"
-        android:scrollbars="none"
+        android:padding="12dp"
+        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/layoutTabsOrders"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavProvider">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#E0F2FE"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="12dp">
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/layoutVolumeIcon"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        app:cardBackgroundColor="#0069B4"
-                        app:cardCornerRadius="10dp"
-                        app:cardElevation="0dp"
-                        app:strokeWidth="0dp">
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/notification"
-                            app:tint="#FFFFFF" />
-                    </com.google.android.material.card.MaterialCardView>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_toLeftOf="@id/layoutVolumeIcon"
-                        android:layout_marginRight="12dp"
-                        android:layout_centerVertical="true">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="الإشعار الصوتية مفعّلة"
-                            android:textColor="#094A74"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ستتلقى تنبيهاً فورياً عند وصول أي طلب جديد"
-                            android:textColor="#0069B4"
-                            android:textSize="11sp"
-                            android:layout_marginTop="1dp" />
-                    </LinearLayout>
-                </RelativeLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="14dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:text="طلبات جديدة انتظار الموافقة"
-                    android:textColor="#1E293B"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    app:cardBackgroundColor="#0069B4"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="0dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:paddingHorizontal="12dp"
-                        android:text="3 طلبات"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-                </com.google.android.material.card.MaterialCardView>
-            </RelativeLayout>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#E2E8F0"
-                app:strokeWidth="1dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/imgClient1"
-                            android:layout_width="42dp"
-                            android:layout_height="42dp"
-                            android:layout_alignParentRight="true"
-                            android:src="@drawable/user"
-                            android:background="#E2E8F0"
-                            android:padding="4dp" />
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_toLeftOf="@id/imgClient1"
-                            android:layout_marginRight="12dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="أحمد محمود الخالدي"
-                                android:textColor="#1E293B"
-                                android:textSize="15sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="📍 حي الرمال - شارع الشهداء"
-                                android:textColor="#64748B"
-                                android:textSize="12sp"
-                                android:layout_marginTop="2dp" />
-                        </LinearLayout>
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            app:cardBackgroundColor="#FEE2E2"
-                            app:cardCornerRadius="8dp"
-                            app:cardElevation="0dp"
-                            app:strokeWidth="0dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="منذ دقيقتين"
-                                android:textColor="#EF4444"
-                                android:textSize="10sp"
-                                android:textStyle="bold"
-                                android:paddingHorizontal="10dp"
-                                android:paddingVertical="5dp"/>
-                        </com.google.android.material.card.MaterialCardView>
-                    </RelativeLayout>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="64dp"
-                        android:layout_marginTop="14dp"
-                        app:cardBackgroundColor="#F8FAFC"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="0dp"
-                        app:strokeWidth="0dp">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:weightSum="2"
-                            android:padding="8dp">
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:gravity="center">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="الكمية المطلوبة" android:textColor="#64748B" android:textSize="11sp"/>
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2,500 لتر" android:textColor="#0069B4" android:textSize="15sp" android:textStyle="bold" android:layout_marginTop="2dp"/>
-                            </LinearLayout>
-                            <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#E2E8F0"/>
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:gravity="center">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="الوقت المفضل" android:textColor="#64748B" android:textSize="11sp"/>
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="اليوم، 4:00 عصراً" android:textColor="#1E293B" android:textSize="13sp" android:textStyle="bold" android:layout_marginTop="2dp"/>
-                            </LinearLayout>
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="44dp"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="14dp">
-                        <com.google.android.material.button.MaterialButton
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1.3"
-                            android:text="✓ قبول الطلب"
-                            android:textColor="#FFFFFF"
-                            android:backgroundTint="#0069B4"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="24dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"/>
-                        <com.google.android.material.button.MaterialButton
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:layout_marginRight="10dp"
-                            android:text="✕ رفض"
-                            android:textColor="#EF4444"
-                            android:backgroundTint="#FFFFFF"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="24dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            app:strokeColor="#FCA5A5"
-                            app:strokeWidth="1.2dp"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#E2E8F0"
-                app:strokeWidth="1dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/imgClient2"
-                            android:layout_width="42dp"
-                            android:layout_height="42dp"
-                            android:layout_alignParentRight="true"
-                            android:src="@drawable/user"
-
-                            android:background="#E2E8F0"
-                            android:padding="4dp" />
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_toLeftOf="@id/imgClient2"
-                            android:layout_marginRight="12dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="عمر حسن الزيني"
-                                android:textColor="#1E293B"
-                                android:textSize="15sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="📍 حي النصر - قرب البرج"
-                                android:textColor="#64748B"
-                                android:textSize="12sp"
-                                android:layout_marginTop="2dp" />
-                        </LinearLayout>
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            app:cardBackgroundColor="#F1F5F9"
-                            app:cardCornerRadius="8dp"
-                            app:cardElevation="0dp"
-                            app:strokeWidth="0dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="منذ 15 دقيقة"
-                                android:textColor="#475569"
-                                android:textSize="10sp"
-                                android:textStyle="bold"
-                                android:paddingHorizontal="10dp"
-                                android:paddingVertical="5dp"/>
-                        </com.google.android.material.card.MaterialCardView>
-                    </RelativeLayout>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="64dp"
-                        android:layout_marginTop="14dp"
-                        app:cardBackgroundColor="#F8FAFC"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="0dp"
-                        app:strokeWidth="0dp">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:weightSum="2"
-                            android:padding="8dp">
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:gravity="center">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="الكمية المطلوبة" android:textColor="#64748B" android:textSize="11sp"/>
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1,000 لتر" android:textColor="#1E293B" android:textSize="15sp" android:textStyle="bold" android:layout_marginTop="2dp"/>
-                            </LinearLayout>
-                            <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#E2E8F0"/>
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:gravity="center">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="الوقت المفضل" android:textColor="#64748B" android:textSize="11sp"/>
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="غداً صباحاً" android:textColor="#1E293B" android:textSize="13sp" android:textStyle="bold" android:layout_marginTop="2dp"/>
-                            </LinearLayout>
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="44dp"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="14dp">
-                        <com.google.android.material.button.MaterialButton
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1.3"
-                            android:text="قبول الطلب"
-                            android:textColor="#FFFFFF"
-                            android:backgroundTint="#0069B4"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="24dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"/>
-                        <com.google.android.material.button.MaterialButton
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:layout_marginRight="10dp"
-                            android:text="رفض"
-                            android:textColor="#64748B"
-                            android:backgroundTint="#FFFFFF"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="24dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            app:strokeColor="#CBD5E1"
-                            app:strokeWidth="1dp"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-    </ScrollView>
+        app:layout_constraintBottom_toTopOf="@id/bottomNavProvider"
+        tools:listitem="@layout/item_provider_order_action" />
 
     <LinearLayout
         android:id="@+id/bottomNavProvider"
@@ -521,11 +167,14 @@
         android:elevation="16dp">
 
         <LinearLayout
+            android:id="@+id/navProviderDashboard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
@@ -541,10 +190,13 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/navProviderOrders"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.2"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <LinearLayout
                 android:layout_width="85dp"
                 android:layout_height="56dp"
@@ -569,11 +221,14 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/navProviderServices"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
@@ -589,15 +244,18 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/navProviderHistory"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:src="@drawable/user"
+                android:src="@drawable/payment"
                 app:tint="#94A3B8" />
             <TextView
                 android:layout_width="wrap_content"
