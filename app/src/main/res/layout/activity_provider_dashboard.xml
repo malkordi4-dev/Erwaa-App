@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F8FAFC"
@@ -25,14 +26,53 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/btnNavNotification"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/notification"
-            app:tint="#64748B" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <RelativeLayout
+                android:id="@+id/btnNavNotification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:clickable="true"
+                android:focusable="true">
+                <ImageView
+                    android:id="@+id/ivNotificationIcon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/notification"
+                    app:tint="#64748B" />
+                <TextView
+                    android:id="@+id/tvNotificationBadge"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignRight="@id/ivNotificationIcon"
+                    android:layout_marginRight="-6dp"
+                    android:layout_marginTop="-6dp"
+                    android:background="@drawable/bg_circle_active"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="9sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgProfile"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:src="@drawable/user"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/CircleImage"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
     </RelativeLayout>
 
     <ScrollView
@@ -300,74 +340,11 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp"/>
 
-            <!-- Placeholder for dynamic list or hardcoded items -->
-            <com.google.android.material.card.MaterialCardView
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvUrgentOrders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#EF4444"
-                app:strokeWidth="1.5dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="14dp">
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_alignParentRight="true">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="توصيل مياه طوارئ - حي الرمال"
-                                android:textColor="#1E293B"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="العميل: أحمد محمود"
-                                android:textColor="#64748B"
-                                android:textSize="12sp"
-                                android:layout_marginTop="2dp" />
-                        </LinearLayout>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:background="#FEE2E2"
-                            android:text="منذ 5 دقائق"
-                            android:textColor="#EF4444"
-                            android:textSize="10sp"
-                            android:textStyle="bold"
-                            android:paddingHorizontal="8dp"
-                            android:paddingVertical="4dp"/>
-                    </RelativeLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="10dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="💧 1000 لتر" android:textColor="#475569" android:textSize="12sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📍 2.5 كم" android:textColor="#475569" android:textSize="12sp" android:layout_marginRight="16dp" android:textStyle="bold"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="38dp"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="12dp">
-                        <com.google.android.material.button.MaterialButton android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="قبول الطلب" android:textColor="#FFFFFF" android:backgroundTint="#0069B4" android:textSize="12sp" android:textStyle="bold" app:cornerRadius="8dp" android:insetTop="0dp" android:insetBottom="0dp"/>
-                        <com.google.android.material.button.MaterialButton android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_marginRight="8dp" android:text="تجاهل" android:textColor="#64748B" android:backgroundTint="#F1F5F9" android:textSize="12sp" android:textStyle="bold" app:cornerRadius="8dp" android:insetTop="0dp" android:insetBottom="0dp" app:strokeColor="#E2E8F0" app:strokeWidth="1dp"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                android:nestedScrollingEnabled="false"/>
 
         </LinearLayout>
     </ScrollView>

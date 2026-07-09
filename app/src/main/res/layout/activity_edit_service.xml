@@ -82,6 +82,7 @@
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp">
                         <ImageView
+                            android:id="@+id/imgServiceCard"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:src="@drawable/img12"
@@ -98,6 +99,7 @@
                         android:gravity="right">
 
                         <TextView
+                            android:id="@+id/tvServiceName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="خدمة توريد مياه التحلية"
@@ -106,6 +108,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tvServiceId"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
@@ -163,6 +166,7 @@
                             android:textColor="#64748B"
                             android:textSize="14sp" />
                         <EditText
+                            android:id="@+id/etPriceLitre"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_toLeftOf="@id/tvCurrencyLitre"
@@ -207,6 +211,7 @@
                             android:textColor="#64748B"
                             android:textSize="14sp" />
                         <EditText
+                            android:id="@+id/etPriceCup"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_toLeftOf="@id/tvCurrencyCup"
@@ -413,10 +418,11 @@
         android:id="@+id/layoutBottomActions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="#FFFFFF"
         android:elevation="12dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="-167dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSaveEdits"
@@ -425,17 +431,17 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="16dp"
+            android:backgroundTint="#0A3A60"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:text="حفظ التعديلات"
             android:textColor="#FFFFFF"
-            android:backgroundTint="#0A3A60"
             android:textSize="16sp"
             android:textStyle="bold"
             app:cornerRadius="27dp"
             app:icon="@drawable/sure"
             app:iconGravity="textStart"
-            app:iconPadding="8dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp" />
+            app:iconPadding="8dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

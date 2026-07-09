@@ -63,6 +63,7 @@
                     android:textStyle="bold" />
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardActiveCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@id/tvMainTitle"
@@ -73,9 +74,10 @@
                     app:cardElevation="0dp"
                     app:strokeWidth="0dp">
                     <TextView
+                        android:id="@+id/tvActiveServicesCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="3 خدمات نشطة"
+                        android:text="0 خدمات نشطة"
                         android:textColor="#0369A1"
                         android:textSize="11sp"
                         android:textStyle="bold"
@@ -133,11 +135,14 @@
         android:elevation="16dp">
 
         <LinearLayout
+            android:id="@+id/navProviderDashboard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
@@ -152,11 +157,14 @@
                 android:layout_marginTop="4dp" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/navProviderOrders"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
@@ -202,11 +210,14 @@
 
 
         <LinearLayout
+            android:id="@+id/navProviderHistory"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"

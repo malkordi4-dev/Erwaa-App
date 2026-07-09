@@ -46,6 +46,11 @@ public class UserTypeActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
 
+        findViewById(R.id.btnAdminEntry).setOnClickListener(v -> {
+            Intent intent = new Intent(UserTypeActivity.this, AdminLoginActivity.class);
+            startActivity(intent);
+        });
+
         btnNext.setOnClickListener(v -> {
             if (selectedType == 1) {
                 Intent intent = new Intent(UserTypeActivity.this, RegisterActivity.class);

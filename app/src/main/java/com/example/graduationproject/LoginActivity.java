@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -101,6 +102,10 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
+                            if (!user.isEmailVerified()) {
+                                showVerificationNeededDialog(email);
+                                return;
+                            }
                             String userId = user.getUid();
                             saveUserDataLocally(email, userId);
                             fetchUserRole(userId);
@@ -154,6 +159,40 @@ public class LoginActivity extends AppCompatActivity {
         
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        finish();
+    }
+
+    private void showVerificationNeededDialog(String email) {
+        new AlertDialog.Builder(LoginActivity.this)
+                .setTitle("تفعيل الحساب مطلوب")
+                .setMessage("لم يتم تفعيل حسابك بعد.\n\nيرجى النقر على رابط التفعيل الذي تم إرساله إلى بريدك الإلكتروني: " + email + "\n\nبعد التفعيل، يمكنك تسجيل الدخول.")
+                .setPositiveButton("إعادة إرسال الرابط", (dialog, which) -> resendVerificationEmail())
+                .setNegativeButton("حسناً", (dialog, which) -> signOutAndFinish())
+                .setCancelable(false)
+                .show();
+    }
+
+    private void resendVerificationEmail() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            user.sendEmailVerification()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "تم إرسال رابط التفعيل مجدداً", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "فشل إرسال الرابط، يرجى المحاولة لاحقاً", Toast.LENGTH_SHORT).show();
+                        }
+                        signOutAndFinish();
+                    });
+        } else {
+            signOutAndFinish();
+        }
+    }
+
+    private void signOutAndFinish() {
+        if (mAuth.getCurrentUser() != null) {
+            mAuth.signOut();
+        }
         finish();
     }
 }

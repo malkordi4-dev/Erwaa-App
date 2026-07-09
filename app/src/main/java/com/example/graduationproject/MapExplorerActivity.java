@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -23,6 +22,7 @@ import androidx.cardview.widget.CardView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -35,12 +35,13 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MapExplorerActivity extends AppCompatActivity {
 
-    private static final String TAG = "MapExplorerDebug";
     private MapView map = null;
     private IMapController mapController;
     private EditText etSearch;
@@ -52,6 +53,9 @@ public class MapExplorerActivity extends AppCompatActivity {
     private MaterialCardView btnFilterWell, btnFilterTruck, btnFilterStorage;
     private String currentFilter = null;
     private FirebaseFirestore db;
+    private ListenerRegistration servicesListener;
+    private List<Marker> serviceMarkers = new ArrayList<>();
+    private List<Marker> providerMarkers = new ArrayList<>();
 
     private String selectedProviderId = "";
     private String selectedProviderName = "";
@@ -59,10 +63,13 @@ public class MapExplorerActivity extends AppCompatActivity {
     private String selectedAddress = "";
     private double selectedLat = 0;
     private double selectedLng = 0;
+    private boolean isPickLocationMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        isPickLocationMode = getIntent().getBooleanExtra("pick_location", false);
 
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
@@ -73,10 +80,7 @@ public class MapExplorerActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         initViews();
         
-        login.setOnClickListener(v -> {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        });
+        login.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
 
         etSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
@@ -94,85 +98,19 @@ public class MapExplorerActivity extends AppCompatActivity {
             map.setMultiTouchControls(true);
             mapController = map.getController();
             mapController.setZoom(15.0);
-            // مركز الخريطة الافتراضي (غزة - الرمال)
-            mapController.setCenter(new GeoPoint(31.516, 34.448)); 
+            mapController.setCenter(new GeoPoint(31.516, 34.448));
             setupMapEvents();
         }
 
         setupClickListeners();
-        
-        // عند الدخول للواجهة: يتم فحص البيانات وإظهار جميع المزودين تلقائياً
-        checkAndAddSampleData();
-    }
 
-    private void checkAndAddSampleData() {
-        db.collection("providers").limit(1).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && (task.getResult() == null || task.getResult().isEmpty())) {
-                addSampleProvidersToFirestore();
-            } else {
-                // جلب كافة المزودين افتراضياً
-                fetchProviders(null, null);
-            }
-        });
-
-        db.collection("services").limit(1).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && (task.getResult() == null || task.getResult().isEmpty())) {
-                addSampleServicesToFirestore();
-            }
-            displayServicesMessage();
-        });
-    }
-
-    private void addSampleProvidersToFirestore() {
-        String[] names = {
-            "محطة الرمال المركزية", "بئر الشيخ رضوان", "صهريج حي النصر السريع", 
-            "مزود مياه تل الهوا", "بئر الشجاعية الكبير", "محطة مياه الزيتون",
-            "صهريج معسكر جباليا", "بئر خانيونس الرئيسي", "مستودع دير البلح", "صهريج رفح الحدودي"
-        };
-        String[] types = { "storage", "well", "truck", "well", "well", "storage", "truck", "well", "storage", "truck" };
-        double[] lats = { 31.516, 31.538, 31.530, 31.498, 31.505, 31.492, 31.542, 31.345, 31.417, 31.285 };
-        double[] lngs = { 34.448, 34.462, 34.455, 34.438, 34.482, 34.465, 34.492, 34.305, 34.350, 34.255 };
-        String[] addresses = { "حي الرمال", "الشيخ رضوان", "حي النصر", "تل الهوا", "الشجاعية", "الزيتون", "جباليا", "خانيونس", "دير البلح", "رفح" };
-
-        for (int i = 0; i < names.length; i++) {
-            Map<String, Object> provider = new HashMap<>();
-            provider.put("business_name", names[i]);
-            provider.put("provider_type", types[i]);
-            provider.put("current_lat", lats[i]);
-            provider.put("current_lng", lngs[i]);
-            provider.put("status", "نشط");
-            provider.put("location_name", addresses[i]);
-            db.collection("providers").add(provider);
+        if (isPickLocationMode) {
+            findViewById(R.id.btnConfirm).setVisibility(View.GONE);
+            findViewById(R.id.bottomSheetCard).setVisibility(View.GONE);
+        } else {
+            checkAndAddSampleData();
+            startListeningForActiveServices(); // إضافة الخدمات الجديدة المقبولة
         }
-        // جلب البيانات بعد الإضافة
-        new android.os.Handler().postDelayed(() -> fetchProviders(null, null), 1500);
-    }
-
-    private void addSampleServicesToFirestore() {
-        String[][] services = {
-            {"1", "طلب مياه لمرة واحدة", "صهريج مياه نقي يصلك فوراً إلى باب المنزل."},
-            {"2", "اشتراك مياه شهري", "تعبئة دورية لخزانك (4 مرات شهرياً) بخصم 20%."},
-            {"3", "مبادرة الطلب الجماعي", "وفر تكاليف النقل بالطلب المشترك مع الجيران."}
-        };
-        for (String[] s : services) {
-            Map<String, Object> service = new HashMap<>();
-            service.put("name_ar", s[1]);
-            service.put("description_ar", s[2]);
-            db.collection("services").document(s[0]).set(service);
-        }
-    }
-
-    private void displayServicesMessage() {
-        db.collection("services").get().addOnSuccessListener(queryDocumentSnapshots -> {
-            if (!queryDocumentSnapshots.isEmpty()) {
-                StringBuilder sb = new StringBuilder("الخدمات المتوفرة حالياً:\n");
-                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                    String name = doc.getString("name_ar");
-                    if (name != null) sb.append("🔹 ").append(name).append("\n");
-                }
-                Toast.makeText(MapExplorerActivity.this, sb.toString().trim(), Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     private void initViews() {
@@ -194,16 +132,13 @@ public class MapExplorerActivity extends AppCompatActivity {
         btnFilterTruck.setOnClickListener(v -> handleFilterClick("truck", btnFilterTruck));
         btnFilterStorage.setOnClickListener(v -> handleFilterClick("storage", btnFilterStorage));
 
-        findViewById(R.id.btnZoomIn).setOnClickListener(v -> mapController.zoomIn());
-        findViewById(R.id.btnZoomOut).setOnClickListener(v -> mapController.zoomOut());
         findViewById(R.id.btnMyLocation).setOnClickListener(v -> {
             mapController.animateTo(new GeoPoint(31.516, 34.448));
-            mapController.setZoom(16.0);
             hideBottomCard();
         });
 
         Confirm1.setOnClickListener(v -> {
-            if (selectedProviderId.isEmpty()) return;
+            if (selectedProviderName.isEmpty()) return;
             Intent intent = new Intent(this, ProviderDetailsActivity.class);
             intent.putExtra("provider_id", selectedProviderId);
             intent.putExtra("provider_name", selectedProviderName);
@@ -215,162 +150,173 @@ public class MapExplorerActivity extends AppCompatActivity {
         });
     }
 
-    private void handleFilterClick(String type, MaterialCardView clickedCard) {
-        if (type.equals(currentFilter)) {
-            currentFilter = null;
-            resetFilterUI();
-            fetchProviders(null, null);
-        } else {
-            currentFilter = type;
-            updateFilterUI(clickedCard);
-            fetchProviders(type, null);
-        }
+    private void checkAndAddSampleData() {
+        db.collection("providers").limit(1).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && (task.getResult() == null || task.getResult().isEmpty())) {
+                addSampleProvidersToFirestore();
+            } else {
+                fetchProviders(null, null);
+            }
+        });
     }
 
-    private void updateFilterUI(MaterialCardView activeCard) {
-        resetFilterUI();
-        activeCard.setCardBackgroundColor(Color.parseColor("#E3F2FD"));
-        activeCard.setStrokeColor(Color.parseColor("#0069B4"));
-        activeCard.setStrokeWidth(4);
+    private void addSampleProvidersToFirestore() {
+        String[] names = {"محطة الرمال", "بئر الشيخ رضوان", "صهريج حي النصر"};
+        String[] types = {"storage", "well", "truck"};
+        double[] lats = {31.516, 31.538, 31.530};
+        double[] lngs = {34.448, 34.462, 34.455};
+        for (int i = 0; i < names.length; i++) {
+            Map<String, Object> p = new HashMap<>();
+            p.put("business_name", names[i]);
+            p.put("provider_type", types[i]);
+            p.put("current_lat", lats[i]);
+            p.put("current_lng", lngs[i]);
+            p.put("status", "نشط");
+            p.put("location_name", "غزة");
+            db.collection("providers").add(p);
+        }
+        fetchProviders(null, null);
     }
 
-    private void resetFilterUI() {
-        MaterialCardView[] cards = {btnFilterWell, btnFilterTruck, btnFilterStorage};
-        for (MaterialCardView c : cards) {
-            c.setCardBackgroundColor(Color.WHITE);
-            c.setStrokeWidth(0);
-        }
+    private void startListeningForActiveServices() {
+        if (servicesListener != null) servicesListener.remove();
+        servicesListener = db.collection("services")
+                .whereEqualTo("status", "approved")
+                .whereEqualTo("isActive", true)
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) return;
+                    if (snapshots != null) {
+                        clearMarkers(serviceMarkers);
+                        for (QueryDocumentSnapshot doc : snapshots) {
+                            ServiceModel s = doc.toObject(ServiceModel.class);
+                            s.setId(doc.getId());
+                            if (s.getLatitude() != 0) addServiceMarker(s);
+                        }
+                        map.invalidate();
+                    }
+                });
     }
 
     private void fetchProviders(String type, String searchQuery) {
-        clearMap();
+        clearMarkers(providerMarkers);
         Query query = db.collection("providers");
-        if (type != null) {
-            query = query.whereEqualTo("provider_type", type);
-        }
+        if (type != null) query = query.whereEqualTo("provider_type", type);
 
         query.get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
-                StringBuilder foundProviders = new StringBuilder();
-                int count = 0;
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    String id = document.getId();
-                    String businessName = document.getString("business_name");
-                    String providerType = document.getString("provider_type");
-                    String locName = document.getString("location_name");
-                    Double lat = document.getDouble("current_lat");
-                    Double lng = document.getDouble("current_lng");
+                for (QueryDocumentSnapshot doc : task.getResult()) {
+                    String name = doc.getString("business_name");
+                    Double lat = doc.getDouble("current_lat");
+                    Double lng = doc.getDouble("current_lng");
+                    String pType = doc.getString("provider_type");
+                    if (name == null || lat == null || lng == null) continue;
+                    if (searchQuery != null && !name.toLowerCase().contains(searchQuery.toLowerCase())) continue;
 
-                    if (businessName == null || lat == null || lng == null) continue;
+                    int icon = R.drawable.water;
+                    int color = Color.parseColor("#0069B4");
+                    if ("truck".equals(pType)) { icon = R.drawable.truck; color = Color.parseColor("#10B981"); }
+                    else if ("storage".equals(pType)) { icon = R.drawable.barrel; color = Color.parseColor("#FF9800"); }
 
-                    if (searchQuery != null && !businessName.toLowerCase().contains(searchQuery.toLowerCase())) {
-                        continue;
-                    }
-
-                    count++;
-                    foundProviders.append("📍 ").append(businessName).append("\n");
-
-                    int iconRes = R.drawable.water;
-                    int color = Color.parseColor("#0069B4"); // Well - Blue
-                    if ("truck".equals(providerType)) {
-                        iconRes = R.drawable.truck;
-                        color = Color.parseColor("#4CAF50"); // Truck - Green
-                    } else if ("storage".equals(providerType)) {
-                        iconRes = R.drawable.barrel;
-                        color = Color.parseColor("#FF9800"); // Storage - Orange
-                    }
-
-                    addCustomMarker(id, new GeoPoint(lat, lng), businessName, locName, getArabicType(providerType), iconRes, color);
-                }
-                
-                // إظهار الرسالة فقط عند الفلترة وليس عند التحميل الكلي
-                if (type != null) {
-                    if (count > 0) {
-                        Toast.makeText(this, "تم العثور على مزودي خدمة " + getArabicType(type) + ":\n" + foundProviders.toString().trim(), Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(this, "لا يوجد مزودين متاحين لخدمة " + getArabicType(type), Toast.LENGTH_SHORT).show();
-                    }
+                    addCustomMarker(doc.getId(), new GeoPoint(lat, lng), name, doc.getString("location_name"), getArabicType(pType), icon, color);
                 }
                 map.invalidate();
             }
         });
     }
 
-    private void addCustomMarker(String id, GeoPoint point, String title, String address, String sourceType, int iconRes, int color) {
-        Marker marker = new Marker(map);
-        marker.setPosition(point);
-        // التمركز في المنتصف ليتناسب مع شكل البطاقة المربعة
-        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
-        marker.setInfoWindow(null);
-        
-        View markerView = LayoutInflater.from(this).inflate(R.layout.custom_marker_layout, null);
-        ImageView iconView = markerView.findViewById(R.id.markerIcon);
-        MaterialCardView container = markerView.findViewById(R.id.markerContainer);
-        
-        if (iconView != null) {
-            iconView.setImageResource(iconRes);
-            iconView.setColorFilter(color);
-        }
-        
-        if (container != null) {
-            container.setStrokeColor(color);
-        }
+    private void addServiceMarker(ServiceModel s) {
+        Marker m = new Marker(map);
+        m.setPosition(new GeoPoint(s.getLatitude(), s.getLongitude()));
+        m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+        m.setIcon(createCustomMarkerIcon(R.drawable.water, Color.parseColor("#0069B4")));
+        m.setOnMarkerClickListener((marker, mv) -> {
+            showBottomCard(s.getNameAr(), s.getProviderName(), "خدمة نشطة");
+            selectedProviderId = s.getProviderId();
+            selectedProviderName = s.getProviderName();
+            mapController.animateTo(marker.getPosition());
+            return true;
+        });
+        map.getOverlays().add(m);
+        serviceMarkers.add(m);
+    }
 
-        // قياس الواجهة ورسمها لتحويلها إلى Bitmap بجودة عالية وحجم كبير
-        markerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        markerView.layout(0, 0, markerView.getMeasuredWidth(), markerView.getMeasuredHeight());
-        Bitmap bitmap = Bitmap.createBitmap(markerView.getMeasuredWidth(), markerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        markerView.draw(canvas);
-        
-        marker.setIcon(new BitmapDrawable(getResources(), bitmap));
-        marker.setOnMarkerClickListener((m, mapView) -> {
-            selectedProviderId = id;
-            selectedProviderName = title;
-            selectedSourceType = sourceType;
-            selectedAddress = address;
-            selectedLat = point.getLatitude();
-            selectedLng = point.getLongitude();
-            showBottomCard(title, address, sourceType);
+    private void addCustomMarker(String id, GeoPoint point, String title, String address, String type, int icon, int color) {
+        Marker m = new Marker(map);
+        m.setPosition(point);
+        m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+        m.setIcon(createCustomMarkerIcon(icon, color));
+        m.setOnMarkerClickListener((marker, mv) -> {
+            selectedProviderId = id; selectedProviderName = title; selectedSourceType = type;
+            selectedAddress = address; selectedLat = point.getLatitude(); selectedLng = point.getLongitude();
+            showBottomCard(title, address, type);
             mapController.animateTo(point);
             return true;
         });
-        map.getOverlays().add(marker);
+        map.getOverlays().add(m);
+        providerMarkers.add(m);
     }
 
-    private void setupMapEvents() {
-        MapEventsReceiver mReceive = new MapEventsReceiver() {
-            @Override public boolean singleTapConfirmedHelper(GeoPoint p) { hideBottomCard(); return true; }
-            @Override public boolean longPressHelper(GeoPoint p) { return false; }
-        };
-        map.getOverlays().add(0, new MapEventsOverlay(mReceive));
+    private BitmapDrawable createCustomMarkerIcon(int resId, int color) {
+        View v = LayoutInflater.from(this).inflate(R.layout.custom_marker_layout, null);
+        ImageView img = v.findViewById(R.id.markerIcon);
+        MaterialCardView card = v.findViewById(R.id.markerContainer);
+        if (img != null) { img.setImageResource(resId); img.setColorFilter(color); }
+        if (card != null) card.setStrokeColor(color);
+        v.measure(0, 0); v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
+        Bitmap b = Bitmap.createBitmap(v.getMeasuredWidth(), v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        v.draw(new Canvas(b));
+        return new BitmapDrawable(getResources(), b);
+    }
+
+    private void clearMarkers(List<Marker> list) {
+        for (Marker m : list) map.getOverlays().remove(m);
+        list.clear();
+    }
+
+    private void handleFilterClick(String type, MaterialCardView card) {
+        if (type.equals(currentFilter)) { currentFilter = null; resetFilterUI(); fetchProviders(null, null); }
+        else { currentFilter = type; updateFilterUI(card); fetchProviders(type, null); }
+    }
+
+    private void updateFilterUI(MaterialCardView card) {
+        resetFilterUI();
+        card.setCardBackgroundColor(Color.parseColor("#E3F2FD"));
+        card.setStrokeColor(Color.parseColor("#0069B4"));
+        card.setStrokeWidth(4);
+    }
+
+    private void resetFilterUI() {
+        MaterialCardView[] cards = {btnFilterWell, btnFilterTruck, btnFilterStorage};
+        for (MaterialCardView c : cards) { c.setCardBackgroundColor(Color.WHITE); c.setStrokeWidth(0); }
     }
 
     private String getArabicType(String type) {
         if ("well".equals(type)) return "بئر مياه 🚰";
         if ("truck".equals(type)) return "صهريج متنقل 🚛";
-        if ("storage".equals(type)) return "مستودع مياه 🏗️";
         return "مزود خدمة";
     }
 
-    private void clearMap() {
-        if (map == null) return;
-        map.getOverlays().clear();
-        setupMapEvents();
-        hideBottomCard();
+    private void setupMapEvents() {
+        map.getOverlays().add(0, new MapEventsOverlay(new MapEventsReceiver() {
+            @Override public boolean singleTapConfirmedHelper(GeoPoint p) {
+                if (isPickLocationMode) {
+                    Intent r = new Intent(); r.putExtra("lat", p.getLatitude()); r.putExtra("lng", p.getLongitude());
+                    setResult(RESULT_OK, r); finish(); return true;
+                }
+                hideBottomCard(); return true;
+            }
+            @Override public boolean longPressHelper(GeoPoint p) { return false; }
+        }));
     }
 
-    private void showBottomCard(String title, String address, String sourceType) {
-        if (tvLocationTitle != null) tvLocationTitle.setText(title);
-        if (tvLocationAddress != null) tvLocationAddress.setText(address);
-        if (tvNearestSource != null) tvNearestSource.setText(sourceType);
+    private void showBottomCard(String title, String address, String type) {
+        tvLocationTitle.setText(title); tvLocationAddress.setText(address); tvNearestSource.setText(type);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
-    private void hideBottomCard() {
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-    }
+    private void hideBottomCard() { bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN); }
 
+    @Override protected void onDestroy() { super.onDestroy(); if (servicesListener != null) servicesListener.remove(); }
     @Override public void onResume() { super.onResume(); if(map != null) map.onResume(); }
     @Override public void onPause() { super.onPause(); if(map != null) map.onPause(); }
 }

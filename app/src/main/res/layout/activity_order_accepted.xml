@@ -20,9 +20,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="حالة الطلب "
+            android:text="حالة الطلب المقبول"
             android:textColor="#0069B4"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/btnBack"
@@ -50,30 +51,29 @@
             android:padding="24dp">
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="170dp"
-                android:layout_height="170dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="28dp"
-                app:cardCornerRadius="95dp"
-                app:cardElevation="6dp"
-                app:strokeColor="#CBD5E1"
-                app:strokeWidth="2.5dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="75dp"
+                app:cardElevation="4dp"
+                app:strokeColor="#0069B4"
+                app:strokeWidth="2dp"
                 app:cardBackgroundColor="#FFFFFF">
-
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:layout_marginTop="20dp"
                     android:src="@drawable/img10" />
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
+                android:id="@+id/tvSuccessTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="تم قبول طلبك بنجاح!"
+                android:text="تم قبول الطلب!"
                 android:textColor="#0F172A"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:gravity="center" />
 
@@ -82,12 +82,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:layout_marginHorizontal="8dp"
-                android:text="قام المزود (محطة غزة المركزية) بالموافقة على طلبك. يرجى إتمام عملية الدفع لتأكيد الحجز وبدء التوصيل."
-                android:textColor="#334155"
+                android:text="جاري تحميل التفاصيل..."
+                android:textColor="#475569"
                 android:textSize="14sp"
                 android:gravity="center"
-                android:lineSpacingExtra="5dp" />
+                android:lineSpacingExtra="4dp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -96,107 +95,111 @@
                 app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="2dp"
-                app:strokeColor="#475569"
-                app:strokeWidth="2dp">
+                app:strokeColor="#E2E8F0"
+                app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="16dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:weightSum="3"
-                        android:gravity="center_vertical">
+                        android:baselineAligned="false">
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="right">
+                            android:orientation="vertical">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="نوع الخدمة"
-                                android:textColor="#64748B"
+                                android:textColor="#94A3B8"
                                 android:textSize="11sp" />
                             <TextView
                                 android:id="@+id/tvServiceTypeName"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:text="توصيل مياه صالحة للشرب"
-                                android:textColor="#0F172A"
+                                android:layout_marginTop="4dp"
+                                android:text="---"
+                                android:textColor="#1E293B"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
-
-                        <View
-                            android:layout_width="2dp"
-                            android:layout_height="36dp"
-                            android:background="#475569"
-                            android:layout_marginHorizontal="12dp"/>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="right">
+                            android:orientation="vertical">
                             <TextView
+                                android:id="@+id/tvQuantityLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="الكمية"
-                                android:textColor="#64748B"
+                                android:text="الكمية / الباقة"
+                                android:textColor="#94A3B8"
                                 android:textSize="11sp" />
                             <TextView
                                 android:id="@+id/tvServiceQuantityValue"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:text="500 لتر"
+                                android:layout_marginTop="4dp"
+                                android:text="---"
                                 android:textColor="#0069B4"
-                                android:textSize="16sp"
+                                android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="1.5dp"
-                        android:background="#CBD5E1"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp" />
+                        android:layout_height="1dp"
+                        android:background="#F1F5F9"
+                        android:layout_marginVertical="12dp" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/ivStatusCheckIcon"
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/protection"
-                            app:tint="#0069B4" />
-
                         <TextView
-                            android:id="@+id/tvPaymentStatusLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toLeftOf="@id/ivStatusCheckIcon"
-                            android:layout_marginRight="8dp"
-                            android:layout_centerVertical="true"
-                            android:text="حالة الطلب: بانتظار الدفع"
-                            android:textColor="#0069B4"
-                            android:textSize="14sp"
+                            android:layout_alignParentRight="true"
+                            android:text="السعر الإجمالي"
+                            android:textColor="#94A3B8"
+                            android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/tvAcceptedOrderPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="0.00 ₪"
+                            android:textColor="#1E293B"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
                     </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#F1F5F9"
+                        android:layout_marginVertical="12dp" />
+
+                    <TextView
+                        android:id="@+id/tvPaymentStatusLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="حالة الدفع: بانتظار السداد"
+                        android:textColor="#0069B4"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:drawablePadding="8dp"
+                        app:drawableRightCompat="@drawable/protection"
+                        app:drawableTint="#0069B4" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -212,63 +215,51 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
-            android:id="@+id/layoutFooterActions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp"
-            android:background="#F8FAFC">
+            android:background="#FFFFFF"
+            android:elevation="4dp">
 
             <Button
                 android:id="@+id/btnNavigateToPayment"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:text="💳  الانتقال إلى الدفع"
+                android:layout_height="54dp"
+                android:text="💳 الانتقال لإتمام الدفع"
                 android:textColor="#FFFFFF"
-                android:textSize="15sp"
-                android:textStyle="bold"
                 android:backgroundTint="#0069B4"
+                android:textStyle="bold"
                 app:cornerRadius="12dp" />
 
             <Button
                 android:id="@+id/btnCancelCurrentOrder"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="12dp"
-                android:text="❌  إلغاء الطلب"
-                android:textColor="#DC2626"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:backgroundTint="#FFFFFF"
-                app:cornerRadius="12dp"
-                android:strokeColor="#DC2626"
-                app:strokeWidth="0.5dp"/>
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:text="إلغاء الطلب"
+                android:textColor="#DC2626" />
         </LinearLayout>
 
-        <!-- Global Navigation Bar -->
         <LinearLayout
             android:id="@+id/bottomNavAccepted"
             android:layout_width="match_parent"
-            android:layout_height="72dp"
+            android:layout_height="64dp"
             android:background="#FFFFFF"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:elevation="8dp">
-            <LinearLayout android:id="@+id/navProfile" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
-                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/user" app:tint="#94A3B8" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="حسابي" android:textColor="#94A3B8" android:textSize="11sp" />
+            android:gravity="center">
+            <LinearLayout android:id="@+id/navProfile" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/user" app:tint="#94A3B8" />
             </LinearLayout>
-            <LinearLayout android:id="@+id/navWallet" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
-                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/wallet" app:tint="#94A3B8" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="المحفظة" android:textColor="#94A3B8" android:textSize="11sp" />
+            <LinearLayout android:id="@+id/navWallet" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/wallet" app:tint="#94A3B8" />
             </LinearLayout>
-            <LinearLayout android:id="@+id/navOrders" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
-                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/personal" app:tint="#0069B4" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="طلباتي" android:textColor="#0069B4" android:textSize="11sp" android:textStyle="bold" />
+            <LinearLayout android:id="@+id/navOrders" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/personal" app:tint="#0069B4" />
             </LinearLayout>
-            <LinearLayout android:id="@+id/navHome" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
-                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/home" app:tint="#94A3B8" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="الرئيسية" android:textColor="#94A3B8" android:textSize="11sp" />
+            <LinearLayout android:id="@+id/navHome" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/home" app:tint="#94A3B8" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

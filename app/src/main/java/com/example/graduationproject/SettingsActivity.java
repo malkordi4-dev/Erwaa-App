@@ -22,6 +22,7 @@ public class SettingsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private SwitchMaterial switchNotifications, switchDataSaver;
     private TextView btnLangEn, btnLangAr;
+    private RelativeLayout btnAbout, btnPrivacy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +39,23 @@ public class SettingsActivity extends AppCompatActivity {
         switchDataSaver = findViewById(R.id.switchDataSaver);
         btnLangEn = findViewById(R.id.btnLangEn);
         btnLangAr = findViewById(R.id.btnLangAr);
+        btnAbout = findViewById(R.id.btnAbout);
+        btnPrivacy = findViewById(R.id.btnPrivacy);
 
         // العودة
         btnBack.setOnClickListener(v -> finish());
 
+        // الانتقال لشاشة عن إرواء
+        btnAbout.setOnClickListener(v -> {
+
+            startActivity(new Intent(SettingsActivity.this, AboutErwaaActivity.class));
+        });
+
+      // الانتقال لشاشة سياسة الخصوصية
+        btnPrivacy.setOnClickListener(v -> {
+
+            startActivity(new Intent(SettingsActivity.this, PrivacyActivity.class));
+        });
         // تسجيل الخروج
         btnLogout.setOnClickListener(v -> {
             mAuth.signOut();
@@ -51,11 +65,14 @@ public class SettingsActivity extends AppCompatActivity {
             finish();
         });
 
-        // تغيير كلمة المرور
+        // تغيير كلمة المرور - إرسال رابط إعادة التعيين للبريد
         btnChangePassword.setOnClickListener(v -> {
             if (mAuth.getCurrentUser() != null && mAuth.getCurrentUser().getEmail() != null) {
                 mAuth.sendPasswordResetEmail(mAuth.getCurrentUser().getEmail())
-                        .addOnSuccessListener(aVoid -> Toast.makeText(this, "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك", Toast.LENGTH_LONG).show());
+                        .addOnSuccessListener(aVoid -> Toast.makeText(this, "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني", Toast.LENGTH_LONG).show())
+                        .addOnFailureListener(e -> Toast.makeText(this, "خطأ: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            } else {
+                Toast.makeText(this, "لم يتم العثور على بريد إلكتروني مرتبط", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -75,7 +92,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void setupSwitches() {
         SharedPreferences prefs = getSharedPreferences("AppSettings", MODE_PRIVATE);
-        
+
         switchNotifications.setChecked(prefs.getBoolean("notifications", true));
         switchDataSaver.setChecked(prefs.getBoolean("data_saver", false));
 
@@ -89,15 +106,22 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void setupBottomNavigation() {
+        // زر الرئيسية يفتح شاشة الملف الشخصي (fragment_profile)
         findViewById(R.id.navHome).setOnClickListener(v -> {
-            Intent intent = new Intent(this, MapExplorerActivity.class);
+            Intent intent = new Intent(this, Profile.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         });
+
+        // زر المحفظة يفتح شاشة المحفظة
         findViewById(R.id.navWallet).setOnClickListener(v -> startActivity(new Intent(this, WalletActivity.class)));
+
+        // زر الطلبات يفتح شاشة طلباتي
         findViewById(R.id.navOrders).setOnClickListener(v -> startActivity(new Intent(this, My_Orders_Activity.class)));
+
+        // زر حسابي (أنت الآن في شاشة الإعدادات التابعة له)
         findViewById(R.id.navProfile).setOnClickListener(v -> {
-            // Already on Settings
+            // حالياً في شاشة الإعدادات
         });
     }
 }

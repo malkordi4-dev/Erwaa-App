@@ -113,6 +113,7 @@ public class RegisterProviderActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
+                            // تم إزالة تفعيل البريد الإلكتروني بناءً على طلب المستخدم
                             saveProviderData(user.getUid(), email, fullName, phone, idNumber, municipalityCode);
                         }
                     } else {
@@ -169,7 +170,8 @@ public class RegisterProviderActivity extends AppCompatActivity {
         providerData.put("location_name", selectedRegion);
         providerData.put("current_lat", lat);
         providerData.put("current_lng", lng);
-        providerData.put("status", "نشط");
+        providerData.put("email_verified", true); // تم تعيينها لتكون مفعلة تلقائياً
+        providerData.put("status", "pending_verification");
 
         db.collection("users").document(userId).set(userProfile)
                 .addOnSuccessListener(aVoid -> {
@@ -184,10 +186,11 @@ public class RegisterProviderActivity extends AppCompatActivity {
     }
 
     private void showSuccessDialog() {
+        mAuth.signOut();
         new AlertDialog.Builder(RegisterProviderActivity.this)
                 .setTitle("تم التسجيل بنجاح")
-                .setMessage("تم إنشاء حساب مقدم الخدمة الخاص بك بنجاح! يمكنك الآن تسجيل الدخول.")
-                .setPositiveButton("تسجيل الدخول", (dialog, which) -> {
+                .setMessage("تم إنشاء حساب مقدم الخدمة بنجاح!\n\nيمكنك الآن تسجيل الدخول مباشرة والبدء في تقديم خدماتك.")
+                .setPositiveButton("حسناً", (dialog, which) -> {
                     startActivity(new Intent(RegisterProviderActivity.this, LoginActivity.class));
                     finish();
                 })

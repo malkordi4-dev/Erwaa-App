@@ -63,6 +63,26 @@
         <activity android:name=".ProviderServicesActivity" />
         <activity android:name=".OrdersManagementActivity" />
         <activity android:name=".TripsHistoryActivity" />
+        <activity android:name=".NotificationsActivity" />
+        <activity android:name=".Order_Details_Activity" />
+        <activity android:name=".ProviderOrderDetailsActivity" />
+        <activity android:name=".AdminServicesActivity" />
+        <activity android:name=".AddEditServiceActivity" />
+        <activity android:name=".AdminLoginActivity" />
+        <activity android:name=".AddServiceActivity" />
+        <activity android:name=".EditServiceActivity" />
+
+        <!-- الأنشطة الإضافية -->
+        <activity android:name=".Profile" />
+        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".SettingsActivity" />
+        <activity
+            android:name=".AboutErwaaActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".PrivacyActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

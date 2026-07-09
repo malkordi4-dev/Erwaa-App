@@ -2,17 +2,23 @@ package com.example.graduationproject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +26,14 @@ public class ProviderServicesActivity extends AppCompatActivity {
 
     private RecyclerView rvServices;
     private MaterialButton btnAddNewService;
+    private TextView tvActiveServicesCount;
+    private ImageView imgProfile;
     private ProviderServicesAdapter adapter;
     private List<ServiceModel> serviceList = new ArrayList<>();
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+    private ListenerRegistration servicesListener;
+    private ListenerRegistration profileListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,68 +45,146 @@ public class ProviderServicesActivity extends AppCompatActivity {
 
         rvServices = findViewById(R.id.rvServices);
         btnAddNewService = findViewById(R.id.btnAddNewService);
+        tvActiveServicesCount = findViewById(R.id.tvActiveServicesCount);
+        imgProfile = findViewById(R.id.imgProfile);
 
         rvServices.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ProviderServicesAdapter(serviceList);
+        adapter = new ProviderServicesAdapter(serviceList, new ProviderServicesAdapter.OnServiceToggleListener() {
+            @Override
+            public void onToggle(ServiceModel service, boolean isActive) {
+                toggleServiceActive(service, isActive);
+            }
+
+            @Override
+            public void onEdit(ServiceModel service) {
+                Intent intent = new Intent(ProviderServicesActivity.this, AddEditServiceActivity.class);
+                intent.putExtra("service_id", service.getId());
+                startActivity(intent);
+            }
+        });
         rvServices.setAdapter(adapter);
-        
-        loadProviderServices();
 
         btnAddNewService.setOnClickListener(v -> {
-            Toast.makeText(this, "إضافة خدمة جديدة قيد التطوير", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, AddEditServiceActivity.class));
         });
 
+        if (imgProfile != null) {
+            imgProfile.setOnClickListener(v -> startActivity(new Intent(this, Profile.class)));
+        }
+
+        findViewById(R.id.btnNotifications).setOnClickListener(v ->
+                startActivity(new Intent(this, NotificationsActivity.class)));
+
+        listenForServices();
+        listenToProfile();
         setupBottomNavigation();
     }
 
-    private void loadProviderServices() {
+    private void listenToProfile() {
+        if (mAuth.getCurrentUser() == null) return;
+        String userId = mAuth.getCurrentUser().getUid();
+        
+        profileListener = db.collection("providers").document(userId).addSnapshotListener((doc, e) -> {
+            if (e != null || doc == null || !doc.exists()) return;
+            String imageUrl = doc.getString("profile_image");
+            if (imgProfile != null) {
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    Glide.with(this).load(imageUrl).placeholder(R.drawable.user).into(imgProfile);
+                } else {
+                    imgProfile.setImageResource(R.drawable.user);
+                }
+            }
+        });
+    }
+
+    private void listenForServices() {
         if (mAuth.getCurrentUser() == null) return;
         String userId = mAuth.getCurrentUser().getUid();
 
-        db.collection("services")
-                .whereEqualTo("provider_id", userId)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    serviceList.clear();
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        ServiceModel service = document.toObject(ServiceModel.class);
-                        // If ServiceModel doesn't have an ID field that matches document ID, we might need to set it
-                        // service.setId(document.getId()); 
-                        serviceList.add(service);
+        servicesListener = db.collection("services")
+                .whereEqualTo("providerId", userId)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) return;
+                    if (snapshots != null) {
+                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                            ServiceModel service = dc.getDocument().toObject(ServiceModel.class);
+                            service.setId(dc.getDocument().getId());
+                            
+                            int index = indexOf(service.getId());
+                            switch (dc.getType()) {
+                                case ADDED:
+                                    if (index == -1) serviceList.add(0, service);
+                                    break;
+                                case REMOVED:
+                                    if (index != -1) serviceList.remove(index);
+                                    break;
+                                case MODIFIED:
+                                    if (index != -1) serviceList.set(index, service);
+                                    break;
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                        updateActiveCount();
                     }
-                    adapter.notifyDataSetChanged();
-                })
+                });
+    }
+
+    private void updateActiveCount() {
+        int count = 0;
+        for (ServiceModel s : serviceList) {
+            if ("approved".equals(s.getStatus()) && s.isActive()) {
+                count++;
+            }
+        }
+        if (tvActiveServicesCount != null) {
+            tvActiveServicesCount.setText(count + " خدمات نشطة");
+        }
+    }
+
+    private int indexOf(String id) {
+        for (int i = 0; i < serviceList.size(); i++) {
+            if (serviceList.get(i).getId() != null && serviceList.get(i).getId().equals(id))
+                return i;
+        }
+        return -1;
+    }
+
+    private void toggleServiceActive(ServiceModel service, boolean isActive) {
+        if (service.getId() == null) return;
+
+        service.setActive(isActive);
+        updateActiveCount();
+
+        db.collection("services").document(service.getId())
+                .update("isActive", isActive)
                 .addOnFailureListener(e -> {
-                    Log.e("ProviderServices", "Error loading services", e);
-                    Toast.makeText(this, "فشل تحميل الخدمات", Toast.LENGTH_SHORT).show();
+                    service.setActive(!isActive);
+                    updateActiveCount();
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(this, "فشل تحديث الحالة", Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void setupBottomNavigation() {
-        View navDashboard = findViewById(R.id.navProviderDashboard);
-        View navOrders = findViewById(R.id.navProviderOrders);
-        View navServices = findViewById(R.id.navProviderServices);
-        View navHistory = findViewById(R.id.navProviderHistory);
+        findViewById(R.id.navProviderDashboard).setOnClickListener(v -> {
+            startActivity(new Intent(this, ProviderDashboardActivity.class));
+            finish();
+        });
+        findViewById(R.id.navProviderOrders).setOnClickListener(v -> {
+            startActivity(new Intent(this, OrdersManagementActivity.class));
+            finish();
+        });
+        findViewById(R.id.navProviderHistory).setOnClickListener(v -> {
+            startActivity(new Intent(this, TripsHistoryActivity.class));
+            finish();
+        });
+    }
 
-        if (navDashboard != null) {
-            navDashboard.setOnClickListener(v -> {
-                startActivity(new Intent(this, ProviderDashboardActivity.class));
-                finish();
-            });
-        }
-
-        if (navOrders != null) {
-            navOrders.setOnClickListener(v -> {
-                startActivity(new Intent(this, OrdersManagementActivity.class));
-                finish();
-            });
-        }
-
-        if (navHistory != null) {
-            navHistory.setOnClickListener(v -> {
-                startActivity(new Intent(this, TripsHistoryActivity.class));
-                finish();
-            });
-        }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (servicesListener != null) servicesListener.remove();
+        if (profileListener != null) profileListener.remove();
     }
 }

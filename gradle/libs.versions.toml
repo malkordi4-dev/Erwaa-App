@@ -11,10 +11,11 @@ playServicesMaps = "18.2.0"
 cardview = "1.0.0"
 preference = "1.2.1"
 googleServices = "4.4.0"
-firebaseBom = "32.7.0"
+firebaseBom = "33.10.0"
 coreKtx = "1.12.0"
 osmdroid = "6.1.20"
 gson = "2.11.0"
+glide = "4.16.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,6 +34,8 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 osmdroid = { group = "org.osmdroid", name = "osmdroid-android", version.ref = "osmdroid" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
 
 [plugins]
 android-application = { id = "com.android.application", version = "8.7.0" }

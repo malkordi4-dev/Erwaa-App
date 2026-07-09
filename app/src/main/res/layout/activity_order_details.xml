@@ -292,7 +292,6 @@
         android:background="#FFFFFF"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent">
-        <!-- Add your bottom nav items here -->
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,89 +1,106 @@
 package com.example.graduationproject;
 
 import com.google.firebase.firestore.Exclude;
-import com.google.gson.annotations.SerializedName;
+import com.google.firebase.firestore.PropertyName;
 
 public class OrderModel {
     @Exclude
     private String id;
 
-    @SerializedName("customer_id")
-    private String customerId;
-
-    @SerializedName("provider_id")
-    private String providerId;
-
-    @SerializedName("provider_name")
-    private String providerName; // تم إضافة هذا الحقل
-
-    @SerializedName("service_id")
-    private String serviceId;
-
-    @SerializedName("status")
-    private String status; // 'pending', 'accepted', 'on_way', 'delivered', 'cancelled'
-
-    @SerializedName("order_type")
-    private String orderType;
-
-    @SerializedName("quantity")
+    private String customer_id;
+    private String provider_id;
+    private String provider_name;
+    private String service_id;
+    private String status;
+    private String order_type;
     private int quantity;
-
-    @SerializedName("unit")
     private String unit;
-
-    @SerializedName("total_price")
-    private Double totalPrice;
-
-    @SerializedName("delivery_lat")
-    private double deliveryLat;
-
-    @SerializedName("delivery_lng")
-    private double deliveryLng;
-
-    @SerializedName("address_details")
-    private String addressDetails;
-
-    @SerializedName("notes")
+    private Double total_price;
+    private double delivery_lat;
+    private double delivery_lng;
+    private String address_details;
     private String notes;
-
-    @SerializedName("scheduled_time")
-    private String scheduledTime;
-
-    @SerializedName("created_at")
-    private Object createdAt;
+    private String scheduled_time;
+    private Object created_at;
 
     public OrderModel() {}
 
+    @Exclude
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
-    public String getCustomerId() { return customerId; }
-    public void setCustomerId(String customerId) { this.customerId = customerId; }
-    public String getProviderId() { return providerId; }
-    public void setProviderId(String providerId) { this.providerId = providerId; }
-    public String getProviderName() { return providerName; }
-    public void setProviderName(String providerName) { this.providerName = providerName; }
-    public String getServiceId() { return serviceId; }
-    public void setServiceId(String serviceId) { this.serviceId = serviceId; }
+
+    @PropertyName("customer_id")
+    public String getCustomerId() { return customer_id; }
+    @PropertyName("customer_id")
+    public void setCustomerId(String customerId) { this.customer_id = customerId; }
+
+    @PropertyName("provider_id")
+    public String getProviderId() { return provider_id; }
+    @PropertyName("provider_id")
+    public void setProviderId(String providerId) { this.provider_id = providerId; }
+
+    @PropertyName("provider_name")
+    public String getProviderName() { return provider_name; }
+    @PropertyName("provider_name")
+    public void setProviderName(String providerName) { this.provider_name = providerName; }
+
+    @PropertyName("service_id")
+    public String getServiceId() { return service_id; }
+    @PropertyName("service_id")
+    public void setServiceId(String serviceId) { this.service_id = serviceId; }
+
+    @PropertyName("status")
     public String getStatus() { return status; }
+    @PropertyName("status")
     public void setStatus(String status) { this.status = status; }
-    public String getOrderType() { return orderType; }
-    public void setOrderType(String orderType) { this.orderType = orderType; }
+
+    @PropertyName("order_type")
+    public String getOrderType() { return order_type; }
+    @PropertyName("order_type")
+    public void setOrderType(String orderType) { this.order_type = orderType; }
+
+    @PropertyName("total_price")
+    public Double getTotalPrice() { return total_price; }
+    @PropertyName("total_price")
+    public void setTotalPrice(Double totalPrice) { this.total_price = totalPrice; }
+
+    @PropertyName("delivery_lat")
+    public double getDeliveryLat() { return delivery_lat; }
+    @PropertyName("delivery_lat")
+    public void setDeliveryLat(double deliveryLat) { this.delivery_lat = deliveryLat; }
+
+    @PropertyName("delivery_lng")
+    public double getDeliveryLng() { return delivery_lng; }
+    @PropertyName("delivery_lng")
+    public void setDeliveryLng(double deliveryLng) { this.delivery_lng = deliveryLng; }
+
+    @PropertyName("address_details")
+    public String getAddressDetails() { return address_details; }
+    @PropertyName("address_details")
+    public void setAddressDetails(String addressDetails) { this.address_details = addressDetails; }
+
+    @PropertyName("quantity")
     public int getQuantity() { return quantity; }
+    @PropertyName("quantity")
     public void setQuantity(int quantity) { this.quantity = quantity; }
+
+    @PropertyName("unit")
     public String getUnit() { return unit; }
+    @PropertyName("unit")
     public void setUnit(String unit) { this.unit = unit; }
-    public Double getTotalPrice() { return totalPrice; }
-    public void setTotalPrice(Double totalPrice) { this.totalPrice = totalPrice; }
-    public double getDeliveryLat() { return deliveryLat; }
-    public void setDeliveryLat(double deliveryLat) { this.deliveryLat = deliveryLat; }
-    public double getDeliveryLng() { return deliveryLng; }
-    public void setDeliveryLng(double deliveryLng) { this.deliveryLng = deliveryLng; }
-    public String getAddressDetails() { return addressDetails; }
-    public void setAddressDetails(String addressDetails) { this.addressDetails = addressDetails; }
+
+    @PropertyName("notes")
     public String getNotes() { return notes; }
+    @PropertyName("notes")
     public void setNotes(String notes) { this.notes = notes; }
-    public String getScheduledTime() { return scheduledTime; }
-    public void setScheduledTime(String scheduledTime) { this.scheduledTime = scheduledTime; }
-    public Object getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Object createdAt) { this.createdAt = createdAt; }
+
+    @PropertyName("scheduled_time")
+    public String getScheduledTime() { return scheduled_time; }
+    @PropertyName("scheduled_time")
+    public void setScheduledTime(String scheduledTime) { this.scheduled_time = scheduledTime; }
+
+    @PropertyName("created_at")
+    public Object getCreatedAt() { return created_at; }
+    @PropertyName("created_at")
+    public void setCreatedAt(Object createdAt) { this.created_at = createdAt; }
 }
