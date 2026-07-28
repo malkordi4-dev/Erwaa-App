@@ -16,13 +16,13 @@ import androidx.core.os.LocaleListCompat;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private SwitchMaterial switchNotifications, switchDataSaver;
     private TextView btnLangEn, btnLangAr;
-    private RelativeLayout btnAbout, btnPrivacy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,46 +39,42 @@ public class SettingsActivity extends AppCompatActivity {
         switchDataSaver = findViewById(R.id.switchDataSaver);
         btnLangEn = findViewById(R.id.btnLangEn);
         btnLangAr = findViewById(R.id.btnLangAr);
-        btnAbout = findViewById(R.id.btnAbout);
-        btnPrivacy = findViewById(R.id.btnPrivacy);
 
-        // العودة
-        btnBack.setOnClickListener(v -> finish());
+        // العودة للواجهة السابقة
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
+        }
 
-        // الانتقال لشاشة عن إرواء
-        btnAbout.setOnClickListener(v -> {
+        // تسجيل الخروج الآمن من الفايربيس وتصفير الشاشات
+        if (btnLogout != null) {
+            btnLogout.setOnClickListener(v -> {
+                mAuth.signOut();
+                Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            });
+        }
 
-            startActivity(new Intent(SettingsActivity.this, AboutErwaaActivity.class));
-        });
+        // تغيير كلمة المرور عبر الفايربيس بشكل آمن
+        if (btnChangePassword != null) {
+            btnChangePassword.setOnClickListener(v -> {
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user != null && user.getEmail() != null && !user.getEmail().trim().isEmpty()) {
+                    mAuth.sendPasswordResetEmail(user.getEmail())
+                            .addOnSuccessListener(aVoid ->
+                                    Toast.makeText(this, "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني بنجاح ✅", Toast.LENGTH_LONG).show())
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(this, "فشل إرسال الرابط: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                } else {
+                    Toast.makeText(this, "عذراً، هذا الحساب غير مرتبط ببريد إلكتروني صالح لإعادة التعيين.", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
 
-      // الانتقال لشاشة سياسة الخصوصية
-        btnPrivacy.setOnClickListener(v -> {
-
-            startActivity(new Intent(SettingsActivity.this, PrivacyActivity.class));
-        });
-        // تسجيل الخروج
-        btnLogout.setOnClickListener(v -> {
-            mAuth.signOut();
-            Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        });
-
-        // تغيير كلمة المرور - إرسال رابط إعادة التعيين للبريد
-        btnChangePassword.setOnClickListener(v -> {
-            if (mAuth.getCurrentUser() != null && mAuth.getCurrentUser().getEmail() != null) {
-                mAuth.sendPasswordResetEmail(mAuth.getCurrentUser().getEmail())
-                        .addOnSuccessListener(aVoid -> Toast.makeText(this, "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني", Toast.LENGTH_LONG).show())
-                        .addOnFailureListener(e -> Toast.makeText(this, "خطأ: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-            } else {
-                Toast.makeText(this, "لم يتم العثور على بريد إلكتروني مرتبط", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // تغيير اللغة
-        btnLangEn.setOnClickListener(v -> setAppLocale("en"));
-        btnLangAr.setOnClickListener(v -> setAppLocale("ar"));
+        // تغيير لغة التطبيق
+        if (btnLangEn != null) btnLangEn.setOnClickListener(v -> setAppLocale("en"));
+        if (btnLangAr != null) btnLangAr.setOnClickListener(v -> setAppLocale("ar"));
 
         setupSwitches();
         setupBottomNavigation();
@@ -87,41 +83,65 @@ public class SettingsActivity extends AppCompatActivity {
     private void setAppLocale(String languageCode) {
         LocaleListCompat appLocale = LocaleListCompat.forLanguageTags(languageCode);
         AppCompatDelegate.setApplicationLocales(appLocale);
-        Toast.makeText(this, "جاري تغيير اللغة...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "جاري تغيير لغة التطبيق...", Toast.LENGTH_SHORT).show();
     }
 
     private void setupSwitches() {
         SharedPreferences prefs = getSharedPreferences("AppSettings", MODE_PRIVATE);
 
-        switchNotifications.setChecked(prefs.getBoolean("notifications", true));
-        switchDataSaver.setChecked(prefs.getBoolean("data_saver", false));
+        if (switchNotifications != null) {
+            switchNotifications.setChecked(prefs.getBoolean("notifications", true));
+            switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                prefs.edit().putBoolean("notifications", isChecked).apply();
+            });
+        }
 
-        switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            prefs.edit().putBoolean("notifications", isChecked).apply();
-        });
-
-        switchDataSaver.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            prefs.edit().putBoolean("data_saver", isChecked).apply();
-        });
+        if (switchDataSaver != null) {
+            switchDataSaver.setChecked(prefs.getBoolean("data_saver", false));
+            switchDataSaver.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                prefs.edit().putBoolean("data_saver", isChecked).apply();
+            });
+        }
     }
 
+    // 🌟 تحديث أزرار التنقل السفلي لتتطابق مع بقية شاشات التطبيق بشكل موحد وتفاعلي
     private void setupBottomNavigation() {
-        // زر الرئيسية يفتح شاشة الملف الشخصي (fragment_profile)
-        findViewById(R.id.navHome).setOnClickListener(v -> {
-            Intent intent = new Intent(this, Profile.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        });
+        View navDashboard = findViewById(R.id.nav_dashboard);
+        View navInitiatives = findViewById(R.id.nav_initiatives);
+        View navMap = findViewById(R.id.nav_map);
+        View navWallet = findViewById(R.id.nav_wallet);
 
-        // زر المحفظة يفتح شاشة المحفظة
-        findViewById(R.id.navWallet).setOnClickListener(v -> startActivity(new Intent(this, WalletActivity.class)));
+        if (navDashboard != null) {
+            navDashboard.setOnClickListener(v -> {
+                Intent intent = new Intent(this, InitiatorDashboardActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
+            });
+        }
 
-        // زر الطلبات يفتح شاشة طلباتي
-        findViewById(R.id.navOrders).setOnClickListener(v -> startActivity(new Intent(this, My_Orders_Activity.class)));
+        if (navInitiatives != null) {
+            navInitiatives.setOnClickListener(v -> {
+                Intent intent = new Intent(this, InitiativesListActivity.class);
+                startActivity(intent);
+                finish();
+            });
+        }
 
-        // زر حسابي (أنت الآن في شاشة الإعدادات التابعة له)
-        findViewById(R.id.navProfile).setOnClickListener(v -> {
-            // حالياً في شاشة الإعدادات
-        });
+        if (navMap != null) {
+            navMap.setOnClickListener(v -> {
+                Intent intent = new Intent(this, MapExplorerActivity.class);
+                startActivity(intent);
+                finish();
+            });
+        }
+
+        if (navWallet != null) {
+            navWallet.setOnClickListener(v -> {
+                Intent intent = new Intent(this, WalletActivity.class);
+                startActivity(intent);
+                finish();
+            });
+        }
     }
 }

@@ -22,21 +22,16 @@ public class Monthly_Subscription_Activity extends AppCompatActivity {
     
     private int selectedPlanPrice = 45;
     private String selectedPlanName = "الباقة الأساسية";
-    private int selectedQuantity = 1000; 
+    private int selectedQuantity = 1000; // Default for basic
     private String selectedFrequency = "كل أسبوع";
     private String selectedDay = "السبت";
-    
-    private String providerId, providerName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monthly_subscription);
 
-        // استقبال بيانات المزود
-        providerId = getIntent().getStringExtra("provider_id");
-        providerName = getIntent().getStringExtra("provider_name");
-
+        // Initialize Views
         ImageView btnBack = findViewById(R.id.btnBack);
         planBasic = findViewById(R.id.planBasic);
         planStandard = findViewById(R.id.planStandard);
@@ -52,6 +47,7 @@ public class Monthly_Subscription_Activity extends AppCompatActivity {
         CardView btnConfirmSubscription = findViewById(R.id.btnConfirmSubscription);
         CardView btnSelectTime = findViewById(R.id.btnSelectTime);
 
+        // Days Initialization
         dayCards = new CardView[]{
                 findViewById(R.id.daySat), findViewById(R.id.daySun), findViewById(R.id.dayMon),
                 findViewById(R.id.dayTue), findViewById(R.id.dayWed), findViewById(R.id.dayThu)
@@ -61,20 +57,25 @@ public class Monthly_Subscription_Activity extends AppCompatActivity {
                 findViewById(R.id.tvTue), findViewById(R.id.tvWed), findViewById(R.id.tvThu)
         };
 
+        // Back Button
         btnBack.setOnClickListener(v -> finish());
 
+        // Plan Selection
         planBasic.setOnClickListener(v -> selectPlan(45, "الباقة الأساسية", 1000, planBasic));
         planStandard.setOnClickListener(v -> selectPlan(90, "الباقة القياسية", 2500, planStandard));
         planFamily.setOnClickListener(v -> selectPlan(160, "الباقة العائلية", 5000, planFamily));
 
+        // Frequency Selection
         freqWeekly.setOnClickListener(v -> selectFrequency("كل أسبوع", freqWeekly, freqBiWeekly));
         freqBiWeekly.setOnClickListener(v -> selectFrequency("كل أسبوعين", freqBiWeekly, freqWeekly));
 
+        // Days Selection
         for (int i = 0; i < dayCards.length; i++) {
             final int index = i;
             dayCards[i].setOnClickListener(v -> selectDay(index));
         }
 
+        // Time Selection
         btnSelectTime.setOnClickListener(v -> {
             if (tvSelectedTime.getText().toString().contains("الصباحية")) {
                 tvSelectedTime.setText("🕒  الفترة المسائية (1:00 م - 5:00 م)");
@@ -83,15 +84,14 @@ public class Monthly_Subscription_Activity extends AppCompatActivity {
             }
         });
 
+        // Confirm Button - Navigate to Review_Order_Activity
         btnConfirmSubscription.setOnClickListener(v -> {
             Intent intent = new Intent(this, Review_Order_Activity.class);
-            intent.putExtra("service_id", "subscription_monthly"); 
-            intent.putExtra("provider_id", providerId);
-            intent.putExtra("provider_name", providerName);
+            intent.putExtra("service_id", 2); // معرف الاشتراك الشهري
             intent.putExtra("quantity", selectedQuantity);
             intent.putExtra("unit", "لتر (اشتراك)");
             intent.putExtra("address", "موقع المشترك المسجل");
-            intent.putExtra("total_price_from_plan", (double)selectedPlanPrice);
+            intent.putExtra("totalPrice", (double)selectedPlanPrice);
             intent.putExtra("notes", "اشتراك شهري: " + selectedPlanName + " - " + selectedFrequency);
             intent.putExtra("scheduledTime", selectedDay + " | " + tvSelectedTime.getText().toString().replace("🕒  ", ""));
             intent.putExtra("lat", 31.51); 
@@ -108,19 +108,31 @@ public class Monthly_Subscription_Activity extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         });
-        findViewById(R.id.navWallet).setOnClickListener(v -> startActivity(new Intent(this, WalletActivity.class)));
-        findViewById(R.id.navOrders).setOnClickListener(v -> startActivity(new Intent(this, My_Orders_Activity.class)));
-        findViewById(R.id.navProfile).setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
+
+        findViewById(R.id.navWallet).setOnClickListener(v -> {
+             startActivity(new Intent(this, WalletActivity.class));
+        });
+
+        findViewById(R.id.navOrders).setOnClickListener(v -> {
+             startActivity(new Intent(this, My_Orders_Activity.class));
+        });
+
+        findViewById(R.id.navProfile).setOnClickListener(v -> {
+             startActivity(new Intent(this, HomeActivity.class));
+        });
     }
 
     private void selectPlan(int price, String name, int qty, CardView selectedCard) {
         selectedPlanPrice = price;
         selectedPlanName = name;
         selectedQuantity = qty;
+
         planBasic.setCardBackgroundColor(Color.WHITE);
         planStandard.setCardBackgroundColor(Color.WHITE);
         planFamily.setCardBackgroundColor(Color.WHITE);
+
         selectedCard.setCardBackgroundColor(Color.parseColor("#E0F2FE"));
+
         tvSummaryPrice.setText(price + ".00 ₪");
         tvBottomPrice.setText(price + ".00 ₪");
     }

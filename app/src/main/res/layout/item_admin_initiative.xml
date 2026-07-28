@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#E2E8F0"
+    app:strokeWidth="1dp"
+    app:cardBackgroundColor="#FFFFFF"
+    android:layoutDirection="rtl">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+
+            <ImageView
+                android:id="@+id/imgInitiative"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img13"
+                android:background="#CBD5E1"/>
+
+
+            <TextView
+                android:id="@+id/tvInitiativeStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|top"
+                android:layout_margin="12dp"
+                android:background="@android:drawable/toast_frame"
+                android:backgroundTint="#005B94"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="نشط"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <!-- تفاصيل ونسب التقدم -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tvInitiativeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="مشروع تحلية الرمال"
+                android:textColor="#0F172A"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- 1. شريط حالة التمويل -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="حالة التمويل"
+                    android:textColor="#64748B"
+                    android:textSize="12sp"/>
+                <TextView
+                    android:id="@+id/tvFundingPercent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="85%"
+                    android:textColor="#005B94"
+                    android:textStyle="bold"
+                    android:textSize="12sp"/>
+            </RelativeLayout>
+            <ProgressBar
+                android:id="@+id/progressFunding"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:progress="85"
+                android:progressTint="#005B94"
+                android:layout_marginTop="4dp"/>
+
+            <!-- 2. شريط تقدم التنفيذ -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="تقدم التنفيذ"
+                    android:textColor="#64748B"
+                    android:textSize="12sp"/>
+                <TextView
+                    android:id="@+id/tvExecutionPercent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="40%"
+                    android:textColor="#00A896"
+                    android:textStyle="bold"
+                    android:textSize="12sp"/>
+            </RelativeLayout>
+            <ProgressBar
+                android:id="@+id/progressExecution"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:progress="40"
+                android:progressTint="#00A896"
+                android:layout_marginTop="4dp"/>
+
+            <!-- خط فاصل ناعم -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#F1F5F9"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- شريط التحكم السفلي الجديد (التفاصيل وتحتها التحديث + أزرار الأدمن) -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- النصوص مرتبة عمودياً (تحت بعض) في أقصى اليمين -->
+                <LinearLayout
+                    android:id="@+id/layoutTextGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical"
+                    android:gravity="right">
+
+                    <TextView
+                        android:id="@+id/btnDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="التفاصيل ←"
+                        android:textColor="#005B94"
+                        android:textStyle="bold"
+                        android:textSize="13sp"
+                        android:clickable="true"
+                        android:focusable="true"/>
+
+                    <TextView
+                        android:id="@+id/tvLastUpdate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="تحديث: منذ ساعتين"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <!-- أيقونة التعديل (القلم) -->
+                    <ImageView
+                        android:id="@+id/btnEditInitiative"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/pen"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_marginLeft="14dp"
+                        android:contentDescription="تعديل" />
+
+                    <!-- أيقونة الحذف (القمامة) -->
+                    <ImageView
+                        android:id="@+id/btnDeleteInitiative"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/img2 "
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="حذف" />
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

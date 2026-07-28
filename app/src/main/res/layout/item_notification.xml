@@ -79,6 +79,42 @@
                 android:textColor="#475569"
                 android:textSize="12sp"
                 android:lineSpacingExtra="3dp"/>
+
+            <LinearLayout
+                android:id="@+id/layoutActions"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp"
+                android:visibility="gone">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPrimary"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="قبول"
+                    android:textColor="#FFFFFF"
+                    android:backgroundTint="#0069B4"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="8dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSecondary"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginRight="8dp"
+                    android:text="التفاصيل"
+                    android:textColor="#475569"
+                    app:strokeColor="#CBD5E1"
+                    android:textSize="12sp"
+                    app:cornerRadius="8dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"/>
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

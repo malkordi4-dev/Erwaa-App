@@ -25,8 +25,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Group_Order_Activity extends AppCompatActivity implements OnMapReadyCallback {
-
+public class Group_Order_Activity extends AppCompatActivity {
+/*
     private EditText etCoordinatorName, etCoordinatorPhone, etLocationDescription;
     private TextView tvTotalLitersBadge;
     private RecyclerView rvNeighborsList;
@@ -161,4 +161,6 @@ public class Group_Order_Activity extends AppCompatActivity implements OnMapRead
 
     @Override protected void onResume() { super.onResume(); mapViewLocation.onResume(); }
     @Override protected void onPause() { super.onPause(); mapViewLocation.onPause(); }
+
+ */
 }

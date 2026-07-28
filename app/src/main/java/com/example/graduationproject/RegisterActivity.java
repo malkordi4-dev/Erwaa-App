@@ -1,12 +1,9 @@
 package com.example.graduationproject;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
@@ -24,13 +21,9 @@ import java.util.Map;
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText etFullName, etEmail, etPassword, etPhone, etIdNumber;
-    private TextView tvRegion;
-    private LinearLayout layoutRegion;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private CardView btnRegister;
-
-    private String selectedRegion = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +38,6 @@ public class RegisterActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etPassword);
         etPhone = findViewById(R.id.etPhone);
         etIdNumber = findViewById(R.id.etIdNumber);
-        tvRegion = findViewById(R.id.tvRegion);
-        layoutRegion = findViewById(R.id.layoutRegion);
         btnRegister = findViewById(R.id.btnRegister);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
@@ -57,23 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
             finish();
         });
 
-        if (layoutRegion != null) {
-            layoutRegion.setOnClickListener(v -> showRegionDialog());
-        }
-
         btnRegister.setOnClickListener(v -> performSignUp());
-    }
-
-    private void showRegionDialog() {
-        String[] regions = {"غزة - الرمال", "غزة - النصر", "خانيونس", "رفح", "دير البلح", "شمال غزة"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("اختر المنطقة السكنية");
-        builder.setItems(regions, (dialog, which) -> {
-            selectedRegion = regions[which];
-            tvRegion.setText(selectedRegion);
-            tvRegion.setTextColor(Color.BLACK);
-        });
-        builder.show();
     }
 
     private void performSignUp() {
@@ -83,8 +58,8 @@ public class RegisterActivity extends AppCompatActivity {
         String phone = etPhone.getText().toString().trim();
         String idNumber = etIdNumber.getText().toString().trim();
 
-        if (email.isEmpty() || password.isEmpty() || fullName.isEmpty() || idNumber.isEmpty() || selectedRegion.isEmpty()) {
-            Toast.makeText(this, "يرجى ملء كافة البيانات واختيار المنطقة", Toast.LENGTH_SHORT).show();
+        if (email.isEmpty() || password.isEmpty() || fullName.isEmpty() || idNumber.isEmpty()) {
+            Toast.makeText(this, "يرجى ملء كافة البيانات", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -116,7 +91,6 @@ public class RegisterActivity extends AppCompatActivity {
         userProfile.put("email", email);
         userProfile.put("phone", phone);
         userProfile.put("id_number", idNumber);
-        userProfile.put("region", selectedRegion);
         userProfile.put("role", "customer");
         userProfile.put("is_provider", false);
         userProfile.put("created_at", com.google.firebase.Timestamp.now());
@@ -126,7 +100,6 @@ public class RegisterActivity extends AppCompatActivity {
         Map<String, Object> customerData = new HashMap<>();
         customerData.put("user_id", userId);
         customerData.put("full_name", fullName);
-        customerData.put("region", selectedRegion);
         customerData.put("status", "active");
         
         batch.set(db.collection("customers").document(userId), customerData);

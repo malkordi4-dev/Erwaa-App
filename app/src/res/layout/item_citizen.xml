@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:layoutDirection="rtl"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp">
+
+        <!-- 1. اسم المواطن والهاتف -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2.2"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvCitizenName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="محمد أحمد علي"
+                android:textColor="#0F172A"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCitizenPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0501234567"
+                android:textColor="#94A3B8"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <!-- 2. رقم الهوية -->
+        <TextView
+            android:id="@+id/tvCitizenId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.8"
+            android:gravity="center"
+            android:text="1098765432"
+            android:textColor="#475569"
+            android:textSize="12sp" />
+
+        <!-- 3. الحالة (Active / Suspended) -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#DCFCE7"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:text="نشط"
+                android:textColor="#166534"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 4. آخر نشاط -->
+        <TextView
+            android:id="@+id/tvLastActivity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:gravity="center"
+            android:text="منذ ساعتين"
+            android:textColor="#64748B"
+            android:textSize="11sp" />
+
+        <!-- 5. قائمة الخيارات (...) -->
+        <ImageView
+            android:id="@+id/btnOptions"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="2dp"
+            android:src="@android:drawable/ic_menu_more"
+            app:tint="#64748B" />
+
+    </LinearLayout>
+
+    <!-- خط فاصل بين العناصر -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#F1F5F9" />
+
+</LinearLayout>

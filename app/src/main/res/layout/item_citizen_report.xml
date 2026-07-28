@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:weightSum="5"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="14dp"
+    android:background="#FFFFFF"
+    android:layoutDirection="rtl">
+
+    <!-- 1. عمود المنطقة -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1.4"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="right|center_vertical">
+
+        <TextView
+            android:id="@+id/tvReportRegion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="حي النخيل الشمالي"
+            android:textColor="#0F172A"
+            android:textStyle="bold"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/tvReportSubRegion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="محافظة العاصمة"
+            android:textColor="#64748B"
+            android:textSize="10sp"
+            android:layout_marginTop="2dp"/>
+    </LinearLayout>
+
+    <!-- 2. عمود عدد التقارير -->
+    <TextView
+        android:id="@+id/tvReportsCount"
+        android:layout_width="0dp"
+        android:layout_weight="0.7"
+        android:layout_height="wrap_content"
+        android:text="142"
+        android:textColor="#334155"
+        android:textSize="13sp"
+        android:gravity="center"/>
+
+    <!-- 3. عمود مستوى الأولوية -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tvPriorityText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="حرجة للغاية"
+            android:textColor="#EF4444"
+            android:textStyle="bold"
+            android:textSize="12sp"/>
+
+        <View
+            android:id="@+id/viewPriorityDot"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:background="@android:drawable/toast_frame"
+            android:backgroundTint="#EF4444"
+            android:layout_marginRight="6dp"/>
+    </LinearLayout>
+
+    <!-- 4. عمود آخر تحديث -->
+    <TextView
+        android:id="@+id/tvReportTime"
+        android:layout_width="0dp"
+        android:layout_weight="0.9"
+        android:layout_height="wrap_content"
+        android:text="منذ 15 دقيقة"
+        android:textColor="#64748B"
+        android:textSize="11sp"
+        android:gravity="center"/>
+
+    <!-- 5. عمود الإجراءات -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAssignTeam"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:text="تخصيص فريق"
+            android:textSize="10sp"
+            android:textColor="#1E293B"
+            android:backgroundTint="#F1F5F9"
+            app:strokeColor="#E2E8F0"
+            app:strokeWidth="1dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="6dp"
+            android:padding="0dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTransferToInitiative"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:text="تحويل لمبادرة"
+            android:textSize="10sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#005B94"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="6dp"
+            android:layout_marginTop="4dp"
+            android:padding="0dp"/>
+    </LinearLayout>
+</LinearLayout>

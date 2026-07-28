@@ -1,21 +1,25 @@
 [versions]
-agp = "8.2.0"
+agp = "8.7.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-appcompat = "1.6.1"
-material = "1.11.0"
-activity = "1.8.0"
+appcompat = "1.7.0"
+material = "1.12.0"
+activity = "1.9.0"
 constraintlayout = "2.1.4"
 playServicesMaps = "18.2.0"
 cardview = "1.0.0"
 preference = "1.2.1"
-googleServices = "4.4.0"
+googleServices = "4.4.2"
 firebaseBom = "33.10.0"
-coreKtx = "1.12.0"
+coreKtx = "1.13.1"
 osmdroid = "6.1.20"
 gson = "2.11.0"
 glide = "4.16.0"
+credentials = "1.5.0"
+googleid = "1.1.1"
+playServicesBase = "18.5.0"
+playServicesLocation = "21.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,14 +33,25 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 google-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
 preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
-firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
-firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 osmdroid = { group = "org.osmdroid", name = "osmdroid-android", version.ref = "osmdroid" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
+androidx-credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
+googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
+google-play-services-base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "playServicesBase" }
+google-play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+
+# الفايربيس من خلال الـ BoM بشكل نظيف وموحد
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 
 [plugins]
-android-application = { id = "com.android.application", version = "8.7.0" }
-google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }

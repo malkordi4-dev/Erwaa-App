@@ -4,11 +4,50 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <queries>
         <package android:name="com.google.android.gms" />
+        <package android:name="com.android.vending" />
+        <intent>
+            <action android:name="com.google.android.gms.common.service.START" />
+        </intent>
+        <intent>
+            <action android:name="com.google.android.gms.api.service.BIND_GEODATA_API" />
+        </intent>
+        <intent>
+            <action android:name="com.google.android.gms.auth.api.signin.Service.START" />
+        </intent>
+        <intent>
+            <action android:name="com.google.android.gms.maps.API_KEY_REQUEST" />
+        </intent>
+        <intent>
+            <action android:name="com.google.android.gms.common.telemetry.service.START" />
+        </intent>
+        <intent>
+            <action android:name="com.google.android.gms.common.internal.service.ICommonService" />
+        </intent>
+        <intent>
+            <action android:name="com.google.android.gms.GMS_CHECKIN" />
+        </intent>
+        <!-- Added for Firestore/Auth broker resolution -->
+        <intent>
+            <action android:name="com.google.android.gms.auth.api.signin.Service.START" />
+        </intent>
+        <intent>
+            <action android:name="com.google.android.gms.auth.api.credentials.service.START" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
     </queries>
 
     <application
@@ -19,11 +58,20 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.GraduationProject">
+        android:theme="@style/Theme.GraduationProject"
+        android:usesCleartextTraffic="true">
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY_HERE" />
+            android:value="AIzaSyAx-pwQ36jxef0NQ8x12CYnDKN6LwSGlGk" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".MainActivity"
@@ -33,6 +81,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".OnboardingActivity" />
         <activity android:name=".ServicesActivity" />
         <activity android:name=".ProviderDetailsActivity" />
@@ -57,32 +106,34 @@
         <activity android:name=".Rate_Service_Activity" />
         <activity android:name=".My_Orders_Activity" />
         <activity android:name=".WalletActivity" />
-
-        <!-- Provider Activities -->
+        <activity android:name=".InitiatorDashboardActivity" />
+        <activity android:name=".InitiativeDetailsActivity" />
+        <activity android:name=".ProfileInitiatorsActivity" />
+        <activity android:name=".InitiativesImpactActivity" />
+        <activity android:name=".CreateInitiativeActivity" />
+        <activity android:name=".WalletInitiatorsActivity" />
+        <activity android:name=".SettingsInitiatorsActivity" />
+        <activity android:name=".InitiativesListActivity" />
+        <activity android:name=".DeliveryConfirmationInitiativeActivity" />
+        <activity android:name=".OrderInitiatorsStatusActivity" />
+        <activity android:name=".DeliveryConfirmationActivity" />
+        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".NeedMapActivity" />
+        <activity android:name=".NotificationsActivity" />
+        <activity android:name=".OrderStatusActivity" />
+        <activity android:name=".Order_Details_Activity" />
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".StationProfileActivity" />
+        <activity android:name=".SubscriptionActivity" />
+        <activity android:name=".UserNotificationActivity" />
         <activity android:name=".ProviderDashboardActivity" />
         <activity android:name=".ProviderServicesActivity" />
         <activity android:name=".OrdersManagementActivity" />
         <activity android:name=".TripsHistoryActivity" />
-        <activity android:name=".NotificationsActivity" />
-        <activity android:name=".Order_Details_Activity" />
-        <activity android:name=".ProviderOrderDetailsActivity" />
-        <activity android:name=".AdminServicesActivity" />
-        <activity android:name=".AddEditServiceActivity" />
-        <activity android:name=".AdminLoginActivity" />
-        <activity android:name=".AddServiceActivity" />
-        <activity android:name=".EditServiceActivity" />
-
-        <!-- الأنشطة الإضافية -->
-        <activity android:name=".Profile" />
-        <activity android:name=".EditProfileActivity" />
-        <activity android:name=".SettingsActivity" />
         <activity
-            android:name=".AboutErwaaActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".PrivacyActivity"
-            android:exported="false" />
+            android:name=".activity_initiative_register"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

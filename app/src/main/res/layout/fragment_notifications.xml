@@ -98,7 +98,6 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/tvSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="إدارة كافة التحديثات والطلبات الواردة"
@@ -119,7 +118,6 @@
                     android:paddingVertical="4dp">
 
                     <TextView
-                        android:id="@+id/filterAll"
                         android:layout_width="wrap_content"
                         android:layout_height="36dp"
                         android:background="@drawable/bg_filter_active"
@@ -129,12 +127,9 @@
                         android:textColor="#FFFFFF"
                         android:textSize="13sp"
                         android:textStyle="bold"
-                        android:layout_marginLeft="8dp"
-                        android:clickable="true"
-                        android:focusable="true"/>
+                        android:layout_marginLeft="8dp"/>
 
                     <TextView
-                        android:id="@+id/filterNewOrders"
                         android:layout_width="wrap_content"
                         android:layout_height="36dp"
                         android:background="@drawable/bg_filter_inactive"
@@ -143,12 +138,9 @@
                         android:text="طلبات جديدة"
                         android:textColor="#475569"
                         android:textSize="13sp"
-                        android:layout_marginLeft="8dp"
-                        android:clickable="true"
-                        android:focusable="true"/>
+                        android:layout_marginLeft="8dp"/>
 
                     <TextView
-                        android:id="@+id/filterRatings"
                         android:layout_width="wrap_content"
                         android:layout_height="36dp"
                         android:background="@drawable/bg_filter_inactive"
@@ -157,12 +149,9 @@
                         android:text="التقييمات"
                         android:textColor="#475569"
                         android:textSize="13sp"
-                        android:layout_marginLeft="8dp"
-                        android:clickable="true"
-                        android:focusable="true"/>
+                        android:layout_marginLeft="8dp"/>
 
                     <TextView
-                        android:id="@+id/filterPayments"
                         android:layout_width="wrap_content"
                         android:layout_height="36dp"
                         android:background="@drawable/bg_filter_inactive"
@@ -170,17 +159,277 @@
                         android:paddingHorizontal="16dp"
                         android:text="المدفوعات"
                         android:textColor="#475569"
-                        android:textSize="13sp"
-                        android:clickable="true"
-                        android:focusable="true"/>
+                        android:textSize="13sp"/>
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvNotifications"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="اليوم"
+                android:textColor="#94A3B8"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"
+                android:layout_marginHorizontal="4dp"/>
+
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"/>
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#E2E8F0"
+                app:strokeWidth="1dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <View
+                        android:id="@+id/unreadIndicator"
+                        android:layout_width="4dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="#0069B4"/>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/iconContainer1"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_toLeftOf="@id/unreadIndicator"
+                        android:layout_marginRight="12dp"
+                        app:cardBackgroundColor="#67E8F9"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/drop"
+                            app:tint="#0069B4" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:id="@+id/tvTime1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="قبل 5 د"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/iconContainer1"
+                        android:layout_toRightOf="@id/tvTime1"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginLeft="12dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="طلب توريد جديد"
+                            android:textColor="#1E293B"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="قام العميل &quot;أحمد محمود&quot; بطلب صهريج 5000 لتر في منطقة الرمال. يرجى مراجعة التفاصيل."
+                            android:textColor="#475569"
+                            android:textSize="12sp"
+                            android:lineSpacingExtra="3dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="right">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:text="قبول الطلب"
+                                android:textColor="#FFFFFF"
+                                android:backgroundTint="#0069B4"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                app:cornerRadius="8dp"
+                                android:paddingHorizontal="16dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:layout_marginLeft="8dp"/>
+
+                            <com.google.android.material.button.MaterialButton
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:text="التفاصيل"
+                                android:textColor="#475569"
+                                app:strokeColor="#CBD5E1"
+                                android:textSize="12sp"
+                                app:cornerRadius="8dp"
+                                android:paddingHorizontal="16dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#E2E8F0"
+                app:strokeWidth="1dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/iconContainer2"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        app:cardBackgroundColor="#E2E8F0"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/payment"
+                            app:tint="#475569" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:id="@+id/tvTime2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="قبل 20 د"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/iconContainer2"
+                        android:layout_toRightOf="@id/tvTime2"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginLeft="12dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="تأكيد دفع ناجح"
+                            android:textColor="#1E293B"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="تم استلام مبلغ 150 شيكل كدفع مقدم من العميل &quot;محمد علي&quot; للطلب رقم #8892."
+                            android:textColor="#475569"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="أمس"
+                android:textColor="#94A3B8"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginHorizontal="4dp"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#E2E8F0"
+                app:strokeWidth="1dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/iconContainer3"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        app:cardBackgroundColor="#E2E8F0"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/star"
+                            app:tint="#0069B4" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:id="@+id/tvTime3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="12:30 م"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/iconContainer3"
+                        android:layout_toRightOf="@id/tvTime3"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginLeft="12dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="تقييم جديد 5 نجوم"
+                            android:textColor="#1E293B"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="&quot;خدمة ممتازة وسريعة، والماء بجودة عالية جداً. شكراً لكم!&quot; - هبة خالد"
+                            android:textColor="#475569"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -196,14 +445,11 @@
         android:elevation="16dp">
 
         <LinearLayout
-            android:id="@+id/navHome"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
+            android:gravity="center">
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
@@ -219,13 +465,10 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/navServices"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.2"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
+            android:gravity="center">
             <LinearLayout
                 android:layout_width="85dp"
                 android:layout_height="56dp"
@@ -249,14 +492,11 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/navOrders"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
+            android:gravity="center">
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
@@ -272,14 +512,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/navHistory"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+
             android:layout_weight="1"
             android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
+            android:gravity="center">
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"

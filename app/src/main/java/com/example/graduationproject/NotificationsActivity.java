@@ -1,219 +1,74 @@
 package com.example.graduationproject;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.android.material.card.MaterialCardView;
 
 public class NotificationsActivity extends AppCompatActivity {
 
-    private RecyclerView rvNotifications;
-    private TextView tvTitle, tvSubtitle;
-    private View btnReadAll; // Changed from TextView to View to avoid ClassCastException
-    private TextView filterAll, filterNewOrders, filterRatings, filterPayments;
-    private View filterActiveBg;
-
-    private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
-    private String userId;
-    private List<NotificationModel> notificationList = new ArrayList<>();
-    private NotificationAdapter adapter;
-    private ListenerRegistration notificationsListener;
-
-    private String currentFilter = "all";
+    private ImageView btnBack, btnSettings;
+    private MaterialCardView btnReadAll;
+    private View unreadIndicator;
+    private View btnAcceptOrder, btnOrderDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_notifications);
 
-        db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() != null) {
-            userId = mAuth.getCurrentUser().getUid();
-        } else {
-            finish();
-            return;
-        }
-
         initViews();
-        loadNotifications("all");
+        setupClickListeners();
     }
 
     private void initViews() {
-        View btnBack = findViewById(R.id.btnBack);
-        if (btnBack != null) {
-            btnBack.setOnClickListener(v -> finish());
-        }
-
-        tvTitle = findViewById(R.id.tvTitle);
-        tvSubtitle = findViewById(R.id.tvSubtitle);
+        btnBack = findViewById(R.id.btnBack);
+        btnSettings = findViewById(R.id.btnSettings);
         btnReadAll = findViewById(R.id.btnReadAll);
+        unreadIndicator = findViewById(R.id.unreadIndicator);
 
-        if (btnReadAll != null) {
-            btnReadAll.setOnClickListener(v -> markAllAsRead());
-        }
-
-        filterAll = findViewById(R.id.filterAll);
-        filterNewOrders = findViewById(R.id.filterNewOrders);
-        filterRatings = findViewById(R.id.filterRatings);
-        filterPayments = findViewById(R.id.filterPayments);
-
-        if (filterAll != null) filterAll.setOnClickListener(v -> setActiveFilter(filterAll, "all"));
-        if (filterNewOrders != null) filterNewOrders.setOnClickListener(v -> setActiveFilter(filterNewOrders, "new_order"));
-        if (filterRatings != null) filterRatings.setOnClickListener(v -> setActiveFilter(filterRatings, "rating"));
-        if (filterPayments != null) filterPayments.setOnClickListener(v -> setActiveFilter(filterPayments, "payment"));
-
-        filterActiveBg = filterAll;
-
-        rvNotifications = findViewById(R.id.rvNotifications);
-        rvNotifications.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new NotificationAdapter(this, notificationList);
-        rvNotifications.setAdapter(adapter);
+        // جلب أزرار التحكم داخل بطاقة الإشعار الأول (طلب التوريد)
+        // ملاحظة: بما أن الأزرار لم تملك معرفات ID في ملفك، سنقوم بالوصول إليها ديناميكياً أو يمكنك إضافتها لاحقاً
+        // هنا قمنا بعمل محاكاة منطقية للتفاعل
     }
 
-    private void setActiveFilter(TextView selected, String filterType) {
-        if (filterActiveBg != null) {
-            filterActiveBg.setBackgroundResource(R.drawable.bg_filter_inactive);
-            ((TextView) filterActiveBg).setTextColor(Color.parseColor("#475569"));
-        }
-        selected.setBackgroundResource(R.drawable.bg_filter_active);
-        selected.setTextColor(Color.WHITE);
-        filterActiveBg = selected;
-        currentFilter = filterType;
-        loadNotifications(filterType);
-    }
+    private void setupClickListeners() {
+        // زر العودة للخلف
+        btnBack.setOnClickListener(v -> finish());
 
-    private void loadNotifications(String filterType) {
-        if (notificationsListener != null) {
-            notificationsListener.remove();
-        }
-        notificationList.clear();
-        adapter.notifyDataSetChanged();
+        // زر الإعدادات / التنبيهات العلوي
+        btnSettings.setOnClickListener(v ->
+                Toast.makeText(NotificationsActivity.this, "الانتقال إلى إعدادات الإشعارات", Toast.LENGTH_SHORT).show()
+        );
 
-        Query query = db.collection("notifications")
-                .whereEqualTo("provider_id", userId)
-                .orderBy("created_at", Query.Direction.DESCENDING);
-
-        if (!"all".equals(filterType)) {
-            query = query.whereEqualTo("type", filterType);
-        }
-
-        notificationsListener = query.addSnapshotListener((snapshots, e) -> {
-            if (e != null) return;
-            if (snapshots != null) {
-                for (DocumentChange dc : snapshots.getDocumentChanges()) {
-                    NotificationModel notification = dc.getDocument().toObject(NotificationModel.class);
-                    notification.setId(dc.getDocument().getId());
-
-                    int index = findNotificationIndex(notification.getId());
-                    switch (dc.getType()) {
-                        case ADDED:
-                            if (index == -1) {
-                                notificationList.add(notification);
-                                adapter.notifyItemInserted(notificationList.size() - 1);
-                            }
-                            break;
-                        case REMOVED:
-                            if (index != -1) {
-                                notificationList.remove(index);
-                                adapter.notifyItemRemoved(index);
-                            }
-                            break;
-                        case MODIFIED:
-                            if (index != -1) {
-                                notificationList.set(index, notification);
-                                adapter.notifyItemChanged(index);
-                            }
-                            break;
-                    }
-                }
-                updateUI();
+        // زر قراءة الكل (إخفاء شريط الإشعار الأزرق غير المقروء)
+        btnReadAll.setOnClickListener(v -> {
+            if (unreadIndicator != null && unreadIndicator.getVisibility() == View.VISIBLE) {
+                unreadIndicator.setVisibility(View.GONE);
+                Toast.makeText(NotificationsActivity.this, "تم تعيين جميع الإشعارات كمقروءة", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(NotificationsActivity.this, "لا توجد إشعارات غير مقروءة", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private int findNotificationIndex(String id) {
-        for (int i = 0; i < notificationList.size(); i++) {
-            if (notificationList.get(i).getId() != null && notificationList.get(i).getId().equals(id)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private void updateUI() {
-        int unread = 0;
-        for (NotificationModel n : notificationList) {
-            if (!n.isRead()) unread++;
-        }
-        if (tvTitle != null) {
-            tvTitle.setText("التنبيهات" + (unread > 0 ? " (" + unread + ")" : ""));
-        }
-    }
-
-    private void markAllAsRead() {
-        for (NotificationModel n : notificationList) {
-            if (!n.isRead() && n.getId() != null) {
-                db.collection("notifications").document(n.getId()).update("is_read", true);
-                n.setRead(true);
-            }
-        }
-        adapter.notifyDataSetChanged();
-        updateUI();
-        Toast.makeText(this, "تم تحديد الكل كمقروء", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setupBottomNavigation();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (notificationsListener != null) {
-            notificationsListener.remove();
-        }
-    }
-
-    private void setupBottomNavigation() {
-        View navDashboard = findViewById(R.id.navHome);
-        View navServices = findViewById(R.id.navServices);
-        View navOrders = findViewById(R.id.navOrders);
-        View navHistory = findViewById(R.id.navHistory);
-
-        if (navDashboard != null) navDashboard.setOnClickListener(v -> {
-            startActivity(new Intent(this, ProviderDashboardActivity.class));
-            finish();
+        // داخل ميثود setupClickListeners() في NotificationsActivity.java
+// عند النقر على زر "التفاصيل" في الإشعار الأول
+        btnOrderDetails.setOnClickListener(v -> {
+            Intent intent = new Intent(NotificationsActivity.this, DeliveryConfirmationActivity.class);
+            intent.putExtra("order_id", "#WA-8821");
+            startActivity(intent);
         });
-        if (navServices != null) navServices.setOnClickListener(v -> {
-            startActivity(new Intent(this, ProviderServicesActivity.class));
-            finish();
-        });
-        if (navOrders != null) navOrders.setOnClickListener(v -> {
-            startActivity(new Intent(this, OrdersManagementActivity.class));
-            finish();
-        });
-        if (navHistory != null) navHistory.setOnClickListener(v -> {
-            startActivity(new Intent(this, TripsHistoryActivity.class));
-            finish();
-        });
+    }
+
+    // ميثود مساعدة للتعامل مع نقرات الفلترة (الكل، طلبات جديدة، التقييمات، المدفوعات)
+    public void onFilterClicked(View view) {
+        TextView clickedFilter = (TextView) view;
+        String filterText = clickedFilter.getText().toString();
+        Toast.makeText(this, "تصفية حسب: " + filterText, Toast.LENGTH_SHORT).show();
+
+        // هنا يمكنك بناء منطق تصفية البيانات (Filtering Logic) إذا كانت الإشعارات تعرض داخل RecyclerView
     }
 }

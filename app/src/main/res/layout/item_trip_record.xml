@@ -50,7 +50,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
-
+                        android:src="@drawable/person"
                         app:tint="#0069B4" />
                 </com.google.android.material.card.MaterialCardView>
 
@@ -102,7 +102,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:background="@drawable/back"
+                        android:background="@drawable/bg_badge_cash"
                         android:paddingHorizontal="6dp"
                         android:paddingVertical="1dp"
                         android:text="نقداً"
@@ -144,7 +144,7 @@
                     <ImageView
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:src="@drawable/back"
+                        android:src="@drawable/check_circle"
                         app:tint="#15803D"
                         android:layout_marginRight="12dp"/>
 
@@ -160,7 +160,7 @@
                     <ImageView
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:src="@drawable/back"
+                        android:src="@drawable/img2"
                         app:tint="#0069B4" />
                 </LinearLayout>
 
@@ -177,7 +177,7 @@
                     <ImageView
                         android:layout_width="14dp"
                         android:layout_height="14dp"
-                        android:src="@drawable/back"
+                        android:src="@drawable/img2"
                         app:tint="#0069B4"
                         android:layout_marginRight="4dp"/>
 

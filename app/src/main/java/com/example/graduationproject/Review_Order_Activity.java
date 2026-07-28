@@ -2,9 +2,10 @@ package com.example.graduationproject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,10 +32,9 @@ public class Review_Order_Activity extends AppCompatActivity {
     private String unit, address, notes, scheduledTime;
     private String providerId, providerName, serviceId;
     private double totalPrice;
+    private String orderType = "single"; 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-
-    private TextView tvServiceName, tvLocationMain, tvOrderNotes, tvWaterPrice, tvTotalPriceMain, tvFooterPriceText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,83 +48,57 @@ public class Review_Order_Activity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-        initViews();
-
+        // استقبال البيانات من الواجهة السابقة
         Intent data = getIntent();
-        // محاولة جلب الـ ID كنص، وإذا فشل نجلب كـ int ونحوله (لزيادة الأمان)
-        serviceId = data.getStringExtra("service_id");
-        if (serviceId == null && data.hasExtra("service_id")) {
-            serviceId = String.valueOf(data.getIntExtra("service_id", 0));
-        }
-
         providerId = data.getStringExtra("provider_id");
         providerName = data.getStringExtra("provider_name");
+        serviceId = data.getStringExtra("service_id");
+        
         quantity = data.getIntExtra("quantity", 500);
         unit = data.getStringExtra("unit");
         address = data.getStringExtra("address");
         notes = data.getStringExtra("notes");
         scheduledTime = data.getStringExtra("scheduledTime");
+        
+        if (unit != null && unit.contains("اشتراك")) {
+            orderType = "monthly";
+        } else if (unit != null && unit.contains("جماعي")) {
+            orderType = "group";
+        } else {
+            orderType = "single";
+        }
 
         double lat = data.getDoubleExtra("lat", 31.516);
         double lng = data.getDoubleExtra("lng", 34.448);
         deliveryLoc = new GeoPoint(lat, lng);
 
-        // إذا كان السعر مرسلاً مسبقاً (كما في الاشتراكات) نستخدمه مباشرة
-        if (data.hasExtra("total_price_from_plan")) {
-            totalPrice = data.getDoubleExtra("total_price_from_plan", 0.0);
-            updateUI("اشتراك مياه شهري");
-        } else if (serviceId != null && !serviceId.isEmpty() && !serviceId.equals("0")) {
-            fetchRealDataAndCalculate();
-        } else {
-            Toast.makeText(this, "بيانات الخدمة غير مكتملة", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+        totalPrice = (unit != null && unit.equals("لتر")) ? (quantity * 0.05) + 15.0 : (quantity * 30.0) + 10.0;
+
+        setupUI();
     }
 
-    private void initViews() {
-        tvServiceName = findViewById(R.id.tvServiceName);
-        tvLocationMain = findViewById(R.id.tvLocationMain);
-        tvOrderNotes = findViewById(R.id.tvOrderNotes);
-        tvWaterPrice = findViewById(R.id.tvWaterPrice);
-        tvTotalPriceMain = findViewById(R.id.tvTotalPriceMain);
-        tvFooterPriceText = findViewById(R.id.tvFooterPriceText);
-        mapView = findViewById(R.id.mapViewReview);
+    private void setupUI() {
+        TextView tvServiceName = findViewById(R.id.tvServiceName);
+        TextView tvLocationMain = findViewById(R.id.tvLocationMain);
+        TextView tvOrderNotes = findViewById(R.id.tvOrderNotes);
+        TextView tvWaterPrice = findViewById(R.id.tvWaterPrice);
+        TextView tvTotalPriceMain = findViewById(R.id.tvTotalPriceMain);
+        TextView tvFooterPriceText = findViewById(R.id.tvFooterPriceText);
+        
+        String displayTitle = (providerName != null ? providerName : "طلب تزويد مياه");
+        tvServiceName.setText(displayTitle);
+        
+        tvLocationMain.setText(address != null ? address : "موقع محدد على الخريطة");
+        tvOrderNotes.setText(notes != null && !notes.isEmpty() ? notes : "لا توجد ملاحظات إضافية");
+        
+        tvWaterPrice.setText(String.format("%.2f ILS", totalPrice - 10.0));
+        tvTotalPriceMain.setText(String.format("%.2f ILS", totalPrice));
+        tvFooterPriceText.setText(String.format("%.2f ILS", totalPrice));
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-        findViewById(R.id.btnConfirmAndSend).setOnClickListener(v -> saveOrderToFirebase());
-    }
+        findViewById(R.id.btnConfirmAndSend).setOnClickListener(v -> saveToFirebase());
 
-    private void fetchRealDataAndCalculate() {
-        db.collection("services").document(serviceId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        ServiceModel service = documentSnapshot.toObject(ServiceModel.class);
-                        if (service != null) {
-                            double pricePerUnit = (unit != null && unit.equals("لتر")) ? service.getPrice() : service.getPriceCup();
-                            double deliveryFee = 10.0;
-                            totalPrice = (quantity * pricePerUnit) + deliveryFee;
-                            updateUI(service.getNameAr());
-                        }
-                    } else {
-                        // في حال لم يتم العثور على الخدمة، نستخدم سعر افتراضي بدلاً من الانهيار
-                        totalPrice = (unit != null && unit.equals("لتر")) ? (quantity * 0.05) + 10.0 : 30.0;
-                        updateUI(providerName != null ? providerName : "طلب مياه");
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "خطأ في جلب بيانات السعر", Toast.LENGTH_SHORT).show();
-                });
-    }
-
-    private void updateUI(String serviceNameDisplay) {
-        tvServiceName.setText(serviceNameDisplay);
-        tvLocationMain.setText(address != null ? address : "الموقع المختار");
-        tvOrderNotes.setText(notes != null && !notes.isEmpty() ? notes : "لا توجد ملاحظات");
-        
-        tvWaterPrice.setText(String.format("%.2f ₪", Math.max(0, totalPrice - 10.0)));
-        tvTotalPriceMain.setText(String.format("%.2f ₪", totalPrice));
-        tvFooterPriceText.setText(String.format("%.2f ₪", totalPrice));
-
+        mapView = findViewById(R.id.mapViewReview);
         if (mapView != null) {
             mapView.setTileSource(TileSourceFactory.MAPNIK);
             mapView.getController().setZoom(16.0);
@@ -132,18 +106,21 @@ public class Review_Order_Activity extends AppCompatActivity {
             Marker marker = new Marker(mapView);
             marker.setPosition(deliveryLoc);
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            marker.setTitle("موقعك");
-            mapView.getOverlays().clear();
+            marker.setTitle("موقع التوصيل");
             mapView.getOverlays().add(marker);
-            mapView.invalidate();
         }
     }
 
-    private void saveOrderToFirebase() {
-        if (mAuth.getCurrentUser() == null) return;
+    private void saveToFirebase() {
+        if (mAuth.getCurrentUser() == null) {
+            Toast.makeText(this, "يجب تسجيل الدخول لإتمام الطلب", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String customerId = mAuth.getCurrentUser().getUid();
 
         Map<String, Object> order = new HashMap<>();
-        order.put("customer_id", mAuth.getUid());
+        order.put("customer_id", customerId);
         order.put("provider_id", providerId);
         order.put("service_id", serviceId);
         order.put("provider_name", providerName);
@@ -152,23 +129,39 @@ public class Review_Order_Activity extends AppCompatActivity {
         order.put("address_details", address);
         order.put("notes", notes);
         order.put("scheduled_time", scheduledTime);
-        order.put("total_price", totalPrice);
-        order.put("status", "pending");
         order.put("delivery_lat", deliveryLoc.getLatitude());
         order.put("delivery_lng", deliveryLoc.getLongitude());
+        order.put("total_price", totalPrice);
+        order.put("status", "pending");
+        order.put("order_type", orderType);
         order.put("created_at", com.google.firebase.Timestamp.now());
 
         db.collection("orders").add(order)
-                .addOnSuccessListener(ref -> {
-                    Toast.makeText(this, "تم إرسال الطلب بنجاح!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(this, Order_Status_Activity.class);
-                    intent.putExtra("order_id", ref.getId());
+                .addOnSuccessListener(documentReference -> {
+                    String orderDocId = documentReference.getId();
+                    Toast.makeText(Review_Order_Activity.this, "تم إرسال طلبك بنجاح!", Toast.LENGTH_LONG).show();
+                    
+                    // محاكاة قبول الطلب تلقائياً بعد ثانيتين
+                    simulateProviderAcceptance(orderDocId);
+
+                    Intent intent = new Intent(Review_Order_Activity.this, Order_Status_Activity.class);
+                    intent.putExtra("order_id", orderDocId);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                    finish();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "فشل في إرسال الطلب", Toast.LENGTH_SHORT).show();
+                    Log.e("Firebase", "Error saving order", e);
+                    Toast.makeText(Review_Order_Activity.this, "حدث خطأ أثناء إرسال الطلب", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void simulateProviderAcceptance(String orderDocId) {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            db.collection("orders").document(orderDocId)
+                    .update("status", "accepted")
+                    .addOnSuccessListener(aVoid -> Log.d("Simulation", "Order accepted automatically"))
+                    .addOnFailureListener(e -> Log.e("Simulation", "Failed to accept order", e));
+        }, 2000); // تأخير لمدة ثانيتين
     }
 
     @Override protected void onResume() { super.onResume(); if(mapView!=null) mapView.onResume(); }

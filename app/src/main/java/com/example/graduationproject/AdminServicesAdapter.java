@@ -44,8 +44,11 @@ public class AdminServicesAdapter extends RecyclerView.Adapter<AdminServicesAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ServiceModel s = list.get(position);
 
-        holder.tvName.setText(s.getNameAr());
-        holder.tvDescription.setText(s.getDescriptionAr());
+        // التحقق من وجود اسم للخدمة لتجنب ظهورها بشكل فارغ
+        String serviceName = !TextUtils.isEmpty(s.getNameAr()) ? s.getNameAr() : "خدمة بدون اسم";
+        holder.tvName.setText(serviceName);
+        
+        holder.tvDescription.setText(s.getDescriptionAr() != null ? s.getDescriptionAr() : "");
         holder.tvPrice.setText(String.format(Locale.getDefault(), "%.2f ₪", s.getPrice()));
         holder.tvPriceCup.setText(String.format(Locale.getDefault(), "%.2f ₪", s.getPriceCup()));
         

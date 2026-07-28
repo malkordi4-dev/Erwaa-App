@@ -25,6 +25,7 @@ public class Order_Details_Activity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
+        // ربط العناصر
         tvOrderId = findViewById(R.id.tvOrderId);
         tvStatusBadge = findViewById(R.id.tvStatusBadge);
         tvCustomerName = findViewById(R.id.tvCustomerName);
@@ -32,8 +33,8 @@ public class Order_Details_Activity extends AppCompatActivity {
         tvUnit = findViewById(R.id.tvUnit);
         tvQuantity = findViewById(R.id.tvQuantity);
         tvTotalPrice = findViewById(R.id.tvTotalPrice);
-        btnCancelOrder = findViewById(R.id.btnConfirmArrival);
-        btnTrackOrder = findViewById(R.id.btnCompleteTask);
+        btnCancelOrder = findViewById(R.id.btnConfirmArrival); // زر إلغاء الطلب في الـ XML
+        btnTrackOrder = findViewById(R.id.btnCompleteTask);    // زر تتبع الطلب في الـ XML
         ImageView btnBack = findViewById(R.id.btnBack);
 
         btnBack.setOnClickListener(v -> finish());
@@ -76,7 +77,7 @@ public class Order_Details_Activity extends AppCompatActivity {
 
                 tvOrderId.setText("#" + (orderId.length() > 8 ? orderId.substring(0, 8) : orderId));
                 tvCustomerName.setText(providerName != null ? providerName : "مزود الخدمة");
-                tvAddress.setText(address != null ? "\uD83D\uDCCD " + address : "\uD83D\uDCCD العنوان غير محدد");
+                tvAddress.setText(address != null ? "📍 " + address : "📍 العنوان غير محدد");
                 tvUnit.setText(unit != null ? unit : "لتر");
                 tvQuantity.setText(quantity != null ? String.valueOf(quantity) : "---");
                 tvTotalPrice.setText(String.format("%.2f ₪", totalPrice != null ? totalPrice : 0.0));
@@ -97,23 +98,23 @@ public class Order_Details_Activity extends AppCompatActivity {
         if (status == null) return;
         switch (status) {
             case "pending":
-                tvStatusBadge.setText("\u25CF قيد الانتظار");
+                tvStatusBadge.setText("● قيد الانتظار");
                 btnTrackOrder.setVisibility(View.GONE);
                 btnCancelOrder.setVisibility(View.VISIBLE);
                 break;
             case "accepted":
             case "on_way":
-                tvStatusBadge.setText("\u25CF في الطريق");
+                tvStatusBadge.setText("● في الطريق");
                 btnTrackOrder.setVisibility(View.VISIBLE);
                 btnCancelOrder.setVisibility(View.VISIBLE);
                 break;
             case "delivered":
-                tvStatusBadge.setText("\u25CF تم التوصيل");
+                tvStatusBadge.setText("● تم التوصيل");
                 btnTrackOrder.setVisibility(View.GONE);
                 btnCancelOrder.setVisibility(View.GONE);
                 break;
             case "cancelled":
-                tvStatusBadge.setText("\u25CF تم الإلغاء");
+                tvStatusBadge.setText("● تم الإلغاء");
                 btnTrackOrder.setVisibility(View.GONE);
                 btnCancelOrder.setVisibility(View.GONE);
                 break;

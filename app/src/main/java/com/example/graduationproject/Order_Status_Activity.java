@@ -69,21 +69,9 @@ public class Order_Status_Activity extends AppCompatActivity {
                 String unit = snapshot.getString("unit");
                 Double price = snapshot.getDouble("total_price");
                 String address = snapshot.getString("address_details");
-                String serviceId = snapshot.getString("service_id");
-                String notes = snapshot.getString("notes");
-                String scheduledTime = snapshot.getString("scheduled_time");
 
-                // التعامل مع بيانات الاشتراك الشهري
-                if ("subscription_monthly".equals(serviceId)) {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("طلب اشتراك شهري قيد المراجعة.\n");
-                    if (notes != null) sb.append(notes).append("\n");
-                    if (scheduledTime != null) sb.append("الموعد المجدول: ").append(scheduledTime);
-                    tvStatusDescription.setText(sb.toString());
-                } else {
-                    if (providerName != null) {
-                        tvStatusDescription.setText("يقوم المزود (" + providerName + ") بمراجعة طلبك، ستتلقى إشعاراً فور القبول.");
-                    }
+                if (providerName != null) {
+                    tvStatusDescription.setText("يقوم المزود (" + providerName + ") بمراجعة طلبك، ستتلقى إشعاراً فور القبول.");
                 }
                 
                 if (quantity != null) tvOrderQuantity.setText(quantity + " " + (unit != null ? unit : ""));

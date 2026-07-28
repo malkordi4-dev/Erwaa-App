@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -27,6 +29,7 @@ import java.util.Locale;
 public class ProviderOrderDetailsActivity extends AppCompatActivity {
 
     private TextView tvOrderNumber, tvOrderStatus, tvCustomerName, tvCustomerAddress, tvWaterType, tvWaterQty, tvPriceTotal;
+    private ImageView imgCustomer;
     private MaterialButton btnConfirmArrival, btnCompleteTask;
     private View btnCallCustomer;
     private MapView map;
@@ -38,7 +41,7 @@ public class ProviderOrderDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // إعدادات Osmdroid
+        // إعدادات الخريطة
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
         setContentView(R.layout.activity_provider_order_details);
 
@@ -46,7 +49,6 @@ public class ProviderOrderDetailsActivity extends AppCompatActivity {
         orderId = getIntent().getStringExtra("order_id");
 
         initViews();
-        setupBottomNavigation();
         
         if (orderId != null) {
             fetchOrderDetails();
@@ -64,6 +66,7 @@ public class ProviderOrderDetailsActivity extends AppCompatActivity {
         tvWaterType = findViewById(R.id.tvWaterType);
         tvWaterQty = findViewById(R.id.tvWaterQty);
         tvPriceTotal = findViewById(R.id.tvPriceTotal);
+        imgCustomer = findViewById(R.id.imgCustomer);
         btnConfirmArrival = findViewById(R.id.btnConfirmArrival);
         btnCompleteTask = findViewById(R.id.btnCompleteTask);
         btnCallCustomer = findViewById(R.id.btnCallCustomer);
@@ -80,7 +83,7 @@ public class ProviderOrderDetailsActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + customerPhone));
                 startActivity(intent);
             } else {
-                Toast.makeText(this, "رقم هاتف الزبون غير متوفر حالياً", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "رقم هاتف الزبون غير متوفر", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -94,11 +97,12 @@ public class ProviderOrderDetailsActivity extends AppCompatActivity {
         if (map != null) {
             map.setTileSource(TileSourceFactory.MAPNIK);
             map.setMultiTouchControls(true);
-            map.getController().setZoom(16.0);
+            map.getController().setZoom(15.0);
         }
     }
 
     private void fetchOrderDetails() {
+        // استخدام SnapshotListener لضمان تحديث البيانات لحظياً من الفايربيز
         orderListener = db.collection("orders").document(orderId).addSnapshotListener((snapshot, e) -> {
             if (e != null) {
                 Log.e("Details", "Listen failed.", e);
@@ -109,9 +113,9 @@ public class ProviderOrderDetailsActivity extends AppCompatActivity {
                 OrderModel order = snapshot.toObject(OrderModel.class);
                 if (order == null) return;
 
-                // تحديث النصوص
+                // ربط البيانات بالواجهة
                 tvOrderNumber.setText("#" + orderId.substring(0, Math.min(orderId.length(), 6)).toUpperCase());
-                tvCustomerAddress.setText(order.getAddressDetails() != null ? "📍 " + order.getAddressDetails() : "العنوان غير محدد");
+                tvCustomerAddress.setText(order.getAddressDetails() != null ? "📍 " + order.getAddressDetails() : "📍 العنوان غير محدد");
                 tvWaterType.setText(order.getOrderType() != null ? order.getOrderType() : "تزويد مياه");
                 tvWaterQty.setText(order.getQuantity() + " " + (order.getUnit() != null ? order.getUnit() : "لتر"));
                 tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f ₪", order.getTotalPrice() != null ? order.getTotalPrice() : 0.0));
@@ -121,7 +125,7 @@ public class ProviderOrderDetailsActivity extends AppCompatActivity {
                 // تحديث موقع الزبون على الخريطة
                 if (order.getDeliveryLat() != 0) {
                     GeoPoint point = new GeoPoint(order.getDeliveryLat(), order.getDeliveryLng());
-                    map.getController().animateTo(point);
+                    map.getController().setCenter(point);
                     Marker marker = new Marker(map);
                     marker.setPosition(point);
                     marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
@@ -131,7 +135,7 @@ public class ProviderOrderDetailsActivity extends AppCompatActivity {
                     map.invalidate();
                 }
 
-                // جلب بيانات العميل (الاسم والهاتف)
+                // جلب بيانات الزبون الإضافية (الاسم، الهاتف، الصورة)
                 if (order.getCustomerId() != null) {
                     fetchCustomerInfo(order.getCustomerId());
                 }
@@ -144,6 +148,11 @@ public class ProviderOrderDetailsActivity extends AppCompatActivity {
             if (doc.exists()) {
                 tvCustomerName.setText(doc.getString("full_name"));
                 customerPhone = doc.getString("phone");
+                String photoUrl = doc.getString("profile_image");
+                
+                if (photoUrl != null && !photoUrl.isEmpty()) {
+                    Glide.with(this).load(photoUrl).placeholder(R.drawable.user).into(imgCustomer);
+                }
             }
         });
     }
@@ -164,7 +173,7 @@ public class ProviderOrderDetailsActivity extends AppCompatActivity {
                 btnCompleteTask.setVisibility(View.VISIBLE);
                 break;
             case "delivered":
-                tvOrderStatus.setText("● طلب مكتمل");
+                tvOrderStatus.setText("● مكتمل");
                 tvOrderStatus.setTextColor(Color.parseColor("#15803D"));
                 btnConfirmArrival.setVisibility(View.GONE);
                 btnCompleteTask.setVisibility(View.GONE);
@@ -175,39 +184,15 @@ public class ProviderOrderDetailsActivity extends AppCompatActivity {
                 btnConfirmArrival.setVisibility(View.GONE);
                 btnCompleteTask.setVisibility(View.GONE);
                 break;
-            default:
-                tvOrderStatus.setText("● " + status);
-                btnConfirmArrival.setVisibility(View.GONE);
-                btnCompleteTask.setVisibility(View.GONE);
         }
     }
 
     private void updateStatus(String status) {
         db.collection("orders").document(orderId).update("status", status)
                 .addOnSuccessListener(aVoid -> {
-                    String msg = "on_way".equals(status) ? "تم بدء التوصيل بنجاح" : "تم إكمال الطلب، شكراً لك!";
-                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-                    if ("delivered".equals(status)) {
-                        finish(); // العودة لقائمة الطلبات عند الانتهاء
-                    }
+                    Toast.makeText(this, "تم تحديث حالة الطلب", Toast.LENGTH_SHORT).show();
                 })
-                .addOnFailureListener(e -> Toast.makeText(this, "فشل تحديث الحالة", Toast.LENGTH_SHORT).show());
-    }
-
-    private void setupBottomNavigation() {
-        findViewById(R.id.navProviderDashboard).setOnClickListener(v -> {
-            startActivity(new Intent(this, ProviderDashboardActivity.class));
-            finish();
-        });
-        findViewById(R.id.navProviderOrders).setOnClickListener(v -> finish()); // العودة للخلف للقائمة
-        findViewById(R.id.navProviderServices).setOnClickListener(v -> {
-            startActivity(new Intent(this, ProviderServicesActivity.class));
-            finish();
-        });
-        findViewById(R.id.navProviderHistory).setOnClickListener(v -> {
-            startActivity(new Intent(this, TripsHistoryActivity.class));
-            finish();
-        });
+                .addOnFailureListener(e -> Toast.makeText(this, "فشل التحديث", Toast.LENGTH_SHORT).show());
     }
 
     @Override public void onResume() { super.onResume(); if (map != null) map.onResume(); }
@@ -216,6 +201,5 @@ public class ProviderOrderDetailsActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (orderListener != null) orderListener.remove();
-        if (map != null) map.onDetach();
     }
 }

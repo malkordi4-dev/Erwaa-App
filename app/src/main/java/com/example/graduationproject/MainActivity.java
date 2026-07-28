@@ -8,6 +8,9 @@ import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -15,26 +18,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Splash screen: wait for 3 seconds then navigate based on app state
+        // Splash screen: الانتظار لمدة 3 ثوانٍ
         new Handler(Looper.getMainLooper()).postDelayed(this::checkNavigationLogic, 3000);
     }
 
     private void checkNavigationLogic() {
         SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
-        
         boolean isFirstTime = prefs.getBoolean("isFirstTime", true);
-        boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
+
+        // التحقق من حالة تسجيل الدخول
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         Intent intent;
-        if (isLoggedIn) {
-            // 1. User is logged in -> Go to Map
+        if (currentUser != null) {
+            // مستخدم مسجل -> اذهب للخريطة
             intent = new Intent(MainActivity.this, MapExplorerActivity.class);
         } else if (isFirstTime) {
-            // 2. First time opening the app -> Go to Onboarding
+            // أول مرة يفتح التطبيق -> اذهب لشاشات Onboarding
             intent = new Intent(MainActivity.this, OnboardingActivity.class);
         } else {
-            // 3. Not first time but not logged in -> Go to Login
-            intent = new Intent(MainActivity.this, LoginActivity.class);
+            // غير مسجل دخول -> نذهب للخريطة أيضاً (كضيف) بناءً على طلبك لرؤية البيانات بدون شرط
+            intent = new Intent(MainActivity.this, MapExplorerActivity.class);
         }
 
         startActivity(intent);

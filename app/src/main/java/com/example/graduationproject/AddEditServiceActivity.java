@@ -1,29 +1,21 @@
 package com.example.graduationproject;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,30 +24,15 @@ public class AddEditServiceActivity extends AppCompatActivity {
 
     private TextInputEditText etName, etDescription;
     private EditText etPriceLitre, etPriceCup;
-    private ImageView btnBack, imgPreview1;
+    private ImageView btnBack;
     private TextView tvHeaderTitle, tvServiceName, tvServiceId;
     private MaterialButton btnSave;
-    private LinearLayout btnUploadImage;
     private SwitchMaterial switchAvailability;
-    private MaterialCardView cardPreview1;
 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    private StorageReference storageRef;
 
     private String editServiceId;
-    private Uri selectedImageUri;
-
-    private final ActivityResultLauncher<String> imagePickerLauncher =
-            registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-                if (uri != null) {
-                    selectedImageUri = uri;
-                    if (cardPreview1 != null) {
-                        cardPreview1.setVisibility(View.VISIBLE);
-                        imgPreview1.setImageURI(uri);
-                    }
-                }
-            });
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,7 +48,6 @@ public class AddEditServiceActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        storageRef = FirebaseStorage.getInstance().getReference("service_images");
 
         initViews();
 
@@ -82,7 +58,6 @@ public class AddEditServiceActivity extends AppCompatActivity {
         }
 
         if (btnBack != null) btnBack.setOnClickListener(v -> finish());
-        if (btnUploadImage != null) btnUploadImage.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
         
         if (btnSave != null) {
             btnSave.setOnClickListener(v -> saveService());
@@ -96,9 +71,6 @@ public class AddEditServiceActivity extends AppCompatActivity {
         etDescription = findViewById(R.id.etServiceDescription);
         etPriceLitre = findViewById(R.id.etPriceLitre);
         etPriceCup = findViewById(R.id.etPriceCup);
-        btnUploadImage = findViewById(R.id.btnUploadImage);
-        imgPreview1 = findViewById(R.id.imgPreview1);
-        cardPreview1 = findViewById(R.id.cardPreview1);
 
         if (editServiceId != null) {
             btnSave = findViewById(R.id.btnSaveEdits);
@@ -121,12 +93,21 @@ public class AddEditServiceActivity extends AppCompatActivity {
                     if (etPriceLitre != null) etPriceLitre.setText(String.valueOf(s.getPrice()));
                     if (etPriceCup != null) etPriceCup.setText(String.valueOf(s.getPriceCup()));
                     if (switchAvailability != null) switchAvailability.setChecked(s.isActive());
+                    if (etName != null) etName.setText(s.getNameAr());
+                    if (etDescription != null) etDescription.setText(s.getDescriptionAr());
                 });
     }
 
     private void saveService() {
         String priceLitreStr = etPriceLitre != null ? etPriceLitre.getText().toString().trim() : "";
         String priceCupStr = etPriceCup != null ? etPriceCup.getText().toString().trim() : "";
+        String name = etName != null ? etName.getText().toString().trim() : "";
+        String description = etDescription != null ? etDescription.getText().toString().trim() : "";
+
+        if (TextUtils.isEmpty(name)) {
+            if (etName != null) etName.setError("اسم الخدمة مطلوب");
+            return;
+        }
 
         if (TextUtils.isEmpty(priceLitreStr)) {
             if (etPriceLitre != null) etPriceLitre.setError("السعر مطلوب");
@@ -138,12 +119,13 @@ public class AddEditServiceActivity extends AppCompatActivity {
 
         db.collection("providers").document(mAuth.getUid()).get().addOnSuccessListener(providerDoc -> {
             Map<String, Object> data = new HashMap<>();
+            data.put("name_ar", name);
+            data.put("description_ar", description);
             data.put("price", Double.parseDouble(priceLitreStr));
             data.put("priceCup", TextUtils.isEmpty(priceCupStr) ? 0.0 : Double.parseDouble(priceCupStr));
             data.put("status", "pending");
             
             if (providerDoc.exists()) {
-                // حفظ كافة بيانات المزود بمسميات تتوافق مع ServiceModel
                 data.put("provider_name", providerDoc.getString("business_name"));
                 data.put("provider_type", providerDoc.getString("provider_type"));
                 data.put("provider_phone", providerDoc.getString("phone"));
@@ -163,9 +145,6 @@ public class AddEditServiceActivity extends AppCompatActivity {
                             finish();
                         });
             } else {
-                String name = etName != null ? etName.getText().toString().trim() : "";
-                data.put("name_ar", name);
-                data.put("description_ar", etDescription != null ? etDescription.getText().toString().trim() : "");
                 data.put("provider_id", mAuth.getUid());
                 data.put("isActive", false);
                 data.put("created_at", com.google.firebase.Timestamp.now());
